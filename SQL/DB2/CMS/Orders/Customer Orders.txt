@@ -1,0 +1,102 @@
+SELECT  
+	DCODAT ORD_DATE,	
+	SUBSTR(CHAR(DCODAT),3,2)||SUBSTR(CHAR(DCODAT),6,2)  ORD_PERD,
+	SUBSTR(CHAR(DCODAT),1,4) ORD_YEAR,
+	DCMDAT PROM_DATE,
+	SUBSTR(CHAR(DCMDAT),3,2)||SUBSTR(CHAR(DCMDAT),6,2) PROM_PERD,  
+	DCSTAT, 
+	DDITST, 
+	BC.BVCOMP BILL_REMIT_TO,  
+	BC.BVCLAS BILL_CUST_CLASS,  
+	BC.BVCUST||' - '||RTRIM(BC.BVNAME) BILL_CUST,  
+	BC.BVPRCD BILL_PROV,  
+	BC.BVCTRY BILL_CTRY,  
+	BC.BVCITY BILL_CITY,
+	BC.BVPOST BILL_POSTAL,
+	BC.BVSALM||' - '||RTRIM(BS.A30) BILL_AGENT,
+	SC.BVCOMP SHIP_REMIT_TO,  
+	SC.BVCLAS SHIP_CUST_CLASS,  
+	SC.BVCUST||' - '||RTRIM(SC.BVNAME) SHIP_CUST,  
+	SC.BVPRCD SHIP_PROV,  
+	SC.BVCTRY SHIP_CTRY, 
+	SC.BVCITY SHIP_CITY,
+	SC.BVPOST SHIP_POSTAL,
+	SC.BVSALM||' - '||RTRIM(SS.A30) SHIP_AGENT,
+	DCCURR, 
+	DCPLNT, 
+	DCSTKL, 
+	DDSTKL, 
+	AVDPLT PLNT, 
+	DDCRRS,                                                                                                                                                                                                                                                                                                                   	DCPROM, 
+	DDORD#, 
+	DDITM#, 
+	ITEM PART, 
+	DESCR, 
+	DDGLC,  
+	GL_DST_CODE GLDC,  
+	GL_EXP_CODE GLEC,  
+	DIGITS(ZWSAL#) SALE_ACCT,  
+	AZGROP||' - '||RTRIM(BQ1TITL) FGRP,  
+	MAJG,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	MING,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	MAJS,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	MINS,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	DDQTOI,
+	DDQTBI, 
+	DDQTSI, 
+	DDUNIT, 
+	DDUNPR, 
+	DDTOTI, 
+	V6UNTI,                                                                                                                                                                                                                                                                                                                                                                                                                  	TOT TOTCOST ,     
+	TOT*DDQTOI COST_NATIVE,                                                                                                                                                                                                                                                                                                                                                                                                                                       	COALESCE(TOT*DDQTOI*IX.RATE,0) COST_USD,
+	DDTOTI SALES_NATIVE,
+	DDTOTI*SX.RATE SALES_USD
+FROM  
+	LGDAT.OCRH  
+	INNER JOIN LGDAT.OCRI ON  
+		DDORD# = DCORD#  
+	INNER JOIN LGDAT.CUST BC ON  
+		BC.BVCUST = DCBCUS  
+	LEFT OUTER JOIN LGDAT.CUST SC ON  
+		SC.BVCUST = DCSCUS  
+	LEFT OUTER JOIN LGDAT.CODE BS ON
+		BS.A2 = 'MM' AND
+		LTRIM(RTRIM(BS.A9)) = BC.BVSALM
+	LEFT OUTER JOIN LGDAT.CODE SS ON
+		SS.A2 = 'MM' AND
+		LTRIM(RTRIM(SS.A9)) = SC.BVSALM
+	LEFT OUTER JOIN FANALYSIS.VW_FFITEMM ON  
+		ITEM = DDPART  
+	LEFT OUTER JOIN LGDAT.STKA ON  
+		V6PART = DDPART AND  
+		V6PLNT = AVDPLT  
+	LEFT OUTER JOIN QGPL.FFICSTX C ON  
+		C.PART = DDPART AND  
+		C.PLNT = AVDPLT AND  
+		C.TRI = 'STD'  
+	LEFT OUTER JOIN LGDAT.CODE G ON  
+		G.A2 = 'EE' AND  
+		LTRIM(RTRIM(G.A9)) = DDGLC  
+	LEFT OUTER JOIN LGDAT.PLNT ON  
+		YAPLNT = SUBSTR(DCSTKL,1,3)  
+	LEFT OUTER JOIN LGDAT.GLIE ON  
+		Y1PLNT = SUBSTR(DCSTKL,1,3) AND  
+		Y1GLEC = SUBSTR(GL_DST_CODE,1,3)  
+	LEFT OUTER JOIN LGDAT.ARMASC ON  
+		ZWCOMP = BC.BVCOMP AND  
+		ZWKEY1 = BC.BVARCD AND  
+		ZWKEY2 = DDGLC  
+	LEFT OUTER JOIN LGDAT.MAST ON  
+		AZCOMP||DIGITS(AZGL#1)||DIGITS(AZGL#2) = DIGITS(ZWSAL#)  
+	LEFT OUTER JOIN LGDAT.FGRP ON  
+		BQ1GRP = AZGROP  
+	LEFT OUTER JOIN FANALYSIS.FFCRET IX ON  
+		IX.PERD = SUBSTR(CHAR(CURRENT_DATE),3,2)||SUBSTR(CHAR(CURRENT_DATE),6,2)  AND
+		IX.FCUR = CASE SUBSTR(AVDPLT,1,2) WHEN '11' THEN 'CA' ELSE 'US' END AND
+		IX.TCUR = 'US' AND
+		IX.RTYP = 'MA'
+	LEFT OUTER JOIN FANALYSIS.FFCRET SX ON  
+		SX.PERD = SUBSTR(CHAR(CURRENT_DATE),3,2)||SUBSTR(CHAR(CURRENT_DATE),6,2)  AND
+		SX.FCUR = DCCURR AND
+		SX.TCUR = 'US' AND
+		SX.RTYP = 'MA'
+
+WHERE  
+	DCODAT >= '2014-10-01'
+FETCH FIRST 10 ROWS ONLY

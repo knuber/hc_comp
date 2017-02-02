@@ -1,0 +1,21 @@
+select X.* from table (Display_Journal( 
+	'RLARP', 
+	'QSQJRN', 
+	'RLARP', 
+	'*CURRENT', 										-- Receiver library and name
+	CAST('2016-06-26 00:00:00' as TIMESTAMP), 			-- Starting timestamp
+	CAST(null as DECIMAL(21,0)), 						-- Starting sequence number
+	'*ALL', 											-- Journal codes
+	'*ALL', 											-- Journal entries
+	'RLARP', 											-- Object library
+	'FFCOSTEFFD', 										-- Object name
+	'*FILE', 											-- Object type, 
+	'*FIRST', 											-- Object member
+	'*ALL', 											-- User
+	'*ALL', 											-- Job
+	'*ALL' 												-- Program
+ ) ) as X 
+ WHERE
+ 	X.CURRENT_USER <> 'PTROWBRIDG' AND
+ 	journal_entry_type in ('DL', 'PT', 'PX', 'UP')
+ FETCH FIRST 100 ROWS ONLY

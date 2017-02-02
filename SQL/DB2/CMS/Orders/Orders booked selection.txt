@@ -1,0 +1,125 @@
+SELECT
+	DCODAT,
+	SUBSTR(CHAR(DCODAT),3,2)||SUBSTR(CHAR(DCODAT),6,2) ORD_PERD,
+	DCMDAT,
+	CASE COALESCE(DHCPO,'') WHEN '' THEN DCPO ELSE DHCPO END DCPO,
+	DCPROM,
+	DDORD#,
+	DDITM#,
+	DCSTAT,
+	DDITST,
+	CASE DDITST 
+		WHEN 'C' THEN 
+			CASE DDQTSI 
+				WHEN 0 THEN 'CANCELED' 
+				ELSE 'CLOSED'
+			END
+		ELSE 
+			CASE WHEN DDQTSI >0 THEN 'BACKORDER' ELSE 'OPEN' END
+	END CALC_STATUS,
+	DDQTOI,
+	DDQTSI,
+	FGQSHP*CASE FESIND WHEN 'Y' THEN 1 ELSE 0 END QTY_I,
+	DCCURR,
+	COALESCE(FGPLNT,SUBSTR(DDSTKL,1,3)) PLNT,
+	DDPART,
+	DDGLC,
+	COALESCE(DIREAS,DDCRRS) DDCRRS,
+	DCTRCD,
+	CASE DDQTOI WHEN 0 THEN 0 ELSE (DDTOTI/DDQTOI)*(DDQTOI-DDQTSI) END AMT_OPEN,
+	CASE DDQTOI WHEN 0 THEN 0 ELSE (DDTOTI/DDQTOI)*(DDQTOI-DDQTSI)*XO.RATE END AMT_OPEN,
+	CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI/DDQTOI END*COALESCE(FGQSHP*CASE FESIND WHEN 'Y' THEN 1 ELSE 0 END,DDQTSI) AMT_SHIP,
+	CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI/DDQTOI END*COALESCE(FGQSHP*CASE FESIND WHEN 'Y' THEN 1 ELSE 0 END,DDQTSI)*XO.RATE AMT_SHIP_USD,
+	FGBOL# BOL,
+	FGENT# BOLI,
+	FEMBOL,
+	FESVIA,
+	FESIND,
+	FESDAT,
+	DIINV#,
+	DILIN#,
+	COALESCE(DIGITS(DHARYR)||DIGITS(DHARPR),'NONE') INV_PERD,
+	DIEXT*CASE DHINCR WHEN 'C' THEN -1 ELSE 1 END DIEXT,
+	DIEXT*CASE DHINCR WHEN 'C' THEN -1 ELSE 1 END*XI.RATE INV_AMT_USD,
+	DIGITS(ZWSAL#) ACCT,
+	AZGROP||' - '||RTRIM(BQ1TITL) FGRP,
+	-------------------CUSTOMER INFO---------------------
+	BC.BVCOMP BILL_REMIT_TO,  
+	BC.BVCLAS BILL_CUST_CLASS,  
+	BC.BVCUST||' - '||RTRIM(BC.BVNAME) BILL_CUST,  
+	SC.BVCLAS SHIP_CUST_CLASS,  
+	SC.BVCUST||' - '||RTRIM(SC.BVNAME) SHIP_CUST,  
+	DDPART PART, 
+	GLDC, 
+	GLEC,
+	MAJG,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	MING,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	MAJS,                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	MINS,                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	------------------COST INFO---------------------------
+	CURR COST_CURR,
+	ROUND(TOT*FGQSHP*CASE FESIND WHEN 'Y' THEN 1 ELSE 0 END*XC.RATE,2) TOT_COST_USD,  
+	------------------TERMS--------------------------------
+	DCTRCD||' - '||RTRIM(TC.DESCR) ORD_TERMS,
+	PAYDATE,
+	PAYDAYS,
+	DISCP,
+	DISCDAYS
+	
+FROM
+	LGDAT.OCRI
+	INNER JOIN LGDAT.OCRH ON
+		DCORD# = DDORD#
+	--------changed below join from inner to left, have ship quantities with no BOL, trying to resolve
+	LEFT OUTER JOIN LGDAT.BOLD ON
+		FGORD# = DDORD# AND
+		FGITEM = DDITM#
+	LEFT OUTER JOIN LGDAT.BOLH ON
+		FEBOL# = FGBOL#
+	LEFT OUTER JOIN LGDAT.OID ON
+		DIINV# = FGINV# AND
+		DILIN# = FGLIN#
+	LEFT OUTER JOIN LGDAT.OIH ON
+		DHINV# = DIINV#
+	LEFT OUTER JOIN FANALYSIS.FFCRET XO ON
+		XO.FCUR = DCCURR AND
+		XO.TCUR = 'US' AND
+		XO.RTYP = 'MA' AND
+		XO.PERD = SUBSTR(CHAR(DCODAT),3,2)||SUBSTR(CHAR(DCODAT),6,2) 
+	LEFT OUTER JOIN FANALYSIS.FFCRET XI ON
+		XI.FCUR = DCCURR AND
+		XI.TCUR = 'US' AND
+		XI.RTYP = 'MA' AND
+		XI.PERD = COALESCE(DIGITS(DHARYR)||DIGITS(DHARPR),'NONE')
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = COALESCE(FGPLNT,SUBSTR(DDSTKL,1,3))
+	LEFT OUTER JOIN FANALYSIS.VW_FFCOPR ON
+		COMP = YACOMP
+	LEFT OUTER JOIN FANALYSIS.FFCRET XC ON
+		XC.FCUR = CURR AND
+		XC.TCUR = 'US' AND
+		XC.RTYP = 'MA' AND
+		XC.PERD = SUBSTR(CHAR(DCODAT),3,2)||SUBSTR(CHAR(DCODAT),6,2) 
+	LEFT OUTER JOIN LGDAT.CUST BC ON
+		BC.BVCUST = DCBCUS
+	LEFT OUTER JOIN LGDAT.CUST SC ON
+		SC.BVCUST = DCSCUS
+	LEFT OUTER JOIN LGDAT.ARMASC ON
+		ZWCOMP = BC.BVCOMP AND
+		ZWKEY1 = BC.BVARCD AND
+		ZWKEY2 = DDGLC AND
+		ZWPLNT = CASE SUBSTR(BC.BVCOMP,1,1) WHEN '3' THEN '0'||BC.BVCOMP ELSE COALESCE(FGPLNT,SUBSTR(DDSTKL,1,3)) END
+	LEFT OUTER JOIN LGDAT.MAST ON
+		AZCOMP||DIGITS(AZGL#1)||DIGITS(AZGL#2) = DIGITS(ZWSAL#)
+	LEFT OUTER JOIN LGDAT.FGRP ON
+		BQ1GRP = AZGROP
+	LEFT OUTER JOIN FANALYSIS.VW_FFITEMM I ON
+		ITEM = DDPART
+	LEFT OUTER JOIN QGPL.FFICSTX C ON
+		C.PART = DDPART AND
+		C.PLNT = COALESCE(FGPLNT,SUBSTR(DDSTKL,1,3)) AND
+		TRI = 'STD'
+	LEFT OUTER JOIN FANALYSIS.VW_FFTMCD TC ON
+		TERM = DCTRCD
+WHERE
+	DCODAT >= '2013-01-01' AND
+	---------added this item to filter out
+	DDQTSI <> 0	
+FETCH FIRST 100 ROWS ONLY

@@ -1,0 +1,84 @@
+
+CREATE OR REPLACE VIEW RLARP.VW_FFWFACM ( 
+	MODULE , 
+	BATCH , 
+	PERD , 
+	TDATE , 
+	PDATE , 
+	ACCT , 
+	AMT , 
+	KBPRJ# , 
+	USRN , 
+	REV , 
+	CUSMOD , 
+	CUSKEY1 , 
+	CUSKEY1D , 
+	CUSKEY2 , 
+	CUSKEY2D , 
+	D07RKEY , 
+	CUSKEY3D , 
+	CUSKEY4 , 
+	CUSKEY4D , 
+	CUSVEND , 
+	CUSCUST , 
+	RECID ) 
+	AS 
+	SELECT  
+		'APMA' MODULE,  
+		BATCH,  
+		PERD,  
+		TDATE,  
+		PDATE,  
+		KRCOM#||DIGITS(D07GLAC) ACCT,  
+		D07AMT*CASE SUBSTR(CUSMOD,1,3) WHEN 'REV' THEN -1 ELSE 1 END AMT,  
+		KBPRJ#,  
+		USRN,  
+		REV,  
+		CUSMOD,  
+		DIGITS(KRPO#)||DIGITS(KRPOI#)||' - '||RTRIM(KRDESC) CUSKEY1,  
+																											 'PO-ITEM-DESCR' CUSKEY1D,  
+		KRPT# CUSKEY2,  
+		'PART' CUSKEY2D,  
+		D07RKEY,  
+		'MASTER RECEIPT KEY' CUSKEY3D,  
+		KRQREC CUSKEY4,  
+		'QTY' CUSKEY4D,  
+		KRVEN# CUSVEND,  
+		'' CUSCUST,  
+		DIGITS(D07TXN) RECID  
+	FROM  
+		(  
+		SELECT DISTINCT  
+			MODULE, BATCH, PERD, TDATE, PDATE, SUBSTR(ACCT,1,2) COMP, USRN, REV, CUSMOD, PRIORP RPERD  
+		FROM  
+			RLARP.FFSBGLWF  
+			LEFT OUTER JOIN RLARP.VW_PRFSPR PP ON  
+				PP.COMP = SUBSTR(ACCT,1,2) AND  
+				PP.CURRP = PERD  
+			  --Changed this to pull in the view PRFSPR to grab the prior period without having to rebuild the function FSPR_OFFSET which doesn't work with 13 periods 
+		WHERE  
+			MODULE = 'APAC'  
+		) X  
+		INNER JOIN RLARP.FFPORCAG G ON  
+			G.D07FSPR = CASE SUBSTR(CUSMOD,1,1) WHEN 'A' THEN '20'||X.PERD ELSE '20'||X.RPERD END  
+		INNER JOIN RLARP.FFPORCAP C ON  
+			KRRKEY = D07RKEY AND  
+			FISC = SUBSTR(D07FSPR,3,4) AND  
+			KRCOM# = X.COMP  
+		INNER JOIN LGDAT.POI ON  
+			KBPO# = KRPO# AND  
+			KBITM# = KRPOI#   
+	RCDFMT VW_FFWFACM ; 
+  
+LABEL ON TABLE RLARP.VW_FFWFACM 
+	IS 'Acct - Modified accrual, swap out with APAC' ; 
+  
+LABEL ON COLUMN RLARP.VW_FFWFACM 
+( KBPRJ# IS 'Project             Number' , 
+	D07RKEY IS 'Master              Receipt Key' ) ; 
+  
+LABEL ON COLUMN RLARP.VW_FFWFACM 
+( KBPRJ# TEXT IS 'Project Number' , 
+	D07RKEY TEXT IS 'Master Receipt Key' ) ; 
+  
+

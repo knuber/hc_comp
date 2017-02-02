@@ -1,0 +1,26 @@
+SELECT
+	UZPART, UZPLNT, UZSEQ#,
+	-----------MATERIAL-------------------
+	UZL1MT, 
+	UZL2MT,
+
+	---------LABOR--------------------
+	UZL1LB,
+	UZL2LB,
+	
+	---------FIXED----------------
+	UZL1BF,
+	UZL2BF,
+
+	--------VARIABLE------------
+	UZL1BV,
+	UZL2BV,
+
+	------OTHER-------------------------
+	UZL1OT,
+	UZL2OT
+FROM
+	LGDAT.PSSC
+WHERE
+	UZPART IN ('IJM01180G18D100','IJM01180G18D100LZGNR')  AND
+	UZPLNT = '152'

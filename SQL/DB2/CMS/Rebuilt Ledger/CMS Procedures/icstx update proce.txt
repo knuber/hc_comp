@@ -1,0 +1,240 @@
+CREATE PROCEDURE FANALYSIS.SP_ICSTX_UPDATE
+
+BEGIN
+
+
+DECLARE BG TIMESTAMP;
+SET BG = CURRENT TIMESTAMP;
+
+DECLARE I INT;
+
+SET I = (SELECT COUNT(*) FROM FANALYSIS.FFPROC WHERE PROCESS = 'ICSTX_UPDATE');
+IF I = 0 THEN 
+	INSERT INTO FANALYSIS.FFPROC VALUES ('ICSTX_UPDATE','START')
+ELSE
+	INSERT INTO FANALYSIS.FFPROCH VALUES ('ICSTX_UPDATE',SESSION_USER,CHAR(BG),CHAR(CURRENT TIMESTAMP),'PROCESS IN USE, EXIT')
+END IF;
+
+
+----------------------------------------------------------------------------------------------------------
+
+DECLARE GLOBAL TEMPORARY TABLE ISS
+(
+ PART CHAR(20), 
+ PLNT CHAR(3),  
+ RCID CHAR(20),  
+ SEQ INT
+);
+
+----------------------------------------------------------------------------------------------------------
+
+DELETE FROM QGPL.FFICSTX WHERE TRI = 'STD';
+
+----------------------------------------------------------------------------------------------------------
+
+INSERT INTO
+ QTEMP.ISS
+SELECT
+ JHPART, JHPLNT, JHRCID,
+ ROW_NUMBER() OVER (PARTITION BY JHPART, JHPLNT ORDER BY JHPART, JHPLNT, JHDATE, JHTIME, JHRCID) SEQ 
+FROM
+ LGDAT.ICSTT
+WHERE
+ JHCTYP = 'S' AND
+ JHRCID > (SELECT MAX(TRI) FROM QGPL.FFICSTX);
+
+----------------------------------------------------------------------------------------------------------
+
+INSERT INTO
+ QTEMP.ISS
+SELECT
+ JHPART, JHPLNT, JHRCID, 0 SEQ
+FROM
+ (
+ SELECT
+  JHPART PART, JHPLNT PLNT, MAX(JHRCID) RCID
+ FROM
+  (--this listing needs to pull the last record id in ICSTT before the first one in ISS per part/plant
+  SELECT
+   PART, PLNT, MIN(RCID) NID
+  FROM
+   QTEMP.ISS
+  GROUP BY
+   PART, PLNT
+  ) X
+ INNER JOIN LGDAT.ICSTT ON
+  JHPART = PART AND
+  JHPLNT = PLNT AND
+  JHCTYP = 'S' AND
+  JHRCID < NID
+ GROUP BY
+  JHPART, JHPLNT
+ ) LAST
+INNER JOIN LGDAT.ICSTT ON
+ JHPART = PART AND
+ JHPLNT = PLNT AND
+ JHRCID = RCID;
+
+----------------------------------------------------------------------------------------------------------
+
+MERGE INTO 
+ QGPL.FFICSTX F
+USING
+ (
+  SELECT
+    T.PART, T.PLNT, 
+  IFNULL(CHAR(FL.JHDATE)||' '||CHAR(FL.JHTIME),'0001-01-01 00:00:00') FST,
+    IFNULL(F.RCID,'00000000000') FRI, 
+  CHAR(TL.JHDATE)||' '||CHAR(TL.JHTIME) TST,
+  T.RCID TRI, 
+  IFNULL(FL.JHMATN,0) MAT, 0 FRT, IFNULL(FL.JHAVDN,0) DUT, 
+  IFNULL(FL.JHSHCN,0) SAH, IFNULL(FL.JHCRCN,0) CUR, 
+  IFNULL(FL.JHAV1N,0) ML1, IFNULL(FL.JHAV2N,0) ML2, 
+  IFNULL(FL.JHLABN,0) LAB, IFNULL(FL.JHBRVN,0) VBR, IFNULL(FL.JHBRFN,0) FBR, 
+  IFNULL(FL.JHOTHN,0) OBR, IFNULL(FL.JHTOTN,0) TOT,
+  TL.JHOHQT QOH
+  FROM
+    QTEMP.ISS T
+    LEFT OUTER JOIN QTEMP.ISS F ON
+      F.PART = T.PART AND
+      F.PLNT = T.PLNT AND
+      F.SEQ = T.SEQ-1
+  LEFT OUTER JOIN LGDAT.ICSTT TL ON
+   TL.JHRCID = T.RCID
+  LEFT OUTER JOIN LGDAT.ICSTT FL ON
+   FL.JHRCID = F.RCID
+ WHERE 
+    T.SEQ >= 1
+  ) A ON
+  A.PART = F.PART AND
+    A.PLNT = F.PLNT AND
+    A.FRI = F.FRI AND
+    A.TRI = F.TRI
+WHEN NOT MATCHED THEN
+ INSERT (F.PART, F.PLNT, F.FST, F.FRI, F.TST, F.TRI, F.MAT, F.FRT, F.DUT, F.SAH, F.CUR, F.ML1, F.ML2, F.LAB, F.VBR, F.FBR, F.OBR, F.TOT, F.QOH)
+ VALUES (A.PART, A.PLNT, A.FST, A.FRI, A.TST, A.TRI, A.MAT, A.FRT, A.DUT, A.SAH, A.CUR, A.ML1, A.ML2, A.LAB, A.VBR, A.FBR, A.OBR, A.TOT, A.QOH);
+
+----------------------------------------------------------------------------------------------------------
+------test for any records that don't have a parent in the associate heirarchy. 
+------all records should have a parent unless they are labled 'STD'
+DECALRE NOPARENT INT;
+SET NOPARENT = 
+(
+SELECT
+ COUNT(*)
+FROM
+ QGPL.FFICSTX F
+ EXCEPTION JOIN QGPL.FFICSTX T ON
+  T.FRI = F.TRI
+WHERE
+ T.TRI <> 'STD'
+);
+IF NOPARENT = 0 THEN EXIT END IF;
+
+----------------------------------------------------------------------------------------------------------
+
+INSERT INTO 
+ QGPL.FFICSTX
+SELECT
+ LAST.PART, LAST.PLNT, LAST.TST, LAST.TRI, '9999-99-99 24:59:59', 'STD',
+ 0,0,0,0,0,0,0,0,0,0,0,0,0
+FROM 
+ QGPL.FFICSTX LAST
+ EXCEPTION JOIN QGPL.FFICSTX NEXT ON
+  NEXT.FRI = LAST.TRI;
+
+----------------------------------------------------------------------------------------------------------
+
+SELECT 
+ COUNT(*)
+FROM
+
+ (
+ SELECT 
+  CGPART PART, CGPLNT PLNT, CHAR(CGSDAT)||' '||'00:00:00' TST,
+  CGMATS MAT, 0 FRT, 0 DUT, 0 SAH, 0 CUR, 0 ML1, 0 ML2, CGLABS LAB, CGBRVS VBR, CGBRFS FBR, CGSTOC OBR, CGSTCS TOT, 0 QTY
+ FROM
+  LGDAT.ICSTM
+ 
+ UNION ALL
+ 
+ SELECT 
+  CHPART PART, CHPLNT PLNT, CHAR(CHSDAT)||' '||'00:00:00' TST,
+  CHSUC MAT, CHSFC FRT, CHSDC DUT, 0 SAH, CHSCC CUR, CHS1C ML1, CHS2C ML2, 0 LAB, 0 VBR, 0 FBR, 0 OBR, CHSTCS TOT, 0 QTY
+ FROM
+  LGDAT.ICSTP
+ 
+ UNION ALL
+ 
+ SELECT
+  Y0PART PART, Y0PLNT PLNT, CHAR(Y0SDAT)||' '||'00:00:00' TST,
+  Y0SMAT MAT, 0 FRT, 0 DUT, Y0SSHC SAH, Y0SOC CUR, 0 ML1, 0 ML2, Y0SLAB LAB, Y0SVBR VBR, Y0SFBR FBR, Y0SOTC OBR, Y0STCS TOT, 0 QTY
+ FROM
+  LGDAT.ICSTR 
+ ) C
+ EXCEPTION JOIN QGPL.FFICSTX F ON
+  F.PART = C.PART AND
+  F.PLNT = C.PLNT AND
+  F.TRI = 'STD'
+WHERE
+ C.PART <> '';
+
+----------------------------------------------------------------------------------------------------------
+
+MERGE INTO
+ QGPL.FFICSTX F
+USING
+ (
+ SELECT 
+  CGPART PART, CGPLNT PLNT, CHAR(CGSDAT)||' '||'00:00:00' TST,
+  CGMATS MAT, 0 FRT, 0 DUT, 0 SAH, 0 CUR, 0 ML1, 0 ML2, CGLABS LAB, CGBRVS VBR, CGBRFS FBR, CGSTOC OBR, CGSTCS TOT, 0 QTY
+ FROM
+  LGDAT.ICSTM
+ 
+ UNION ALL
+ 
+ SELECT 
+  CHPART PART, CHPLNT PLNT, CHAR(CHSDAT)||' '||'00:00:00' TST,
+  CHSUC MAT, CHSFC FRT, CHSDC DUT, 0 SAH, CHSCC CUR, CHS1C ML1, CHS2C ML2, 0 LAB, 0 VBR, 0 FBR, 0 OBR, CHSTCS TOT, 0 QTY
+ FROM
+  LGDAT.ICSTP
+ 
+ UNION ALL
+ 
+ SELECT
+  Y0PART PART, Y0PLNT PLNT, CHAR(Y0SDAT)||' '||'00:00:00' TST,
+  Y0SMAT MAT, 0 FRT, 0 DUT, Y0SSHC SAH, Y0SOC CUR, 0 ML1, 0 ML2, Y0SLAB LAB, Y0SVBR VBR, Y0SFBR FBR, Y0SOTC OBR, Y0STCS TOT, 0 QTY
+ FROM
+  LGDAT.ICSTR 
+ ) C ON
+  C.PART = F.PART AND
+  C.PLNT = F.PLNT AND
+  F.TRI = 'STD'
+WHEN MATCHED THEN UPDATE SET 
+ F.MAT = C.MAT,
+ F.FRT = C.FRT,
+ F.DUT = C.DUT,
+ F.SAH = C.SAH,
+ F.CUR = C.CUR,
+ F.ML1 = C.ML1,
+ F.ML2 = C.ML2,
+ F.LAB = C.LAB,
+ F.VBR = C.VBR,
+ F.FBR = C.FBR,
+ F.OBR = C.OBR,
+ F.TOT = C.TOT;
+
+----------------------------------------------------------------------------------------------------------
+
+DELETE FROM QGPL.FFICSTX_E;
+
+----------------------------------------------------------------------------------------------------------
+
+INSERT INTO 
+ QGPL.FFICSTX_E
+SELECT
+ *
+FROM
+ QGPL.FFICSTX
+WHERE
+ TST >= (SELECT TST FROM QGPL.FFICSTX WHERE TRI = 'X');

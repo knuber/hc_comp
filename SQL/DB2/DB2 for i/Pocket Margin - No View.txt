@@ -1,0 +1,190 @@
+SELECT 
+	---------------------Order Info-----------------------------------------
+
+	DCODAT, 										
+	PD.FSPR ORD_FSPR, 
+	DDQDAT, 
+	DCMDAT, 
+	RTRIM(DCPO) DCPO, 
+	RTRIM(DCPROM) DCPROM, 
+	DDORD#, 
+	DCPPCL, 
+	DDITM#, 
+	DCSTAT, 
+	DDITST, 
+	CASE DDITST 
+		WHEN 'C' THEN 
+			CASE DDQTSI 
+				WHEN 0 THEN 'CANCELED' 
+				ELSE 'CLOSED' 
+			END 
+		ELSE 
+			CASE WHEN DDQTSI >0 THEN 'BACKORDER' ELSE 'OPEN' END 
+	END CALC_STATUS, 
+	DDQTOI, 
+	CASE WHEN COALESCE(V6MPCK,0) <= 0 THEN 0 ELSE DDQTOI/V6MPCK END PALLETS_ORD,
+	DDQTSI, 
+	DDSDAT, 
+	DCCURR, 
+	SUBSTR(DDSTKL,1,3) DDSTKL,
+	DCPLNT, 
+	DDPART, 
+	DDGLC, 
+ 	GLDC, 
+ 	GLEC, 
+ 	MAJG, 	MING, 	MAJS, 	MINS,
+
+	-------------------CUSTOMER INFO--------------------- 
+
+ 	BC.BVCOMP BILL_REMIT_TO, 
+ 	BC.BVCLAS BILL_CUST_CLASS, 
+ 	BC.BVCUST||' - '||RTRIM(BC.BVNAME) BILL_CUST, 
+ 	SC.BVCLAS SHIP_CUST_CLASS, 
+ 	SC.BVCUST||' - '||RTRIM(SC.BVNAME) SHIP_CUST, 
+	GEO, CHAN,
+ 
+	-------------------Shipping Info----------------------
+
+	QZCRYC ORIG_CTRY,
+	QZPROV ORIG_PROV,
+	QZPOST ORIG_POST,
+	SC.BVCTRY DEST_PROV,
+	SC.BVPRCD DEST_PROV,
+	SC.BVPOST DEST_POST,
+
+
+	--------------------------Accounting-----------------------------------
+
+	DIGITS(ZWSAL#) ACCT, 
+	AZGROP||' - '||RTRIM(BQ1TITL) FGRP, 
+
+ 	------------------TERMS-------------------------------- 
+
+ 	DCTRCD||' - '||RTRIM(TC.DESCR) ORD_TERMS, 
+ 	PAYDATE, 
+ 	PAYDAYS, 
+ 	DISCP, 
+ 	DISCDAYS,
+
+	---------------------Valuation--------------------------------------------
+
+	CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END ORD_AMT, 
+	CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END*XO.RATE ORD_AMT_USD, 
+	DDQTOI*(MAT+LAB) ORD_COST,
+	DDQTOI*(MAT+LAB)*XC.RATE ORD_COST_USD,
+	
+	-MIN(
+			FLOAT(
+				(
+				30.0-CASE PAYDATE WHEN '' THEN PAYDAYS ELSE DAYS(PAYDATE) - DAYS(DCMDAT) END
+				)
+				/30.0
+			)
+			*.01
+		,
+			(
+				FLOAT
+				(
+				30.0 - DISCDAYS
+				)
+				/30.0
+				*.01
+				-COALESCE(DISCP,0.0)
+			) 
+	)*CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END*XO.RATE TERMS_USD
+
+
+FROM 
+	-----------------------Order file lines----------------------------------------
+
+ 	LGDAT.OCRI 
+ 	INNER JOIN LGDAT.OCRH ON 
+ 	 	DCORD# = DDORD# 
+
+	-----------------------Plant/Part Master---------------------------------------
+
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = DDPART AND
+		V6PLNT = SUBSTR(DDSTKL,1,3)
+
+	-----------------------Plant Info----------------------------------------------
+
+	LEFT OUTER JOIN FANALYSIS.VW_FFPLPR PL ON
+		PL.YAPLNT = SUBSTRING(DDSTKL,1,3)
+	LEFT OUTER JOIN LGDAT.PLNT P ON
+		P.YAPLNT = SUBSTR(DDSTKL,1,3)
+	LEFT OUTER JOIN LGDAT.ADRS ON
+		QZADR = YAADR#
+
+
+	-----------------------Company Fiscal Periods----------------------------------
+
+	LEFT OUTER JOIN FANALYSIS.VW_FFGLPD PD ON
+		PL.COMP = PD.COMP AND
+		SDAT <= DCODAT AND
+		EDAT >= DCODAT
+
+	-----------------------Order Currency Conversion-------------------------------
+
+ 	LEFT OUTER JOIN FANALYSIS.FFCRET XO ON 
+ 	 	XO.FCUR = DCCURR AND 
+ 	 	XO.TCUR = 'US' AND 
+		XO.RTYP = 'MA' AND 
+		XO.PERD = PD.FSPR
+
+	-----------------------Inventory Currency Conversion---------------------------
+
+	LEFT OUTER JOIN FANALYSIS.FFCRET XC ON 
+ 	 	XC.FCUR = PL.CURR AND 
+ 	 	XC.TCUR = 'US' AND 
+		XC.RTYP = 'MA' AND 
+		XC.PERD = PD.FSPR
+	
+	-----------------------Customer Masters (Bill & Ship)--------------------------
+
+	LEFT OUTER JOIN LGDAT.CUST BC ON 
+		BC.BVCUST = DCBCUS 
+	LEFT OUTER JOIN LGDAT.CUST SC ON 
+		SC.BVCUST = DCSCUS 
+
+	-----------------------Accounting----------------------------------------------
+
+	LEFT OUTER JOIN LGDAT.ARMASC ON 
+		ZWCOMP = BC.BVCOMP AND 
+		ZWKEY1 = BC.BVARCD AND 
+		ZWKEY2 = DDGLC AND 
+		ZWPLNT = CASE SUBSTR(BC.BVCOMP,1,1) WHEN '3' THEN '0'||BC.BVCOMP ELSE SUBSTR(DDSTKL,1,3) END 
+	LEFT OUTER JOIN LGDAT.MAST ON 
+		AZCOMP||DIGITS(AZGL#1)||DIGITS(AZGL#2) = DIGITS(ZWSAL#) 
+	LEFT OUTER JOIN LGDAT.FGRP ON 
+		BQ1GRP = AZGROP 
+
+	-----------------------Item Attributes-----------------------------------------
+
+	LEFT OUTER JOIN FANALYSIS.VW_FFITEMM I ON 
+		ITEM = DDPART 
+	LEFT OUTER JOIN FANALYSIS.VW_FFTMCD TC ON 
+		TERM = DCTRCD
+	
+	-----------------------Inventory Cost------------------------------------------
+	
+	LEFT OUTER JOIN QGPL.FFICSTX X ON
+		X.PART = DDPART AND
+		X.PLNT = SUBSTRING(DDSTKL,1,3) AND
+		TRI = 'STD'
+
+	-----------------------Segment Files-------------------------------------------
+
+	LEFT OUTER JOIN FANALYSIS.FFTERR T ON
+		PROV = SC.BVPRCD AND
+		CTRY = SC.BVCTRY AND
+		T.VERS = 'INI'
+	LEFT OUTER JOIN FANALYSIS.FFCHNL C ON
+		BILL = BC.BVCLAS AND
+		SHIP = SC.BVCLAS AND
+		C.VERS = 'INI'
+
+
+WHERE
+	PD.FSPR >= '1502'
+FETCH FIRST 10 ROWS ONLY

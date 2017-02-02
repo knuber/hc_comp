@@ -1,0 +1,38 @@
+SELECT 
+	'SER' MOD,WZSER#,wzstkl, wzbin#, COALESCE(htpart, WZPART) PART, htqty as count, htunit, 0 as before, V6UNTI
+FROM 
+	lgdat.phys 
+	iNNER JOIN lgdat.seri ON 
+		wzser#=htmstn 
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = HTPART AND
+		V6PLNT = SUBSTR(WZSTKL,1,3)
+WHERE 
+	wzstkl LIKE '152%'
+
+
+UNION ALL
+
+SELECT 
+	'PHY' MOD,WZSER#,wzstkl, wzbin#, WZPART, wzCqty as count, wzunit, 0 as before, V6UNTI                                                
+FROM 
+	lgdat.phys
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = WZPART AND
+		V6PLNT = SUBSTR(WZSTKL,1,3)
+WHERE 
+	wzstkl LIKE '152%' AND 
+	WZPART<>''
+
+UNION ALL
+
+SELECT 
+	'QOH' MOD, 0,LQstkl, LQbin#, LQPART, 0 as count, LQunit, LQQTYH as before, V6UNTI                                               
+FROM 
+	lgdat.BINB
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = LQPART AND
+		V6PLNT = SUBSTR(LQSTKL,1,3)
+WHERE 
+	LQstkl LIKE '152%'
+FETCH FIRST 10 ROWS ONLY

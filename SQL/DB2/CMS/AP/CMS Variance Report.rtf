@@ -1,0 +1,232 @@
+--WO LEDGER VARIANCE REPORTING SOLUTION IN SQL
+--PAUL TROWBRIDGE
+
+
+
+-------------------HOLDS MASTER WO LIST------------------------------------------------------------------
+															--
+	DECLARE GLOBAL TEMPORARY TABLE WORX_WPP (WO CHAR(10), PART CHAR(20), PLNT CHAR(3), STAT CHAR(1))--
+															-- 
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+-------------------HOLD STATIC WO BOM DEFENITION AT TIME OF PULL-----------------------------------------
+															--
+	DECLARE GLOBAL TEMPORARY TABLE WORX_JBOM LIKE LGDAT.CJOBDM						--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+-------------------HOLD EACH BATCH FO BOMS REPORTED FOR WO BOM CHANGES-----------------------------------
+															--
+	DECLARE GLOBAL TEMPORARY TABLE WORX_ABOM LIKE LGDAT.RPRM						--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+-------------------HOLD THE CURRENT BOM DEFENTITION WHICH SHOULD BE THE STANDARD-------------------------
+															--
+	DECLARE GLOBAL TEMPORARY TABLE WORX_CBOM LIKE LGDAT.METHDM						--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+-------------------HOLD ALL RELEVANT PART COSTS----------------------------------------------------------
+															--
+	DECLARE GLOBAL TEMPORARY TABLE WORX_COST 									--
+		(													--
+		PART CHAR(20),											--
+		PLNT CHAR(3),												--
+		SEQ# DEC(3,0),											--
+		MAT_TLI FLOAT,											--
+		MAT_CUM FLOAT,											--
+		LAB_TLI FLOAT,											--
+		LAB_CUM FLOAT,											--
+		VAR_TLI FLOAT,											--
+		VAR_CUM FLOAT,											--
+		FIX_TLI FLOAT,											--
+		FIX_CUM FLOAT,											--
+		OTH_TLI FLOAT,											--
+		OTH_CUM FLOAT												--
+		)													--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+
+-------------------POPULATE THE MASTER LIST OF WORK ORDERS TO BE DEALT WITH------------------------------
+															--MAY NEED TO LOOK AT PULLING IN GLSBAP FOR 
+	INSERT INTO QTEMP.WORX_WPP											--OUTSOURCED ITEMS THAT USE AP
+	SELECT DISTINCT 												--
+		LTRIM(RTRIM(DKKEYN)) AS WO,										--
+		COALESCE(C.DNPART,H.DNPART) AS PART,								--THE IDEA HERE IS TO PULL EVERY UNIQUE WO
+		COALESCE(C.DNPLNT,H.DNPLNT) AS PLNT,								--THAT HAS POSTED AGAINST THE LEDGER SO THAT
+		CASE COALESCE(C.DNPART,'X') WHEN 'X' THEN 'H' ELSE 'C' END					--ALL LEDGER ACTIVTY FROM WO'S CAN BE EXPLAINED
+															--THE CURRENT AND HISTORY JOB HEADERS WILL
+	FROM														--PROVIDE THAT PLANT AND PART AS WELL AS THE
+		LGDAT.GLSBIV												--CURRENT/HIST STATUS FOR SUBSEQUENT CURR/HIST
+		LEFT OUTER JOIN LGDAT.CJOBH C ON									--FILE RETRIEVALS
+			C.DNJOB = DKKEYN											--
+		LEFT OUTER JOIN LGDAT.HJOBH H ON				 					--
+			H.DNJOB = DKKEYN										--
+	WHERE														--
+		DKFSYR = 20 AND 											--PERIOD & PLANT INFO SHOULD BE CONVERTED
+		DKFSYY = 13 AND 											--TO VARIABLES INSTANTIATED UP TOP
+		DKFSPR = 11 AND											--
+		DKSRCE = 'PD' AND											--
+		DKQUAL = 'WO' AND											--
+		COALESCE(C.DNPLNT,H.DNPLNT) = '152'								--
+	FETCH FIRST 20 ROWS ONLY											--ONLY DEAL WITH 20 RECORDS FOR TESTING
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+-------------------POPULATE STATIC WO BOM DEFENITIONS----------------------------------------------------
+															--PULL ALL THE STATIC WO BOM DEFENITIONS
+INSERT INTO QTEMP.WORX_JBOM												--AS THEY SIT NOW.
+SELECT															--
+	CJ.*														--
+FROM															--
+	LGDAT.CJOBDM CJ												--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		EFJOB# = WO AND											--
+		EFPART = PART												--
+WHERE															--
+	STAT = 'C'													--
+															--
+UNION ALL														--
+															--
+SELECT															--
+	HJ.*														--
+FROM															--
+	LGDAT.HJOBDM HJ												--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		EFJOB# = WO AND											--
+		EFPART = PART												--
+WHERE															--
+	STAT = 'H'													--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------POPULATE REPORTED BOMS-----------------------------------------------------------------
+															--
+INSERT INTO QTEMP.WORX_ABOM												--
+SELECT															--
+	R.*														--
+FROM															--
+	LGDAT.RPRM R													--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		UIJOB# = WO												--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+-----------------POPULATE CURRENT METHOD BOMS------------------------------------------------------------
+															--
+INSERT INTO QTEMP.WORX_CBOM												--
+SELECT 														--
+	M.*														--
+FROM															--
+	LGDAT.METHDM M												--
+	INNER JOIN 													--
+	(														--
+		SELECT DISTINCT PART, PLNT										--
+		FROM QTEMP.WORX_WPP											--
+	) X ON														--
+	AQPART = PART AND												--
+	AQPLNT = PLNT													--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+
+/*              This part needs to wait until after the routings are added			*/
+
+-----------------PULL COSTS FOR ALL PARTS----------------------------------------------------------------
+															--
+INSERT INTO QTEMP.WORX_COST												--
+SELECT DISTINCT													--
+	EFPART AS PART, PLNT	,EFSEQ#, 0,0,0,0,0,0,0,0,0,0							--
+FROM															--
+	QTEMP.WORX_JBOM												--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		EFPART = PART AND											--
+		EFJOB# = WO												--
+															--
+UNION															--
+															--
+SELECT DISTINCT													--
+	EFMTLP AS PART, PLNT	,EFSEQ#, 0,0,0,0,0,0,0,0,0,0							--
+FROM															--
+	QTEMP.WORX_JBOM												--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		EFPART = PART AND											--
+		EFJOB# = WO												--
+UNION															--																						--
+SELECT DISTINCT													--
+	UIPART AS PART, PLNT	,UISEQ#, 0,0,0,0,0,0,0,0,0,0							--
+FROM															--
+	QTEMP.WORX_ABOM												--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		UIPART = PART AND											--
+		UIJOB# = WO												--
+UNION															--
+															--
+SELECT DISTINCT													--
+	UIMTLP AS PART, PLNT	,UISEQ#,0,0,0,0,0,0,0,0,0,0								--
+FROM															--
+	QTEMP.WORX_ABOM												--
+	INNER JOIN QTEMP.WORX_WPP ON										--
+		UIPART = PART AND											--
+		UIJOB# = WO												--
+															--
+UNION															--
+															--
+SELECT DISTINCT													--
+	AQPART AS PART, AQPLNT,AQSEQ#, 0,0,0,0,0,0,0,0,0,0							--
+FROM															--
+	QTEMP.WORX_CBOM												--
+															--
+UNION															--
+															--
+SELECT DISTINCT													--
+	AQMTLP AS PART, AQPLNT,AQSEQ#, 0,0,0,0,0,0,0,0,0,0							--
+FROM															--
+	QTEMP.WORX_CBOM												--
+															--
+---------------------------------------------------------------------------------------------------------
+
+
+/*this update will not be able to add sequence 8 & 9 operations because 8 & 9 are not in any boms.
+perhaps a seperate join on unique parts and then inserting where the sequence is not already present.
+Or could simply union in the routing sequences, unlikely that a sequence will be costed and not have a method or vice versa*/
+
+UPDATE 
+	QTEMP.WORX_COST C
+SET
+	(MAT_TLI,LAB_TLI,VAR_TLI,FIX_TLI,OTH_TLI) = 
+	(
+	SELECT 
+		UZI1MT,UZI1LB,UZI1BV,UZI1BF,UZI1OT
+	FROM
+		LGDAT.PSSC
+	WHERE
+		UZPART = PART AND
+		UZPLNT = PLNT AND
+		UZSEQ# = SEQ#
+	)

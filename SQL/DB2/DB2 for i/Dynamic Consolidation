@@ -1,0 +1,102 @@
+
+-------temp table to hold intermediate results subject to hierarchacal operation--------
+DECLARE GLOBAL TEMPORARY TABLE  tbw(
+	tb varchar(2),
+	fsyr varchar(4),
+	stat varchar(1),
+	fgrp varchar(7),
+	glcc varchar(10),
+	perd varchar(4),
+	ob dec(18,2),
+	nt dec(18,2),
+	eb dec(18,2),
+	bg dec(18,2),
+	fc dec(18,2)
+);
+
+
+------------insert initial result set---------------
+INSERT INTO QTEMP.tbw
+SELECT
+	SUBSTR(ACCT,1,2) TB, 'TB' FLAG, 
+	AJ4CCYY, AZSTAT,
+	AZGROP,
+	AZFUT3, 
+	AZFUT2, 
+	PERD, 
+	OB, 
+	NT, 
+	EB, 
+	BG, 
+	FC
+FROM	
+	TABLE(RLARP.F_GLMT('1606','1606')) X;
+
+
+-------------------sequential consolidation list from hierachy----------------
+
+WITH RECURSIVE CH
+( PRNT , CHLD , LVL , IDX )
+AS
+(
+	SELECT
+		0, CAST(MAX(DW6COMN) AS VARCHAR(100)), 0, CAST('00' AS VARCHAR(100))
+	FROM
+		LGDAT.GLCA
+
+	UNION ALL
+	
+	SELECT	
+		CHLD, CAST(DW6SCOM AS VARCHAR(100)), LVL + 1, IDX||'.'||CAST(DW6SCOM AS VARCHAR(100))
+	FROM	
+		LGDAT.GLCA
+		INNER JOIN CH ON
+			DW6COMN = CHLD
+	WHERE
+		LVL < 10
+)
+SELECT
+	lvl, chld, DESCR , CURR , CONS
+FROM
+	CH
+	LEFT OUTER JOIN RLARP.VW_FFCOPR ON
+		COMP = CHLD
+WHERE
+	-----this is brittle logic----
+	cons not like 'TB%'
+ORDER BY
+	lvl desc;
+
+---encounter of a FX type consolidation level require grabbing an intermediate table list of trial balances underneath that level
+SELECT * FROM TABLE(RLARP.F_CHILD_TB('11')) X;
+
+
+--------------------elimination type record pull---------------------
+SELECT 
+	SUBSTR(DIGITS(D35USR4),9,2) TB, OS.FLAG, 
+	AJ4CCYY, AZSTAT,
+	CASE OS.FLAG
+		WHEN 'CLEAR' THEN AZGROP
+		ELSE D35USR2 
+	END AZGROP,
+	AZFUT3, 
+	AZFUT2, 
+	PERD, 
+	CASE OS.FLAG WHEN 'CLEAR' THEN -OB ELSE OB END OB, 
+	CASE OS.FLAG WHEN 'CLEAR' THEN -NT ELSE NT END NT, 
+	CASE OS.FLAG WHEN 'CLEAR' THEN -EB ELSE EB END EB, 
+	CASE OS.FLAG WHEN 'CLEAR' THEN -BG ELSE BG END BG, 
+	CASE OS.FLAG WHEN 'CLEAR' THEN -FC ELSE FC END FC
+FROM 
+	TABLE(RLARP.F_GLMT('1606','1606')) X 
+	INNER JOIN LGDAT.GGTP G ON
+		D35GCDE = AZFUT3	
+	CROSS JOIN TABLE(VALUES 
+		('CLEAR'),
+		('OFFSET')
+	) AS OS(FLAG)
+WHERE
+	D35USR4 <> 0 AND
+	AZGROP <> D35USR2
+	
+

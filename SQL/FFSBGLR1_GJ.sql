@@ -1,0 +1,280 @@
+CREATE OR REPLACE PROCEDURE RLARP.SB_GJ_R1 ( 
+	IN vPERD VARCHAR(4)
+	)
+	DYNAMIC RESULT SETS 1 
+	LANGUAGE SQL 
+	SPECIFIC RLARP.SB_GJ_R1
+	NOT DETERMINISTIC 
+	MODIFIES SQL DATA 
+	CALLED ON NULL INPUT 
+	SET OPTION  ALWBLK = *ALLREAD , 
+	ALWCPYDTA = *OPTIMIZE , 
+	COMMIT = *NONE , 
+	DECRESULT = (31, 31, 00) , 
+	DFTRDBCOL = *NONE , 
+	DYNDFTCOL = *NO , 
+	DYNUSRPRF = *USER , 
+	SRTSEQ = *HEX   
+	BEGIN 
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		DECLARE V_ERROR INTEGER ; 
+		DECLARE MSG_VAR VARCHAR ( 255 ) ; 
+		DECLARE RETRN_STATUS INTEGER ; 
+		DECLARE C1 CURSOR WITH RETURN TO CLIENT FOR SELECT * FROM TABLE(RLARP.FN_ISB(vPERD)) AS X;
+		
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION  --,SQLWARNING 
+		BEGIN 
+			SET V_ERROR = SQLCODE ; 
+			GET DIAGNOSTICS RETRN_STATUS = RETURN_STATUS ; 
+		  
+			IF ( V_ERROR IS NULL ) OR ( V_ERROR <> 0 AND V_ERROR <> 466 ) OR ( RETRN_STATUS > 3 ) 
+			THEN 
+				SET MSG_VAR = 'PROC: ' || 'RLARP.SB_UD' || ', ' || COALESCE ( MSG_VAR , '' ) || ', SQLCODE: ' || CHAR ( V_ERROR ) || ', PARAMS: '; 
+				--ROLLBACK;
+				--COMMIT; 
+				SET RETRN_STATUS = - 1; 
+				SIGNAL SQLSTATE '75001' SET MESSAGE_TEXT = MSG_VAR ; 
+			ELSE 
+				SET V_ERROR = 0 ; 
+			END IF ; 
+		END ; 
+		
+	------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		DELETE FROM RLARP.FFSBGLR1 WHERE PERD = vPERD AND SUBSTR(MODULE,1,2) IN ('GJ','RJ','OS','AU');
+		
+	------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		DELETE FROM RLARP.FFSBGLWF;
+
+	------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		INSERT INTO 
+			RLARP.FFSBGLWF
+		SELECT 
+			DKSRCE||DKQUAL , 
+			DIGITS(DKBTC#) , DIGITS(DKFSYY)||DIGITS(DKFSPR) AS PERD,
+			CHAR(DKTDAT) , 
+			CHAR(DKPDAT) , 
+			DIGITS(DKACC#) , 
+			DKAMT , 
+			DKPJNM , 
+			DKFUT4 ,
+			DKREV ,
+			'JOURNAL ENTRY' AS CUSMOD,
+			DKADDD AS CUSKEY1,
+			'BATCH DESCR' AS CUSKEY1D,
+			DKREFD AS CUSKEY2,
+			'LINE DESCR' AS CUSKEY2D,
+			DKKEYN AS CUSKEY3,
+			'BATCH' AS CUSKEY3D,
+			DKREF# AS CUSKEY4,
+			'JOUNAL' AS CUSKEY4D,
+			'' AS CUSVEND,
+			DKBCUS AS CUSCUST, DIGITS(DKRCID) AS RECID
+		FROM 
+			LGDAT.GTRAN GTRAN
+		WHERE
+			DKFSYR = 20 AND  
+			DIGITS(DKFSYY)||DIGITS(DKFSPR) = vPERD AND
+			DKSRCE IN ('GJ','RJ','OS','AU')
+
+		UNION ALL
+
+		SELECT 
+			DKSRCE||DKQUAL , 
+			DIGITS(DKBTC#) , DIGITS(DKFSYY)||DIGITS(DKFSPR) AS PERD,
+			CHAR(DKTDAT) , 
+			CHAR(DKPDAT) , 
+			DIGITS(DKACC#) , 
+			DKAMT , 
+			DKPJNM , 
+			DKFUT4 ,
+			DKREV ,
+			'JOURNAL ENTRY' AS CUSMOD,
+			DKADDD AS CUSKEY1,
+			'BATCH DESCR' AS CUSKEY1D,
+			DKREFD AS CUSKEY2,
+			'LINE DESCR' AS CUSKEY2D,
+			DKKEYN AS CUSKEY3,
+			'BATCH' AS CUSKEY3D,
+			DKREF# AS CUSKEY4,
+			'JOUNAL' AS CUSKEY4D,
+			'' AS CUSVEND,
+			DKBCUS AS CUSCUST, DIGITS(DKRCID) AS RECID
+		FROM 
+			LGDAT.GTLYN GTRAN
+		WHERE
+			DKFSYR = 20 AND  
+			DIGITS(DKFSYY)||DIGITS(DKFSPR) = vPERD AND
+			DKSRCE IN ('GJ','RJ','OS','AU')
+
+		UNION ALL
+
+		SELECT 
+			DKSRCE||DKQUAL , 
+			DIGITS(DKBTC#) , DIGITS(DKFSYY)||DIGITS(DKFSPR) AS PERD,
+			CHAR(DKTDAT) , 
+			CHAR(DKPDAT) , 
+			DIGITS(DKACC#) , 
+			DKAMT , 
+			DKPJNM , 
+			DKFUT4 ,
+			DKREV ,
+			'JOURNAL ENTRY' AS CUSMOD,
+			DKADDD AS CUSKEY1,
+			'BATCH DESCR' AS CUSKEY1D,
+			DKREFD AS CUSKEY2,
+			'LINE DESCR' AS CUSKEY2D,
+			DKKEYN AS CUSKEY3,
+			'BATCH' AS CUSKEY3D,
+			DKREF# AS CUSKEY4,
+			'JOUNAL' AS CUSKEY4D,
+			'' AS CUSVEND,
+			DKBCUS AS CUSCUST, DIGITS(DKRCID) AS RECID
+		FROM 
+			LGDAT.GNYTR GTRAN
+		WHERE
+			DKFSYR = 20 AND  
+			DIGITS(DKFSYY)||DIGITS(DKFSPR) = vPERD AND
+			DKSRCE IN ('GJ','RJ','OS','AU');
+		
+	------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		INSERT INTO 
+			RLARP.FFSBGLR1_E
+		SELECT 
+			W.MODULE,
+			W.BATCH,
+			W.PERD,
+			W.TDATE,
+			W.PDATE,
+			W.ACCT,
+			SUM(W.AMT) AMT,
+			W.PROJ,
+			W.USRN,
+			W.REV,
+			W.CUSMOD,
+			W.CUSKEY1,
+			W.CUSKEY1D,
+			W.CUSKEY2,
+			W.CUSKEY2D,
+			W.CUSKEY3,
+			W.CUSKEY3D,
+			W.CUSKEY4,
+			W.CUSKEY4D,
+			W.CUSVEND,
+			W.CUSCUST,
+			W.RECID
+		FROM 
+			RLARP.FFSBGLWF W
+			EXCEPTION JOIN RLARP.FFSBGLR1 F ON
+				W.PERD = F.PERD AND
+				W.MODULE = F.MODULE AND
+				W.CUSMOD = F.CUSMOD AND
+				W.ACCT = F.ACCT AND
+				W.BATCH = F.BATCH AND
+				W.PDATE = F.PDATE AND
+				W.PROJ = F.PROJ AND
+				W.CUSKEY1 = F.CUSKEY1 AND
+				W.CUSKEY2 = F.CUSKEY2 AND
+				W.CUSKEY3 = F.CUSKEY3 AND
+				W.CUSKEY4 = F.CUSKEY4 AND
+				W.CUSVEND = F.CUSVEND AND
+				W.CUSCUST = F.CUSCUST AND
+				W.RECID = F.RECID
+		GROUP BY
+			W.MODULE,
+			W.BATCH,
+			W.PERD,
+			W.TDATE,
+			W.PDATE,
+			W.ACCT,
+			W.PROJ,
+			W.USRN,
+			W.REV,
+			W.CUSMOD,
+			W.CUSKEY1,
+			W.CUSKEY1D,
+			W.CUSKEY2,
+			W.CUSKEY2D,
+			W.CUSKEY3,
+			W.CUSKEY3D,
+			W.CUSKEY4,
+			W.CUSKEY4D,
+			W.CUSVEND,
+			W.CUSCUST,
+			W.RECID;
+		
+	------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		INSERT INTO 
+			RLARP.FFSBGLR1
+		SELECT 
+			W.MODULE,
+			W.BATCH,
+			W.PERD,
+			W.TDATE,
+			W.PDATE,
+			W.ACCT,
+			SUM(W.AMT) AMT,
+			W.PROJ,
+			W.USRN,
+			W.REV,
+			W.CUSMOD,
+			W.CUSKEY1,
+			W.CUSKEY1D,
+			W.CUSKEY2,
+			W.CUSKEY2D,
+			W.CUSKEY3,
+			W.CUSKEY3D,
+			W.CUSKEY4,
+			W.CUSKEY4D,
+			W.CUSVEND,
+			W.CUSCUST,
+			W.RECID
+		FROM 
+			RLARP.FFSBGLWF W
+			EXCEPTION JOIN RLARP.FFSBGLR1 F ON
+				W.PERD = F.PERD AND
+				W.MODULE = F.MODULE AND
+				W.CUSMOD = F.CUSMOD AND
+				W.ACCT = F.ACCT AND
+				W.BATCH = F.BATCH AND
+				W.PDATE = F.PDATE AND
+				W.PROJ = F.PROJ AND
+				W.CUSKEY1 = F.CUSKEY1 AND
+				W.CUSKEY2 = F.CUSKEY2 AND
+				W.CUSKEY3 = F.CUSKEY3 AND
+				W.CUSKEY4 = F.CUSKEY4 AND
+				W.CUSVEND = F.CUSVEND AND
+				W.CUSCUST = F.CUSCUST AND
+				W.RECID = F.RECID
+		GROUP BY
+			W.MODULE,
+			W.BATCH,
+			W.PERD,
+			W.TDATE,
+			W.PDATE,
+			W.ACCT,
+			W.PROJ,
+			W.USRN,
+			W.REV,
+			W.CUSMOD,
+			W.CUSKEY1,
+			W.CUSKEY1D,
+			W.CUSKEY2,
+			W.CUSKEY2D,
+			W.CUSKEY3,
+			W.CUSKEY3D,
+			W.CUSKEY4,
+			W.CUSKEY4D,
+			W.CUSVEND,
+			W.CUSCUST,
+			W.RECID;
+			
+		OPEN C1;	
+		
+	END;

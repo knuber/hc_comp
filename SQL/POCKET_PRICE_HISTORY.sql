@@ -1,0 +1,199 @@
+CREATE VIEW V_POCKPRIC AS
+SELECT 
+	---------------------Order Info-----------------------------------------
+
+	DCODAT, 										
+	PD.FSPR ORD_FSPR, 
+	DDQDAT, 
+	DCMDAT, 
+	RTRIM(DCPO) DCPO, 
+	RTRIM(DCPROM) DCPROM, 
+	DDORD#, 
+	DCPPCL, 
+	DDITM#, 
+	DCSTAT, 
+	DDITST, 
+	CASE DDITST WHEN 'C' THEN 
+		CASE DDQTSI WHEN 0 THEN 'CANCELED' ELSE 'CLOSED' END 
+		ELSE CASE WHEN DDQTSI >0 THEN 'BACKORDER' ELSE 'OPEN' END 
+	END CALC_STATUS, 
+	DDQTOI, 
+	DDQTSI, 
+	A.V6UNTI,
+	DDSDAT, 
+	DCCURR, 
+	SUBSTR(DDSTKL,1,3) DDSTKL,
+	DCPLNT, 
+	DDPART, 
+	SUBSTR(DDPART,1,8) MOLD,
+	DDGLC, 
+ 	GLDC, 
+ 	GLEC, 
+ 	MAJG, 	MING, 	MAJS, 	MINS,
+
+	-------------------CUSTOMER INFO--------------------- 
+
+ 	BC.BVCOMP BILL_REMIT_TO,
+ 	BC.BVCLAS BILL_CUST_CLASS, 
+ 	BC.BVCUST||' - '||RTRIM(BC.BVNAME) BILL_CUST, 
+ 	SC.BVCLAS SHIP_CUST_CLASS, 
+ 	SC.BVCUST||' - '||RTRIM(SC.BVNAME) SHIP_CUST, 
+	COALESCE(GEO,'UNDEFINED') GEO, COALESCE(CHAN,'UNDEFINED') CHAN,
+ 
+	-------------------Shipping Info----------------------
+
+	QZCRYC ORIG_CTRY,
+	QZPROV ORIG_PROV,
+	SUBSTR(QZPOST,1,3) ORIG_LANE,
+	QZPOST ORIG_POST,
+	SC.BVCTRY DEST_CTRY,
+	SC.BVPRCD DEST_PROV,
+	SUBSTR(SC.BVPOST,1,3) DEST_LANE,
+	SC.BVPOST DEST_POST,
+
+
+	--------------------------Accounting-----------------------------------
+
+	DIGITS(ZWSAL#) ACCT, 
+	AZGROP||' - '||RTRIM(BQ1TITL) FGRP, 
+	
+	---------------------Valuation--------------------------------------------
+
+	CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END ORD_AMT, 
+	CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END*XO.RATE ORD_AMT_USD, 
+	DDQTOI*(MATERIAL+LABOR) ORD_COST,
+	DDQTOI*(MATERIAL+LABOR)*XC.RATE ORD_COST_USD,
+
+ 	---------------------Terms-------------------------------- 
+
+ 	DCTRCD||' - '||RTRIM(TC.DESCR) ORD_TERMS, 
+ 	PAYDATE, 
+ 	PAYDAYS, 
+ 	DISCP, 
+ 	DISCDAYS,
+	-MIN(
+			FLOAT((30.0-CASE PAYDATE WHEN '' THEN PAYDAYS ELSE DAYS(PAYDATE) - DAYS(DCMDAT) END)/30.0)*.01,
+			FLOAT(30.0 - DISCDAYS)/30.0*.01-COALESCE(DISCP,0.0)
+	)*CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END*XO.RATE TERMS_USD,
+
+	
+	--------------------Freight---------------------------------------------
+	
+	
+	V6MPCK PCS_PLT,
+	CASE WHEN COALESCE(V6MPCK,0) <= 0 THEN 0 ELSE DDQTOI/V6MPCK END PALLETS,
+	FP.HMILES MILES,
+	FL.HCPM CPM_L,
+	FS.HCPM CPM_P,
+	ROUND(FLOAT(COALESCE(FP.HMILES,FL.HMILES)*COALESCE(FP.HCPM,FL.HCPM,FS.HCPM)/24)*FLOAT(CASE WHEN COALESCE(V6MPCK,0) <= 0 THEN 0 ELSE DDQTOI/V6MPCK END),2)* CASE WHEN DCPPCL = 'P' THEN 1 ELSE 0 END FREIGHT,
+
+	--------------------Returns & Allowances---------------------------------------------
+	
+	CG.CGRP,
+	ROUND(CR.CRED,5) CREDR,
+	ROUND(CR.REBT,5) REBTR,
+	ROUND(CRED*CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END*XO.RATE,2) CRED,
+	ROUND(REBT*CASE DDQTOI WHEN 0 THEN 0 ELSE DDTOTI END*XO.RATE,2) REBT
+	
+FROM 
+
+	-----------------------Order file lines----------------------------------------
+
+ 	LGDAT.OCRI 
+ 	INNER JOIN LGDAT.OCRH ON 
+ 	 	DCORD# = DDORD# 
+
+	-----------------------Plant/Part Master---------------------------------------
+
+	LEFT OUTER JOIN LGDAT.STKA A ON
+		A.V6PART = DDPART AND
+		A.V6PLNT = SUBSTR(DDSTKL,1,3)
+
+	-----------------------Plant Info----------------------------------------------
+
+	LEFT OUTER JOIN RLARP.VW_FFPLPR PL ON
+		PL.YAPLNT = SUBSTRING(DDSTKL,1,3)
+	LEFT OUTER JOIN LGDAT.PLNT P ON
+		P.YAPLNT = SUBSTR(DDSTKL,1,3)
+	LEFT OUTER JOIN LGDAT.ADRS ON
+		QZADR = YAADR#
+
+
+	-----------------------Company Fiscal Periods----------------------------------
+
+	LEFT OUTER JOIN RLARP.VW_FFGLPD PD ON
+		PL.COMP = PD.COMP AND
+		SDAT <= DCODAT AND
+		EDAT >= DCODAT
+
+	-----------------------Order Currency Conversion-------------------------------
+
+ 	LEFT OUTER JOIN RLARP.FFCRET XO ON 
+ 	 	XO.FCUR = DCCURR AND 
+ 	 	XO.TCUR = 'US' AND 
+		XO.RTYP = 'MA' AND 
+		XO.PERD = PD.FSPR
+
+	-----------------------Inventory Currency Conversion---------------------------
+
+	LEFT OUTER JOIN RLARP.FFCRET XC ON 
+ 	 	XC.FCUR = PL.CURR AND 
+ 	 	XC.TCUR = 'US' AND 
+		XC.RTYP = 'MA' AND 
+		XC.PERD = PD.FSPR
+	
+	-----------------------Customer Masters (Bill & Ship)--------------------------
+
+	LEFT OUTER JOIN LGDAT.CUST BC ON 
+		BC.BVCUST = DCBCUS 
+	LEFT OUTER JOIN LGDAT.CUST SC ON 
+		SC.BVCUST = DCSCUS 
+
+	-----------------------Accounting----------------------------------------------
+
+	LEFT OUTER JOIN LGDAT.ARMASC ON 
+		ZWCOMP = BC.BVCOMP AND 
+		ZWKEY1 = BC.BVARCD AND 
+		ZWKEY2 = DDGLC AND 
+		ZWPLNT = CASE SUBSTR(BC.BVCOMP,1,1) WHEN '3' THEN '0'||BC.BVCOMP ELSE SUBSTR(DDSTKL,1,3) END 
+	LEFT OUTER JOIN LGDAT.MAST ON 
+		AZCOMP||DIGITS(AZGL#1)||DIGITS(AZGL#2) = DIGITS(ZWSAL#) 
+	LEFT OUTER JOIN LGDAT.FGRP ON 
+		BQ1GRP = AZGROP 
+
+	-----------------------Item Attributes-----------------------------------------
+
+	LEFT OUTER JOIN RLARP.VW_FFITEMM I ON 
+		ITEM = DDPART 
+	LEFT OUTER JOIN RLARP.VW_FFTMCD TC ON 
+		TERM = DCTRCD
+	
+	-----------------------Inventory Cost------------------------------------------
+	
+	LEFT OUTER JOIN RLARP.VW_FFICSTX X ON
+		X.V6PART = DDPART AND
+		X.V6PLNT = SUBSTRING(DDSTKL,1,3)
+
+	-----------------------Pricing Project Files-------------------------------------------
+
+	LEFT OUTER JOIN RLARP.FFTERR T ON
+		PROV = SC.BVPRCD AND
+		CTRY = SC.BVCTRY AND
+		T.VERS = 'INI'
+	LEFT OUTER JOIN RLARP.FFCHNL C ON
+		BILL = BC.BVCLAS AND
+		SHIP = SC.BVCLAS AND
+		C.VERS = 'INI'
+	LEFT OUTER JOIN RLARP.FFCUST CG ON		
+		CG.CUSTN = DCBCUS
+	LEFT OUTER JOIN RLARP.FFCRED CR ON
+		CR.CUSTG = COALESCE(CG.CGRP,BC.BVCUST||' - '||RTRIM(BC.BVNAME))
+	LEFT OUTER JOIN RLARP.FR8M8 FP ON	
+		FP.ORIG = QZPOST AND	
+		FP.DEST = SC.BVPOST
+	LEFT OUTER JOIN RLARP.FR8M8 FL ON	
+		FL.ORIG = SUBSTR(QZPOST,1,3) AND	
+		FL.DEST = SUBSTR(SC.BVPOST,1,3)
+	LEFT OUTER JOIN RLARP.FR8M8 FS ON	
+		FS.ORIG = QZPROV AND	
+		FS.DEST = SC.BVPRCD

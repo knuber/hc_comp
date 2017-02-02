@@ -1,0 +1,91 @@
+
+--DECLARE GLOBAL TEMPORARY TABLE ISS(PART CHAR(20), PLNT CHAR(3), DT CHAR(10), TM CHAR(8), RCID CHAR(20), NEWC FLOAT, QTY FLOAT, SEQ INT)
+
+----------------------------------------SELECT A RANGE OF COST ROLL INSTANCES-----------------------------------------------------------
+/*
+INSERT INTO
+	QTEMP.ISS
+SELECT
+	JHPART, JHPLNT, CHAR(JHDATE), CHAR(JHTIME), JHRCID, JHTOTN, JHOHQT, 
+	ROW_NUMBER() OVER (PARTITION BY JHPART, JHPLNT ORDER BY JHPART, JHPLNT, JHDATE, JHTIME, JHRCID) SEQ 
+FROM
+	LGDAT.ICSTT
+WHERE
+	JHCTYP = 'S' AND
+	JHDATE >= (SELECT MAX(TDT) FROM QGPL.FFCOSTEFFD)
+*/
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+----------------------------------------PULL THE LAST ROLL ITEM BEFORE THE FIRST IN THE CURRENT LIST ISS--------------------------------
+/*
+INSERT INTO
+	QTEMP.ISS
+SELECT
+	JHPART, JHPLNT, CHAR(JHDATE), CHAR(JHTIME), JHRCID, JHTOTN, JHOHQT, 0 SEQ
+FROM
+	(
+	SELECT
+		JHPART PART, JHPLNT PLNT, MAX(JHRCID) RCID
+	FROM
+		(
+			--this listing needs to pull the last record id in ICSTT before the first one in ISS per part/plant
+			SELECT
+				PART, PLNT, MIN(RCID) NID
+			FROM
+				QTEMP.ISS
+			GROUP BY
+				PART, PLNT
+		) X
+		INNER JOIN LGDAT.ICSTT ON
+			JHPART = PART AND
+			JHPLNT = PLNT AND
+			JHCTYP = 'S' AND
+			JHRCID < NID
+	GROUP BY
+		JHPART, JHPLNT
+	) LAST
+	INNER JOIN LGDAT.ICSTT ON
+		JHPART = PART AND
+		JHPLNT = PLNT AND
+		JHRCID = RCID
+*/
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+----------------------------------------LINK UP THE COST ROLLS ACCORDING TO THE SEQUENCES AND INSERT TO FFCOSTEFFD----------------------
+/*
+MERGE INTO 
+	QGPL.FFCOSTEFFD F
+USING
+	(	
+	SELECT
+		T.PART, T.PLNT, 
+		IFNULL(F.DT,'0001-01-01') FDT, 
+		IFNULL(F.TM,'00:00:00') FTM, 
+		IFNULL(F.RCID,'00000000000') FRI , 
+		T.DT TDT, T.TM TTM, T.RCID TRI, IFNULL(F.NEWC,0) FCOST, T.NEWC TCOST, T.QTY TQTY, F.SEQ, T.SEQ
+	FROM
+		QTEMP.ISS T
+		LEFT OUTER JOIN QTEMP.ISS F ON
+			F.PART = T.PART AND
+			F.PLNT = T.PLNT AND
+			F.SEQ = T.SEQ-1
+	WHERE 
+		T.SEQ >= 1
+	) A ON
+		A.PART = F.PART AND
+		A.PLNT = F.PLNT AND
+		A.FRI = F.FRI AND
+		A.TRI = F.TRI
+WHEN NOT MATCHED THEN
+	INSERT (F.PART, F.PLNT, F.FDT, F.FTM, F.FRI, F.TDT, F.TTM, F.TRI, F.FCOST, F.TCOST, F.TQTY)
+	VALUES (A.PART, A.PLNT, A.FDT, A.FTM, A.FRI, A.TDT, A.TTM, A.TRI, A.FCOST, A.TCOST, A.TQTY)
+*/
+----------------------------------------------------------------------------------------------------------------------------------------
+	
+
+--CREATE UNIQUE INDEX QGPL.PART_PLNT_RCID ON QGPL.FFCOSTEFFD (PART  ASC, PLNT  ASC, TRI  ASC)

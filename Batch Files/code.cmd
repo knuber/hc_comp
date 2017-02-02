@@ -1,0 +1,1 @@
+"C:\Program Files\DTM_SQL_Runner\sqlrun" -I"C:\Program Files\DTM_SQL_Runner\code.ini"

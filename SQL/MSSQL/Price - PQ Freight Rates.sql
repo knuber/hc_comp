@@ -1,0 +1,30 @@
+SELECT 
+	QZPROV,
+	QZPOST,
+	BVPRCD,
+	BVPOST,
+	MinimumCharge,
+	AVG(RoadMiles),
+	Rate
+FROM
+	PriceQuote.dbo.Freight
+	INNER JOIN LGDAT.CUST ON
+		BVCUST = CustomerNumber
+	INNER JOIN LGDAT.PLNT ON 
+		YAPLNT = ManufactureSource
+	INNER JOIN LGDAT.ADRS ON
+		YAADR# = QZADR
+WHERE
+	RATE IS NOT NULL
+GROUP BY
+	QZPROV,
+	QZpost,
+	BVPRCD,
+	BVPOST,
+	MinimumCharge,
+	Rate
+ORDER BY
+	QZPROV,
+	QZpost,
+	BVPRCD,
+	BVPOST

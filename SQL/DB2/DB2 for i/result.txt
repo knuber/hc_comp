@@ -1,0 +1,1487 @@
+ ROUTINE_DEFINITION                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 
+ BEGIN
+
+------------------------------------------------------------------------------------------------------------------------------------------------------ 
+	DECLARE V_ERROR INTEGER ;
+	DECLARE MSG_VAR VARCHAR ( 255 ) ;
+	DECLARE RETRN_STATUS INTEGER ;
+	DECLARE C1 CURSOR WITH RETURN TO CLIENT FOR SELECT * FROM TABLE ( RLARP . F_PD_STK ( VPERD ) ) AS X ;
+	
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION --,SQLWARNING 
+	BEGIN
+		SET V_ERROR = SQLCODE ;
+		GET DIAGNOSTICS RETRN_STATUS = RETURN_STATUS ;
+	
+		IF ( V_ERROR IS NULL ) OR ( V_ERROR <> 0 AND V_ERROR <> 466 ) OR ( RETRN_STATUS > 3 )
+		THEN
+			SET MSG_VAR = 'PROC: ' || 'RLARP.PD_UD' || ', ' || COALESCE ( MSG_VAR , '' ) || ', SQLCODE: ' || CHAR ( V_ERROR ) || ', PARAMS: ' ;
+			--ROLLBACK; 
+			--COMMIT; 
+			SET RETRN_STATUS = - 1 ;
+			SIGNAL SQLSTATE '75001' SET MESSAGE_TEXT = MSG_VAR ;
+		ELSE
+			SET V_ERROR = 0 ;
+		END IF ;
+	END ;
+
+
+	--need to add standard department
+	--need to add process variance
+	--need to add line number for standard cost bom items
+	--need to go back and restate RRAT for ASG
+	--need to add procurement variance
+	--need to take explosion approach to accomodate phantoms & sequnce numbers
+	--fix standard cost history
+
+	----------------------------------------build FFCOSTEFFD for any new records--------------------------------------------------------------
+	
+	CALL RLARP . CH_UD ;
+
+	----------------------------------------setup production gl batch selection file----------------------------------------------------------
+
+	DECLARE GLOBAL TEMPORARY TABLE B ( BATCH INT ) ;
+
+	----------------------------------------setup production gl work file---------------------------------------------------------------------
+
+
+	DECLARE GLOBAL TEMPORARY TABLE T (
+		SRCE CHAR ( 4 ) ,
+		WRKO VARCHAR ( 20 ) ,
+		BTCH INT ,
+		ENT# INT ,
+		SEQ# INT ,
+		PART VARCHAR ( 20 ) ,
+		RPLN CHAR ( 1 ) ,
+		PQTY FLOAT ,
+		ARSC VARCHAR ( 5 ) ,
+		ADEP VARCHAR ( 5 ) ,
+		ACTN VARCHAR ( 3 ) ,
+		ACCT CHAR ( 12 ) ,
+		AMNT DECIMAL ( 14 , 2 ) ,
+		SRSC VARCHAR ( 5 ) ,
+		RHRS FLOAT ,
+		RCRW FLOAT ,
+		SHRS FLOAT ,
+		SCRW FLOAT ,
+		RATE FLOAT ,
+		SIZE FLOAT
+	) ;
+		
+	-----------------------------select posted batches from the target period to be evaluated-------------------------------------------------
+		
+	INSERT INTO
+		QTEMP . B
+	SELECT DISTINCT
+		NWBTID
+	FROM
+		LGDAT . RPRH
+		EXCEPTION JOIN RLARP . FFPDGLR1 ON
+			BTID = NWBTID
+	WHERE
+		DIGITS ( NWFSYY ) || DIGITS ( NWFSPP ) = VPERD AND
+		NWPOST = 'Y' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+	--setup completed production for good pieces, entry is to debit inventory for the standard cost for the quantity reported
+	--standard cost at the time of posting is falsely estimated to be the batch creation date since post date was not available
+	--at the time this was originally written
+	--the account number to use is from the GLIE & PLNT files
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'CPG' ,
+		YACOMP || DIGITS ( Y1INVA ) ACCT ,
+		COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) AMT ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			TIBTID = BATCH
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = TIPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = TIPART
+		LEFT OUTER JOIN LGDAT . GLIE ON
+			Y1PLNT = NWPLNT AND
+			Y1GLEC = COALESCE ( AWGLED , AVGLED )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN = 1 AND
+		TIQTYP <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+	--credit inventory for the standard BOM one level down (which is a bad assumption) at standard cost for the good parent parts reported
+	--the standard cost is assumed to be the batch creation date since the post date was not available at time of writing
+	--the account number to use is from GLIE & the PLNT file
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , AQMTLP , A2 . V6RPLN ,
+		- FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( TIQTYP ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'SBG' ,
+		DIGITS ( COALESCE ( D . GNSTDM , P . GNSTDM ) ) ACCT ,
+		ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( TIQTYP ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			BATCH = TIBTID
+		INNER JOIN LGDAT . STKA A1 ON
+			A1 . V6PART = TIPART AND
+			A1 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = A1 . V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = A1 . V6UNTI
+		INNER JOIN LGDAT . METHDM ON
+			AQPART = TIPART AND
+			AQPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . STKA A2 ON
+			A2 . V6PART = AQMTLP AND
+			A2 . V6PLNT = AQPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+		CHPART = AQMTLP AND
+		CHPLNT = AQPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = AQMTLP AND
+			CGPLNT = AQPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = AQMTLP AND
+			Y0PLNT = AQPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = AQMTLP AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCCOM D ON
+			D . GNDEPT = TIDEPT AND
+			D . GNCOMP = YACOMP
+		LEFT OUTER JOIN LGDAT . GLCCOM P ON
+			P . GNDEPT = '' AND
+			P . GNPLNT = NWPLNT AND
+			P . GNCOMP = YACOMP
+	WHERE
+		TISEQ# = 10 AND
+		A1 . V6RPLN = 1 AND
+		TIQTYP <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+	--same as SBG except for the parent part is scrap pieces reported
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , AQMTLP , A2 . V6RPLN ,
+		- FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'SBS' ,
+		DIGITS ( COALESCE ( D . GNSTDM , P . GNSTDM ) ) ACCT ,
+		ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		INNER JOIN LGDAT . STKA A1 ON
+			A1 . V6PART = OEPART AND
+			A1 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = A1 . V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = A1 . V6UNTI
+		INNER JOIN LGDAT . METHDM ON
+			AQPART = OEPART AND
+			AQPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . STKA A2 ON
+			A2 . V6PART = AQMTLP AND
+			A2 . V6PLNT = AQPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = AQMTLP AND
+			CHPLNT = AQPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = AQMTLP AND
+			CGPLNT = AQPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = AQMTLP AND
+			Y0PLNT = AQPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = AQMTLP AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCCOM D ON
+			D . GNDEPT = OEDEPT AND
+			D . GNCOMP = YACOMP
+		LEFT OUTER JOIN LGDAT . GLCCOM P ON
+			P . GNDEPT = '' AND
+			P . GNPLNT = NWPLNT AND
+			P . GNCOMP = YACOMP
+	WHERE
+		OESEQ# = 10 AND
+		A1 . V6RPLN = 1 AND
+		OESQTY <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+	--credit scrap variance account according to standard scrap incorporated into the standard cost for good pieces reported
+	--the calculation is STD_COST*(1-SCRAP_RATE)*GOOD_PIECES
+	------------------------------------------------------------------------------------------------------------------------------------------
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		- FLOAT ( TIQTYP ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'ASG' ,
+		DIGITS ( GOMTSV ) ACCT ,
+		- ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * FLOAT ( TIQTYP ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			BATCH = TIBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = TIPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = TIPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = TIPART
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = TIDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN = 1 AND
+		- FLOAT ( TIQTYP ) * ( 1 - FLOAT ( AOEFF ) / 100 ) <> 0 ;
+		
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		- FLOAT ( OESQTY ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'ASS' ,
+		DIGITS ( GOMTSV ) ACCT ,
+		- ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * FLOAT ( OESQTY ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = OEPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = OEPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = OEPART
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN = 1 AND
+		- FLOAT ( OESQTY ) * ( 1 - FLOAT ( AOEFF ) / 100 ) <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'ALG' ,
+		DIGITS ( GOPYCL ) ACCT ,
+		ROUND ( - CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * AO#MEN / AO#MCH + AOSETP * AOSCRW / V6OPTR ) * FLOAT ( TIQTYP ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC ,
+		CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( TIQTYP ) RHRS ,
+		AO#MEN / AO#MCH RCRW ,
+		AOSETP / V6OPTR * FLOAT ( TIQTYP ) SHRS ,
+		AOSCRW SCRW ,
+		CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END RRAT ,
+		V6OPTR SRAT
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			BATCH = TIBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+				C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = TIPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = TIPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = TIPART
+		LEFT OUTER JOIN LGDAT . RESRE ON
+			ABDEPT = AODEPT AND
+			ABRESC = AORESC
+		LEFT OUTER JOIN LGDAT . DEPTS ON
+			ABDEPT = AADEPT
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = TIDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN = 1 AND
+		TIQTYP <> 0 AND
+		AAOSRV = 'N' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'ALS' ,
+		DIGITS ( GOPYCL ) ACCT ,
+		ROUND ( - CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * AO#MEN / AO#MCH + AOSETP * AOSCRW / V6OPTR ) * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC ,
+		CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( OESQTY ) RHRS ,
+		AO#MEN / AO#MCH RCRW ,
+		AOSETP / V6OPTR * FLOAT ( OESQTY ) SHRS ,
+		AOSCRW SCRW ,
+		CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END RRAT ,
+		V6OPTR SRAT
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = OEPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = OEPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = OEPART
+		LEFT OUTER JOIN LGDAT . RESRE ON
+			ABDEPT = AODEPT AND
+			ABRESC = AORESC
+		LEFT OUTER JOIN LGDAT . DEPTS ON
+			ABDEPT = AADEPT
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN = 1 AND
+		OESQTY <> 0 AND
+		AAOSRV = 'N' ;
+	
+	------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'AVG' ,
+		DIGITS ( GOBDCL ) ACCT ,
+		ROUND ( - CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( TIQTYP ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC ,
+		CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( TIQTYP ) RHRS ,
+		AO#MEN / AO#MCH RCRW ,
+		AOSETP / V6OPTR * FLOAT ( TIQTYP ) SHRS ,
+		AOSCRW SCRW ,
+		CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END RRAT ,
+		V6OPTR SRAT
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			BATCH = TIBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = TIPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = TIPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = TIPART
+		LEFT OUTER JOIN LGDAT . RESRE ON
+			ABDEPT = AODEPT AND
+			ABRESC = AORESC
+		LEFT OUTER JOIN LGDAT . DEPTS ON
+			ABDEPT = AADEPT
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = TIDEPT AND
+			GOCOMP = YACOMP
+
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN = 1 AND
+		TIQTYP <> 0 AND
+		AAOSRV = 'N' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+	
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'AVS' ,
+		DIGITS ( GOBDCL ) ACCT ,
+		ROUND ( - CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC ,
+		CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( OESQTY ) RHRS ,
+		AO#MEN / AO#MCH RCRW ,
+		AOSETP / V6OPTR * FLOAT ( OESQTY ) SHRS ,
+		AOSCRW SCRW ,
+		CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END RRAT ,
+		V6OPTR SRAT
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = OEPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = OEPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = OEPART
+		LEFT OUTER JOIN LGDAT . RESRE ON
+			ABDEPT = AODEPT AND
+			ABRESC = AORESC
+		LEFT OUTER JOIN LGDAT . DEPTS ON
+			ABDEPT = AADEPT
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN = 1 AND
+		OESQTY <> 0 AND
+		AAOSRV = 'N' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'AFG' ,
+		DIGITS ( GOBFCL ) ACCT ,
+		ROUND ( - CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( TIQTYP ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC ,
+		CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( TIQTYP ) RHRS ,
+		AO#MEN / AO#MCH RCRW ,
+		AOSETP / V6OPTR * FLOAT ( TIQTYP ) SHRS ,
+		AOSCRW SCRW ,
+		CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END RRAT ,
+		V6OPTR SRAT
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			BATCH = TIBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = TIPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = TIPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = TIPART
+		LEFT OUTER JOIN LGDAT . RESRE ON
+			ABDEPT = AODEPT AND
+			ABRESC = AORESC
+		LEFT OUTER JOIN LGDAT . DEPTS ON
+			ABDEPT = AADEPT
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = TIDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN = 1 AND
+		TIQTYP <> 0 AND
+		AAOSRV = 'N' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------		
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'AFS' ,
+		DIGITS ( GOBFCL ) ACCT ,
+		ROUND ( - CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		AORESC ,
+		CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( OESQTY ) RHRS ,
+		AO#MEN / AO#MCH RCRW ,
+		AOSETP / V6OPTR * FLOAT ( OESQTY ) SHRS ,
+		AOSCRW SCRW ,
+		CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END RRAT ,
+		V6OPTR SRAT
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = OEPART AND
+			AOPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = OEPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = OEPART
+		LEFT OUTER JOIN LGDAT . RESRE ON
+			ABDEPT = AODEPT AND
+			ABRESC = AORESC
+		LEFT OUTER JOIN LGDAT . DEPTS ON
+			ABDEPT = AADEPT
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN = 1 AND
+		OESQTY <> 0 AND
+		AAOSRV = 'N' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------		
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'ACG' ,
+		DIGITS ( GOOTCL ) ACCT ,
+		ROUND ( - APCOST * FLOAT ( TIQTYP ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			BATCH = TIBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = TIPART AND
+			AOPLNT = NWPLNT
+		INNER JOIN LGDAT . METHDO ON
+			APPART = TIPART AND
+			APPLNT = NWPLNT
+		INNER JOIN LGDAT . DEPTS ON	
+			AADEPT = AODEPT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = TIDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN = 1 AND
+		TIQTYP <> 0 AND
+		AAOSRV = 'Y' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'ACS' ,
+		DIGITS ( GOOTCL ) ACCT ,
+		ROUND ( - APCOST * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		INNER JOIN LGDAT . METHDR ON
+			AOPART = OEPART AND
+			AOPLNT = NWPLNT
+		INNER JOIN LGDAT . METHDO ON
+			APPART = OEPART AND
+			APPLNT = NWPLNT
+		INNER JOIN LGDAT . DEPTS ON	
+			AADEPT = AODEPT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN = 1 AND
+		OESQTY <> 0 AND
+		AAOSRV = 'Y' ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'CPS' ,
+		DIGITS ( GOMTSV ) ACCT ,
+		ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			BATCH = NWBTID
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN = 1 AND
+		OESQTY <> 0 ;
+		
+	------------------------------------------------------------------------------------------------------------------------------------------
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2 . V6RPLN ,
+		- UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+		UIRESC , UIDEPT ,
+		'BMT' ,
+		YACOMP || DIGITS ( Y1INVA ) ACCT ,
+		ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRM ON
+			BATCH = UIBTID
+		LEFT OUTER JOIN LGDAT . STKA A1 ON
+				A1 . V6PART = UIPART AND
+				A1 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . STKA A2 ON
+			A2 . V6PART = UIMTLP AND
+			A2 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = UIMTLP AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = UIMTLP AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = UIMTLP AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = UIMTLP AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( UICDAT ) || CHAR ( UICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( UICDAT ) || CHAR ( UICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . GLIE ON
+			Y1PLNT = NWPLNT AND
+			Y1GLEC = COALESCE ( AWGLED , AVGLED )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = Y1PLNT
+	WHERE
+		A1 . V6RPLN = 1 AND
+		UISEQ# = 10 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2 . V6RPLN ,
+		UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+		UIRESC , UIDEPT ,
+		'ABT' ,
+		DIGITS ( COALESCE ( D . GNSTDM , P . GNSTDM ) ) ACCT ,
+		ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRM ON
+			BATCH = UIBTID
+		LEFT OUTER JOIN LGDAT . STKA A1 ON
+			A1 . V6PART = UIPART AND
+			A1 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . STKA A2 ON
+			A2 . V6PART = UIMTLP AND
+			A2 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = UIMTLP AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = UIMTLP AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = UIMTLP AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = UIMTLP AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( UICDAT ) || CHAR ( UICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( UICDAT ) || CHAR ( UICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCCOM D ON
+			D . GNDEPT = UIDEPT AND
+			D . GNCOMP = YACOMP
+		LEFT OUTER JOIN LGDAT . GLCCOM P ON
+			P . GNDEPT = '' AND
+			P . GNPLNT = NWPLNT AND
+			P . GNCOMP = YACOMP
+	WHERE
+	A1 . V6RPLN = 1 AND
+	UISEQ# = 10 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	 
+	
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'CPG' ,
+		YACOMP || DIGITS ( Y1INVA ) ACCT ,
+		ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) AMT ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			TIBTID = BATCH
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = TIPART
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = TIPART
+		LEFT OUTER JOIN LGDAT . GLIE ON
+			Y1PLNT = NWPLNT AND
+			Y1GLEC = COALESCE ( AWGLED , AVGLED )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN IN ( '2' , '3' ) AND
+		TIQTYP <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+		OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		OERESC , OEDEPT ,
+		'CPS' ,
+		DIGITS ( GOMTSV ) ACCT ,
+		ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * FLOAT ( OESQTY ) * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			BATCH = NWBTID
+		INNER JOIN LGDAT . RPRP ON
+			BATCH = OEBTID
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = OEPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = OEPART AND
+			C1 . IHUNT2 = OEUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = OEPART AND
+			C2 . IHUNT1 = OEUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = OEPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = OEPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = OEPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = OEPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCDEP ON
+			GOCODE = OEDEPT AND
+			GOCOMP = YACOMP
+	WHERE
+		OESEQ# = 10 AND
+		V6RPLN IN ( '2' , '3' ) AND
+		OESQTY <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+		TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+		TIRESC , TIDEPT ,
+		'AMG' ,
+		DIGITS ( COALESCE ( D . GNSTDO , P . GNSTDO ) ) ACCT ,
+		ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * TIQTYP * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) AMT ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRQ ON
+			TIBTID = BATCH
+		LEFT OUTER JOIN LGDAT . STKA ON
+			V6PART = TIPART AND
+			V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+			C1 . IHPART = TIPART AND
+			C1 . IHUNT2 = TIUNIT AND
+			C1 . IHUNT1 = V6UNTI
+		LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+			C2 . IHPART = TIPART AND
+			C2 . IHUNT1 = TIUNIT AND
+			C2 . IHUNT2 = V6UNTI
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = TIPART AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = TIPART AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = TIPART AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = TIPART AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( TICDAT ) || CHAR ( TICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( TICDAT ) || CHAR ( TICTIM )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCCOM D ON
+			D . GNDEPT = TIDEPT AND
+			D . GNCOMP = YACOMP
+		LEFT OUTER JOIN LGDAT . GLCCOM P ON
+			P . GNDEPT = '' AND
+			P . GNPLNT = NWPLNT AND
+			P . GNCOMP = YACOMP
+	WHERE
+		TISEQ# = 10 AND
+		V6RPLN IN ( '2' , '3' ) AND
+		TIQTYP <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+		
+	INSERT INTO QTEMP . T
+	SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'AMS' ,
+	DIGITS ( COALESCE ( D . GNSTDO , P . GNSTDO ) ) ACCT ,
+	ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * OESQTY * COALESCE ( ( C1 . IHCNV1 / C1 . IHCNV2 ) , ( C2 . IHCNV2 / C2 . IHCNV1 ) , FLOAT ( 1 ) ) , 2 ) AMT ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+	QTEMP . B
+	INNER JOIN LGDAT . RPRH ON
+	NWBTID = BATCH
+	INNER JOIN LGDAT . RPRP ON
+	OEBTID = BATCH
+	LEFT OUTER JOIN LGDAT . STKA ON
+	V6PART = OEPART AND
+	V6PLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT . PUNIT C1 ON
+	C1 . IHPART = OEPART AND
+	C1 . IHUNT2 = OEUNIT AND
+	C1 . IHUNT1 = V6UNTI
+	LEFT OUTER JOIN LGDAT . PUNIT C2 ON
+	C2 . IHPART = OEPART AND
+	C2 . IHUNT1 = OEUNIT AND
+	C2 . IHUNT2 = V6UNTI
+	LEFT OUTER JOIN LGDAT . ICSTP ON
+	CHPART = OEPART AND
+	CHPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT . ICSTM ON
+	CGPART = OEPART AND
+	CGPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT . ICSTR ON
+	Y0PART = OEPART AND
+	Y0PLNT = NWPLNT
+	LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+	PART = OEPART AND
+	PLNT = NWPLNT AND
+	CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( OECDAT ) || CHAR ( OECTIM ) AND
+	CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( OECDAT ) || CHAR ( OECTIM )
+	LEFT OUTER JOIN LGDAT . GLCCOM D ON
+	D . GNDEPT = OEDEPT
+	LEFT OUTER JOIN LGDAT . GLCCOM P ON
+	P . GNPLNT = NWPLNT AND
+	P . GNDEPT = ''
+	WHERE
+	OESEQ# = 10 AND
+	V6RPLN IN ( '2' , '3' ) AND
+	OESQTY <> 0 ;
+		
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2 . V6RPLN ,
+		- UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+		UIRESC , UIDEPT ,
+		'BMT' ,
+		YACOMP || DIGITS ( Y1INVA ) ACCT ,
+		ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRM ON
+			BATCH = UIBTID
+		LEFT OUTER JOIN LGDAT . STKA A1 ON
+			A1 . V6PART = UIPART AND
+			A1 . V6PLNT = SUBSTR ( UIDEPT , 1 , 3 )
+		LEFT OUTER JOIN LGDAT . STKA A2 ON
+			A2 . V6PART = UIMTLP AND
+			A2 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = UIMTLP AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = UIMTLP AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = UIMTLP AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = UIMTLP AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( UICDAT ) || CHAR ( UICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( UICDAT ) || CHAR ( UICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . GLIE ON
+			Y1PLNT = NWPLNT AND
+			Y1GLEC = COALESCE ( AWGLED , AVGLED )
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = Y1PLNT
+	WHERE
+		A1 . V6RPLN IN ( '2' , '3' ) AND
+		UISEQ# = 10 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	
+		
+		
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2 . V6RPLN ,
+		UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+		UIRESC , UIDEPT ,
+		'ABT' ,
+		DIGITS ( COALESCE ( D . GNSTDM , P . GNSTDM ) ) ACCT ,
+		ROUND ( COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . B
+		INNER JOIN LGDAT . RPRH ON
+			NWBTID = BATCH
+		INNER JOIN LGDAT . RPRM ON
+			BATCH = UIBTID
+		LEFT OUTER JOIN LGDAT . STKA A1 ON
+			A1 . V6PART = UIPART AND
+			A1 . V6PLNT = SUBSTR ( UIDEPT , 1 , 3 )
+		LEFT OUTER JOIN LGDAT . STKA A2 ON
+			A2 . V6PART = UIMTLP AND
+			A2 . V6PLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTP ON
+			CHPART = UIMTLP AND
+			CHPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTM ON
+			CGPART = UIMTLP AND
+			CGPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . ICSTR ON
+			Y0PART = UIMTLP AND
+			Y0PLNT = NWPLNT
+		LEFT OUTER JOIN RLARP . FFCOSTEFFD ON
+			PART = UIMTLP AND
+			PLNT = NWPLNT AND
+			CHAR ( FDT ) || CHAR ( FTM ) <= CHAR ( UICDAT ) || CHAR ( UICTIM ) AND
+			CHAR ( TDT ) || CHAR ( TTM ) >= CHAR ( UICDAT ) || CHAR ( UICTIM )
+		LEFT OUTER JOIN LGDAT . STKMM ON
+			AVPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . STKMP ON
+			AWPART = UIMTLP
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = NWPLNT
+		LEFT OUTER JOIN LGDAT . GLCCOM D ON
+			D . GNDEPT = UIDEPT AND
+			D . GNCOMP = YACOMP
+		LEFT OUTER JOIN LGDAT . GLCCOM P ON
+			P . GNDEPT = '' AND
+			P . GNPLNT = NWPLNT AND
+			P . GNCOMP = YACOMP
+	WHERE
+		A1 . V6RPLN IN ( '2' , '3' ) AND
+		UISEQ# = 10 ;
+		
+	------------------------------------------------------------------------------------------------------------------------------------------	
+
+	INSERT INTO
+		QTEMP . T
+	SELECT
+		'OOBP' , WRKO , BTCH , 0 , SEQ# , '' , '' , 0 , '' , ADEP , 'OBP' ,
+		DIGITS ( COALESCE ( D . GNSTDM , P . GNSTDM ) ) ,
+		- ROUND ( SUM ( AMNT ) , 2 ) ,
+		'' , 0 , 0 , 0 , 0 , 0 , 0
+	FROM
+		QTEMP . T
+		LEFT OUTER JOIN LGDAT . PLNT ON
+			YAPLNT = SUBSTR ( ADEP , 1 , 3 )
+		LEFT OUTER JOIN LGDAT . GLCCOM D ON
+			D . GNDEPT = ADEP AND
+			D . GNCOMP = YACOMP
+		LEFT OUTER JOIN LGDAT . GLCCOM P ON
+			P . GNPLNT = SUBSTR ( ADEP , 1 , 3 ) AND
+			P . GNDEPT = '' AND
+			P . GNCOMP = YACOMP
+	GROUP BY
+		'OOBP' , WRKO , BTCH , 0 , SEQ# , ADEP ,
+		DIGITS ( COALESCE ( D . GNSTDM , P . GNSTDM ) )
+	HAVING
+		ROUND ( SUM ( AMNT ) , 2 ) <> 0 ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------	
+		
+	INSERT INTO RLARP . FFPDGLR1 SELECT * FROM QTEMP . T ;
+
+	------------------------------------------------------------------------------------------------------------------------------------------
+
+	DROP TABLE QTEMP . T ;
+	DROP TABLE QTEMP . B ;
+	OPEN C1 ;
+END 
+

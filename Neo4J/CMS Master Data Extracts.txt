@@ -1,0 +1,42 @@
+--------
+SELECT
+	AVPART "part",
+	AVDES1 "descr",
+	AVDES2 "descr2",
+	AVDES3 "descr3",
+	AVMING "minor_group",
+	AVUNTI "unit_of_meaure",
+	AVMAJG "major_group",
+	AVMAJS "sales_major",
+	AVMINS "sales_minor",
+	AVGLCD "distribution_code",
+	AVGLED "expense_code",
+	AVHARM "harmonization",
+	AVCLSS "inventory_class",
+	AVNWHT "net_weight",
+	AVNWUN "net_weight_uom",
+	AVSVOL "shipping_volume",
+	AVSVUN "shipping_volume_uom",
+	AVENGC "engineering_change",
+	AVREVL "revision_level",
+	AVRDAT "revision_date",
+	AVDPLT "default_plant",
+	AVCPT "customer_part",
+	AVASSC "assemplby_code",
+	AVTYPE "stock_type"
+FROM 
+	RLARP.VW_FFSTKMX
+	
+------------major groups----------
+SELECT	
+	BQGRP "major_group",
+	BQDES "description"
+FROM
+	LGDAT.MAJG
+	
+	
+-----------minor gorups------------
+SELECT DISTINCT 
+	BRMGRP "minor_group", BRDES "description"
+FROM 
+	LGDAT.MMGP

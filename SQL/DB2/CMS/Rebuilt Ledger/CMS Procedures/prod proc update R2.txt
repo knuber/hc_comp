@@ -1,0 +1,1227 @@
+CREATE PROCEDURE FANALYSIS.SP_PDGLR1 (IN PERD VARCHAR(4))
+LANGUAGE SQL 
+
+BEGIN
+	
+
+----------------------------------------------Overview------------------------------------------------------------------
+/*
+this logic produces standard cost transactions for reported production (RPRH, RPRQ, RPRM, RPRP) utilizing
+the METHD(X) files. The assumption is that the METHD(x) files remain unchanges since the last cost roll. 
+Violations of this assumption will turn up as an out of balance journal entry for which a plug line is setup under
+the action code 'OBP' (out of balance posting).
+
+This logic only works when there is only one reporting point per part number.
+
+There are 2 sections, the first is for items flagged with procurement type 1 (STKA.V6RPLN)
+the second is for items flagged as 2 or 3. Since the standard BOM shoudl not be used, any difference between
+the completed item reported and the items reported as being used to make it is credited to a misc absorption code
+
+each debit or credit is processed as an sql statement block below populating to a temp table until complete
+the temp table contents are then checked for out of balance and moved to QGPL.FFPDGLR1
+*/
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+--setup temp table to hold batches that need transactions
+------------------------------------------------------------------------------------------------------------------------
+DECLARE GLOBAL TEMPORARY TABLE B ( BATCH INT ) ;
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+--setup a temp table to hold rebuilt accounting transactions
+------------------------------------------------------------------------------------------------------------------------
+DECLARE GLOBAL TEMPORARY TABLE T (
+SRCE CHAR ( 4 ) ,
+WRKO VARCHAR ( 20 ) ,
+BTCH INT ,
+ENT# INT ,
+SEQ# INT ,
+PART VARCHAR ( 20 ) ,
+RPLN CHAR ( 1 ) ,
+PQTY FLOAT ,
+ARSC VARCHAR ( 5 ) ,
+ADEP VARCHAR ( 5 ) ,
+ACTN VARCHAR ( 3 ) ,
+ACCT CHAR ( 12 ) ,
+AMNT DECIMAL ( 14 , 2 ) ,
+SRSC VARCHAR ( 5 ) ,
+RHRS FLOAT ,
+RCRW FLOAT ,
+SHRS FLOAT ,
+SCRW FLOAT ,
+RATE FLOAT ,
+SIZE FLOAT
+) ;
+
+--populate temp table with target transactions
+--target transactions are any RPRH records with specified fiscal period that don't have a matching batch in FFPDGLR1
+INSERT INTO QTEMP.B
+SELECT DISTINCT
+	NWBTID
+FROM
+	LGDAT.RPRH
+	EXCEPTION JOIN QGPL.FFPDGLR1 ON
+		BTID = NWBTID
+WHERE
+	DIGITS ( NWFSYY ) || DIGITS ( NWFSPP ) = PERD AND
+	NWPOST = 'Y' ;
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--completed good production, good pieces going into inventory account at GLIE.Y1INVA using action code 'CPG'
+--valuation is standard cost effective batch creation time
+-------------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'CPG' ,
+	YACOMP || DIGITS ( Y1INVA ) ACCT ,
+	COALESCE ( TOT , 0 ) * TIQTYP * COALESCE (FACTOR , FLOAT ( 1 ) ) AMT ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM	
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		TIBTID = BATCH
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT ON
+		IHPART = TIPART AND
+		IHUNT1 = TIUNIT AND
+		IHUNT2 = V6UNTI
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = TIPART AND
+		PLNT = NWPLNT AND
+		FST <= CHAR FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= CHAR FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN QGPL.VW_FFSTKMX ON
+		AVPART = TIPART
+	LEFT OUTER JOIN LGDAT.GLIE ON
+		Y1PLNT = NWPLNT AND
+		Y1GLEC = COALESCE ( AWGLED , AVGLED )
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN = 1 AND
+	TIQTYP <> 0 ;
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the standard bill of materials to the reported good pieces as a credit
+--against the applicable GLCCOM.GNSTDM account using action code 'SBG'
+-------------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , AQMTLP , A2.V6RPLN ,
+	- FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( TIQTYP ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'SBG' ,
+	DIGITS ( COALESCE ( D.GNSTDM , P.GNSTDM ) ) ACCT ,
+	ROUND ( - COALESCE ( TOT , 0 ) * FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( TIQTYP ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		BATCH = TIBTID
+	INNER JOIN LGDAT.STKA A1 ON
+		A1.V6PART = TIPART AND
+		A1.V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT ON
+		IHPART = TIPART AND
+		IHUNT2 = TIUNIT AND
+		IHUNT1 = A1.V6UNTI
+	INNER JOIN LGDAT.METHDM ON
+		AQPART = TIPART AND
+		AQPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.STKA A2 ON
+		A2.V6PART = AQMTLP AND
+		A2.V6PLNT = AQPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = AQMTLP AND
+		PLNT = NWPLNT AND
+		FST <= CHAR FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= CHAR FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = TIDEPT AND
+		D.GNCOMP = YACOMP
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNDEPT = '' AND
+		P.GNPLNT = NWPLNT AND
+		P.GNCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	A1.V6RPLN = 1 AND
+	TIQTYP <> 0 ;
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the standard bill of materials to the reported scrap pieces (RPRP) as a credit
+--against the applicable GLCCOM.GNSTDM account using action code 'SBS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , AQMTLP , A2.V6RPLN ,
+	- FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'SBS' ,
+	DIGITS ( COALESCE ( D.GNSTDM , P.GNSTDM ) ) ACCT ,
+	ROUND ( - COALESCE ( TOT , 0 ) * FLOAT ( AQQPPC / AQQTYM ) / FLOAT ( 1 - AQSCRP / 100 ) * CASE AQRQBY WHEN 'B' THEN - 1 ELSE 1 END * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	INNER JOIN LGDAT.STKA A1 ON
+		A1.V6PART = OEPART AND
+		A1.V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = A1.V6UNTI
+	INNER JOIN LGDAT.METHDM ON
+		AQPART = OEPART AND
+		AQPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.STKA A2 ON
+		A2.V6PART = AQMTLP AND
+		A2.V6PLNT = AQPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = AQMTLP AND
+		PLNT = NWPLNT AND
+		FST <= CHAR FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= CHAR FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = OEDEPT AND
+		D.GNCOMP = YACOMP
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNDEPT = '' AND
+		P.GNPLNT = NWPLNT AND
+		P.GNCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	A1.V6RPLN = 1 AND
+	OESQTY <> 0 ;
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the scrap allowance built into the routing to the good pieces reported
+--against the applicable GLCDEP.GOMTSV account using action code 'ASG'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	- FLOAT ( TIQTYP ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'ASG' ,
+	DIGITS ( GOMTSV ) ACCT ,
+	- ROUND ( COALESCE ( TOT , 0 ) * FLOAT ( TIQTYP ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		BATCH = TIBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = TIPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = TIPART AND
+		PLNT = NWPLNT AND
+		FST <= CHAR FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= CHAR FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = TIDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN = 1 AND
+	- FLOAT ( TIQTYP ) * ( 1 - FLOAT ( AOEFF ) / 100 ) <> 0 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the scrap allowance built into the routing to the scrap pieces reported
+--against the applicable GLCDEP.GOMTSV account using action code 'ASS'
+-------------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	- FLOAT ( OESQTY ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( FACTOR, FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'ASS' ,
+	DIGITS ( GOMTSV ) ACCT ,
+	- ROUND ( COALESCE ( TOT , 0 ) * FLOAT ( OESQTY ) * ( 1 - FLOAT ( AOEFF ) / 100 ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = OEPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = OEPART AND
+		PLNT = NWPLNT AND
+		FST <= CHAR FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= CHAR FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN = 1 AND
+	- FLOAT ( OESQTY ) * ( 1 - FLOAT ( AOEFF ) / 100 ) <> 0 ;
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the labor allowance built into the routing to the good pieces reported
+--against the applicable GLCDEP.GOPYCL account using action code 'ALG'
+-------------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'ALG' ,
+	DIGITS ( GOPYCL ) ACCT ,
+	ROUND ( - CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * AO#MEN / AO#MCH + AOSETP * AOSCRW / V6OPTR ) * FLOAT ( TIQTYP ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC ,
+	CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( TIQTYP ) RHRS ,
+	AO#MEN / AO#MCH RCRW ,
+	AOSETP / V6OPTR * FLOAT ( TIQTYP ) SHRS ,
+	AOSCRW SCRW ,
+	CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END RRAT ,
+	V6OPTR SRAT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		BATCH = TIBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = TIPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.RESRE ON
+		ABDEPT = AODEPT AND
+		ABRESC = AORESC
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		ABDEPT = AADEPT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = TIDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN = 1 AND
+	TIQTYP <> 0 ;
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the labor allowance built into the routing to the scrap pieces reported
+--against the applicable GLCDEP.GOPYCL account using action code 'ALS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'ALS' ,
+	DIGITS ( GOPYCL ) ACCT ,
+	ROUND ( - CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * AO#MEN / AO#MCH + AOSETP * AOSCRW / V6OPTR ) * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC ,
+	CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( OESQTY ) RHRS ,
+	AO#MEN / AO#MCH RCRW ,
+	AOSETP / V6OPTR * FLOAT ( OESQTY ) SHRS ,
+	AOSCRW SCRW ,
+	CASE ABLABR WHEN 0 THEN IFNULL ( AASTDR , 0 ) ELSE IFNULL ( ABLABR , 0 ) END RRAT ,
+	V6OPTR SRAT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = OEPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	LEFT OUTER JOIN LGDAT.RESRE ON
+		ABDEPT = AODEPT AND
+		ABRESC = AORESC
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		ABDEPT = AADEPT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN = 1 AND
+	OESQTY <> 0 ;
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the variable overhead allowance built into the routing to the good pieces reported
+--against the applicable GLCDEP.GOBDCL account using action code 'AVG'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'AVG' ,
+	DIGITS ( GOBDCL ) ACCT ,
+	ROUND ( - CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( TIQTYP ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC ,
+	CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( TIQTYP ) RHRS ,
+	AO#MEN / AO#MCH RCRW ,
+	AOSETP / V6OPTR * FLOAT ( TIQTYP ) SHRS ,
+	AOSCRW SCRW ,
+	CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END RRAT ,
+	V6OPTR SRAT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		BATCH = TIBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = TIPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.RESRE ON
+		ABDEPT = AODEPT AND
+		ABRESC = AORESC
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		ABDEPT = AADEPT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = TIDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN = 1 AND
+	TIQTYP <> 0 ;
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the variable overhead allowance built into the routing to the scrap pieces reported
+--against the applicable GLCDEP.GOBDCL account using action code 'AVS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'AVS' ,
+	DIGITS ( GOBDCL ) ACCT ,
+	ROUND ( - CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC ,
+	CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( OESQTY ) RHRS ,
+	AO#MEN / AO#MCH RCRW ,
+	AOSETP / V6OPTR * FLOAT ( OESQTY ) SHRS ,
+	AOSCRW SCRW ,
+	CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END RRAT ,
+	V6OPTR SRAT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = OEPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.RESRE ON
+		ABDEPT = AODEPT AND
+		ABRESC = AORESC
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		ABDEPT = AADEPT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN = 1 AND
+	OESQTY <> 0 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the fixed overhead allowance built into the routing to the good pieces reported
+--against the applicable GLCDEP.GOBFCL account using action code 'AFG'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'AFG' ,
+	DIGITS ( GOBFCL ) ACCT ,
+	ROUND ( - CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( TIQTYP ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC ,
+	CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( TIQTYP ) RHRS ,
+	AO#MEN / AO#MCH RCRW ,
+	AOSETP / V6OPTR * FLOAT ( TIQTYP ) SHRS ,
+	AOSCRW SCRW ,
+	CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END RRAT ,
+	V6OPTR SRAT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		BATCH = TIBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = TIPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.RESRE ON
+		ABDEPT = AODEPT AND
+		ABRESC = AORESC
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		ABDEPT = AADEPT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = TIDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN = 1 AND
+	TIQTYP <> 0 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the fixed overhead allowance built into the routing to the scrap pieces reported
+--against the applicable GLCDEP.GOBFCL account using action code 'AFS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'AFS' ,
+	DIGITS ( GOBFCL ) ACCT ,
+	ROUND ( - CASE ABBRDR WHEN 0 THEN IFNULL ( AABRDR , 0 ) ELSE IFNULL ( ABBRDR , 0 ) END * ( CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END + AOSETP / V6OPTR ) * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	AORESC ,
+	CASE AORUNS WHEN 0 THEN 0 ELSE 1 / AORUNS END * FLOAT ( OESQTY ) RHRS ,
+	AO#MEN / AO#MCH RCRW ,
+	AOSETP / V6OPTR * FLOAT ( OESQTY ) SHRS ,
+	AOSCRW SCRW ,
+	CASE ABVBRD WHEN 0 THEN IFNULL ( AAVBRD , 0 ) ELSE IFNULL ( ABVBRD , 0 ) END RRAT ,
+	V6OPTR SRAT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN LQGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDR ON
+		AOPART = OEPART AND
+		AOPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.RESRE ON
+		ABDEPT = AODEPT AND
+		ABRESC = AORESC
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		ABDEPT = AADEPT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN = 1 AND
+	OESQTY <> 0 ;
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the subcontract allowance built into the routing to the good pieces reported
+--against the applicable GLCDEP.GOOTCL account using action code 'ACG'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE (FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'ACG' ,
+	DIGITS ( GOOTCL ) ACCT ,
+	ROUND ( - APCOST * FLOAT ( TIQTYP ) * COALESCE (FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		BATCH = TIBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDO ON
+		APPART = TIPART AND
+		APPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = TIDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN = 1 AND
+	TIQTYP <> 0 ;
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--apply the subcontract allowance built into the routing to the scrap pieces reported
+--against the applicable GLCDEP.GOOTCL account using action code 'ACS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'ACS' ,
+	DIGITS ( GOOTCL ) ACCT ,
+	ROUND ( - APCOST * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	INNER JOIN LGDAT.METHDO ON
+		APPART = OEPART AND
+		APPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN = 1 AND
+	OESQTY <> 0 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--debit completed scrap pieces reported at totals standard cost to the applicable GLCDEP.GOMTSV account using action code 'CPS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'CPS' ,
+	DIGITS ( GOMTSV ) ACCT ,
+	ROUND ( COALESCE ( TOT , 0 ) * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		BATCH = NWBTID
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN LQGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = OEPART AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN = 1 AND
+	OESQTY <> 0 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--credit actual bill of materials used at total standard cost from the applicable GLIE.Y1INVA account using action code 'BMT'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2.V6RPLN ,
+	- UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+	UIRESC , UIDEPT ,
+	'BMT' ,
+	YACOMP || DIGITS ( Y1INVA ) ACCT ,
+	ROUND ( - COALESCE ( TOT , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRM ON
+		BATCH = UIBTID
+	LEFT OUTER JOIN LGDAT.STKA A1 ON
+		A1.V6PART = UIPART AND
+		A1.V6PLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.STKA A2 ON
+		A2.V6PART = UIMTLP AND
+		A2.V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = UIMTLP AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.VW_FFSTKMX ON
+		AVPART = UIMTLP
+	LEFT OUTER JOIN LGDAT.GLIE ON
+		Y1PLNT = NWPLNT AND
+		Y1GLEC = AVGLED
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = Y1PLNT
+WHERE
+	A1.V6RPLN = 1 AND
+	UISEQ# = 10 ;
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--debit actual bill of mat used at total standard cost to the applicable GLCCOM.GNSTDM MUV account using action code 'ABT'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2.V6RPLN ,
+	UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+	UIRESC , UIDEPT ,
+	'ABT' ,
+	DIGITS ( COALESCE ( D.GNSTDM , P.GNSTDM ) ) ACCT ,
+	ROUND ( COALESCE ( TOT , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRM ON
+		BATCH = UIBTID
+	LEFT OUTER JOIN LGDAT.STKA A1 ON
+		A1.V6PART = UIPART AND
+		A1.V6PLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.STKA A2 ON
+		A2.V6PART = UIMTLP AND
+		A2.V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = UIMTLP AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = UIDEPT AND
+		D.GNCOMP = YACOMP
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNDEPT = '' AND
+		P.GNPLNT = NWPLNT AND
+		P.GNCOMP = YACOMP
+WHERE
+	A1.V6RPLN = 1 AND
+	UISEQ# = 10 ;
+
+
+
+-------------------------------------This starts the section where the reported item is not a prodcution item---------------------------
+
+-------------------------------------------------------------------------------------------------------------------------------
+--completed good production, good pieces going into inventory account at GLIE.Y1INVA using action code 'CPG'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'CPG' ,
+	YACOMP || DIGITS ( Y1INVA ) ACCT ,
+	ROUND ( COALESCE ( TOT , 0 ) * TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) AMT ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		TIBTID = BATCH
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = TIPART AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN QGPL.VW_FFSTKMX ON
+		AVPART = TIPART
+	LEFT OUTER JOIN LGDAT.GLIE ON
+		Y1PLNT = NWPLNT AND
+		Y1GLEC = AVGLED
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN IN ( '2' , '3' ) AND
+	TIQTYP <> 0 ;
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--completed scrap production, total standard cost of pieces reported debited to GLCDEP.GOMTSV under action code 'CPS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'CPS' ,
+	DIGITS ( GOMTSV ) ACCT ,
+	ROUND ( COALESCE ( TOT , 0 ) * FLOAT ( OESQTY ) * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		BATCH = NWBTID
+	INNER JOIN LGDAT.RPRP ON
+		BATCH = OEBTID
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = OEPART AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCDEP ON
+		GOCODE = OEDEPT AND
+		GOCOMP = YACOMP
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN IN ( '2' , '3' ) AND
+	OESQTY <> 0 ;
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--total value of good pieces completed credited from GLCCOM.GNSTDO under code 'AMG'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRQ' , TIJOB# , TIBTID , TIENT# , TISEQ# , TIPART , V6RPLN ,
+	TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	TIRESC , TIDEPT ,
+	'AMG' ,
+	DIGITS ( COALESCE ( D.GNSTDO , P.GNSTDO ) ) ACCT ,
+	ROUND ( - COALESCE ( TOT , 0 ) * TIQTYP * COALESCE ( FACTOR , FLOAT ( 1 ) ) , 2 ) AMT ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRQ ON
+		TIBTID = BATCH
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = TIPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = TIPART AND
+		C1.IHUNT2 = TIUNIT AND
+		C1.IHUNT1 = V6UNTI
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = TIPART AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9)) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = TIDEPT AND
+		D.GNCOMP = YACOMP
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNDEPT = '' AND
+		P.GNPLNT = NWPLNT AND
+		P.GNCOMP = YACOMP
+WHERE
+	TISEQ# = 10 AND
+	V6RPLN IN ( '2' , '3' ) AND
+	TIQTYP <> 0 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--total value of scrap pieces completed credited from GLCCOM.GNSTDO under code 'AMS'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRP' , OEJOB# , OEBTID , OEENT# , OESEQ# , OEPART , V6RPLN ,
+	OESQTY * COALESCE ( FACTOR , FLOAT ( 1 ) ) ,
+	OERESC , OEDEPT ,
+	'AMS' ,
+	DIGITS ( COALESCE ( D.GNSTDO , P.GNSTDO ) ) ACCT ,
+	ROUND ( - COALESCE ( FCOST , CGSTCS , CHSTCS , Y0STCS , 0 ) * OESQTY * COALESCE ( FACTOR, FLOAT ( 1 ) ) , 2 ) AMT ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRP ON
+		OEBTID = BATCH
+	LEFT OUTER JOIN LGDAT.STKA ON
+		V6PART = OEPART AND
+		V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.VW_FFUNIT C1 ON
+		C1.IHPART = OEPART AND
+		C1.IHUNT2 = OEUNIT AND
+		C1.IHUNT1 = V6UNTI
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = OEPART AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = OEDEPT
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNPLNT = NWPLNT AND
+		P.GNDEPT = ''
+WHERE
+	OESEQ# = 10 AND
+	V6RPLN IN ( '2' , '3' ) AND
+	OESQTY <> 0 ;
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--total standard cost of reported bill of mat credited from GLIE.Y1INVA under code 'BMT'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2.V6RPLN ,
+	- UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+	UIRESC , UIDEPT ,
+	'BMT' ,
+	YACOMP || DIGITS ( Y1INVA ) ACCT ,
+	ROUND ( - COALESCE ( TOT , 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRM ON
+		BATCH = UIBTID
+	LEFT OUTER JOIN LGDAT.STKA A1 ON
+		A1.V6PART = UIPART AND
+		A1.V6PLNT = SUBSTR ( UIDEPT , 1 , 3 )
+	LEFT OUTER JOIN LGDAT.STKA A2 ON
+		A2.V6PART = UIMTLP AND
+		A2.V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = UIMTLP AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9)) AND
+		TST >= CFANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN QGPL.VW_FFSTKMX ON
+		AVPART = UIMTLP
+	LEFT OUTER JOIN LGDAT.GLIE ON
+		Y1PLNT = NWPLNT AND
+		Y1GLEC = AVGLED
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = Y1PLNT
+WHERE
+	A1.V6RPLN IN ( '2' , '3' ) AND
+	UISEQ# = 10 ;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--total standard cost of reported bill of mat debited to GLCCOM.GNSTDM under code 'ABT'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'RPRM' , UIJOB# , UIBTID , UIENT# , UISEQ# , UIMTLP , A2.V6RPLN ,
+	UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END ,
+	UIRESC , UIDEPT ,
+	'ABT' ,
+	DIGITS ( COALESCE ( D.GNSTDM , P.GNSTDM ) ) ACCT ,
+	ROUND ( COALESCE ( TOT, 0 ) * UITQTY * CASE UIRQBY WHEN 'B' THEN - 1 ELSE 1 END , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = BATCH
+	INNER JOIN LGDAT.RPRM ON
+		BATCH = UIBTID
+	LEFT OUTER JOIN LGDAT.STKA A1 ON
+		A1.V6PART = UIPART AND
+		A1.V6PLNT = SUBSTR ( UIDEPT , 1 , 3 )
+	LEFT OUTER JOIN LGDAT.STKA A2 ON
+		A2.V6PART = UIMTLP AND
+		A2.V6PLNT = NWPLNT
+	LEFT OUTER JOIN QGPL.FFICSTX ON
+		PART = UIMTLP AND
+		PLNT = NWPLNT AND
+		FST <= FANALYSIS.fn_NWFUT9(NWFUT9) AND
+		TST >= FANALYSIS.fn_NWFUT9(NWFUT9)
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = NWPLNT
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = UIDEPT AND
+		D.GNCOMP = YACOMP
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNDEPT = '' AND
+		P.GNPLNT = NWPLNT AND
+		P.GNCOMP = YACOMP
+WHERE
+	A1.V6RPLN IN ( '2' , '3' ) AND
+	UISEQ# = 10 ;
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+--create a plug entry for items that don't balance under account GNSTDM and code 'OBP'
+-------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO QTEMP.T
+SELECT
+	'OOBP' , WRKO , BTCH , 0 , SEQ# , '' , '' , 0 , '' , ADEP , 'OBP' ,
+	DIGITS ( COALESCE ( D.GNSTDM , P.GNSTDM ) ) ,
+	- ROUND ( SUM ( AMNT ) , 2 ) ,
+	'' , 0 , 0 , 0 , 0 , 0 , 0
+FROM
+	QTEMP.T
+	LEFT OUTER JOIN LGDAT.PLNT ON
+		YAPLNT = SUBSTR ( ADEP , 1 , 3 )
+	LEFT OUTER JOIN LGDAT.GLCCOM D ON
+		D.GNDEPT = ADEP AND
+		D.GNCOMP = YACOMP
+	LEFT OUTER JOIN LGDAT.GLCCOM P ON
+		P.GNPLNT = SUBSTR ( ADEP , 1 , 3 ) AND
+		P.GNDEPT = '' AND
+		P.GNCOMP = YACOMP
+GROUP BY
+	'OOBP' , WRKO , BTCH , 0 , SEQ# , ADEP ,
+	DIGITS ( COALESCE ( D.GNSTDM , P.GNSTDM ) )
+HAVING
+	ROUND ( SUM ( AMNT ) , 2 ) <> 0 ;
+
+
+INSERT INTO QGPL.FFPDGLR1 SELECT * FROM QTEMP.T ;
+DELETE FROM QGPL.FFPDGLR1_E ;
+DELETE FROM QGPL.FFRPRR_E ;
+INSERT INTO QGPL.FFPDGLR1_E SELECT * FROM QTEMP.T ;
+
+INSERT INTO QGPL.FFRPRR_E
+SELECT
+	OABTID ,
+	OAENT# ,
+	OADEPT ,
+	OARESC ,
+	OARDAT ,
+	OASHFT ,
+	OASHGP ,
+	OAPART ,
+	OAJOB# ,
+	OASEQ# ,
+	OAQTYG ,
+	OAQTYS ,
+	OAUNIT ,
+	OATIME ,
+	OASDAT ,
+	OASTIM ,
+	OATMZN ,
+	OAEDAT ,
+	OAETIM ,
+	OASRCE ,
+	OASTAT ,
+	OAPOST ,
+	OAFUT01 ,
+	DIGITS ( NWFSYY ) || DIGITS ( NWFSPP ) ,
+	NWLABL ,
+	NWPLNT
+FROM
+	QTEMP.B
+	INNER JOIN LGDAT.RPRR R ON
+		R.OABTID = BATCH
+	INNER JOIN LGDAT.RPRH ON
+		NWBTID = OABTID ;
+
+DROP TABLE QTEMP.T ;
+DROP TABLE QTEMP.B ;
+	
+
+END 
