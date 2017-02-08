@@ -21168,10 +21168,10 @@ CREATE PROCEDURE RLARP.SB_UD_R2 (
 	 
 	/* 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
-	|																	Void Checks																		| 
+	|     								Void Checks									    | 
 	|___________________________________________________________________________________________________________________________________________________|				 
-	|Voided check transactions APVC post to the anchor file GLSBAP with a hook to the check number whihc is used to go back and embed voucher & invoice	| 
-	|The data natively exists with the appropriate level of granularity for reporting and is also accurate												| 
+	|Voided check transactions APVC post to the anchor file GLSBAP with a hook to the check number whihc is used to go back and embed voucher & invoice | 
+	|The data natively exists with the appropriate level of granularity for reporting and is also accurate						    | 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
 	*/ 
   
@@ -21224,11 +21224,11 @@ CREATE PROCEDURE RLARP.SB_UD_R2 (
   
 	/* 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
-	|																	Voucher Posting																	| 
+	|				Voucher Posting													    | 
 	|___________________________________________________________________________________________________________________________________________________|				 
-	|Voucher postings are transacted without reference to the 3-way match data																			| 
-	|this module currently only gets half way there because of complications around manually changing the accounts or amounts involved in the voucher	| 
-	|The PO & description are linked in, but ideally we would have the master receipt key which is the common thread for reporting						| 
+	|Voucher postings are transacted without reference to the 3-way match data									    | 
+	|this module currently only gets half way there because of complications around manually changing the accounts or amounts involved in the voucher   | 
+	|The PO & description are linked in, but ideally we would have the master receipt key which is the common thread for reporting			    | 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
 	*/ 
 	 -----need to look at a new approach where the POMVAR linkage is setup if matching was used, otherwise default to this logic 
