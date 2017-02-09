@@ -1,5 +1,6 @@
 ﻿
 WITH 
+	----------------ADP Checks-------------
 	ADPC (
 		adp_comp, 
 		employee, 
@@ -23,6 +24,7 @@ WITH
 		WHERE
 			gl_descr = 'NET PAY'
 	),
+	--------------Bank Checks-----------------
 	BANK (
 		aodate,
 		trans,
@@ -44,11 +46,11 @@ WITH
 			LEFT JOIN LATERAL regexp_matches(rec->>'Reference','([^''0].*)','g') CHK ON TRUE
 		WHERE
 			srce = 'PNCC' AND
-			rec @> $${"Transaction":"Checks Paid","AccountName":"The HC Operating Company PAYR"}$$
+			rec @> '{"Transaction":"Checks Paid","AccountName":"The HC Operating Company PAYR"}'::jsonb
 		ORDER BY
 			CHK[1]::numeric asc
 	)
-
+--------merge and get difference-------------
 SELECT
 	ADP_COMP,
 	PAY_DATE,

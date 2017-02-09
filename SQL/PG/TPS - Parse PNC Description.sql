@@ -30,7 +30,7 @@ from
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','SEC:(.+?) Cust') sec ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','Desc:(.+?) Comp') descr ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','Discr:(.+?)(?=$| SEC:|\w+?:)') discr ON TRUE
-	LEFT JOIN LATERAL regexp_matches(rec->>'Description','([\w].*?)(?=$| -|\s[0-9].*?|[\w/]+?:)') ini ON TRUE
+	LEFT JOIN LATERAL regexp_matches(rec->>'Description','([\w].*?)(?=$| -|\s[0-9].*?|\s[\w/]+?:)') ini ON TRUE
 WHERE
 	srce = 'PNCC' AND
 	rec->>'AsOfDate' >= '2016-10-01'
