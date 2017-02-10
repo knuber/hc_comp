@@ -18,11 +18,18 @@ WITH
 			period_end,
 			checkn::numeric,
 			cms_acct,
-			amount
+			SUM(amount)
 		FROM
 			payroll.adp_rp 
 		WHERE
 			gl_descr = 'NET PAY'
+		GROUP BY
+			adp_comp,
+			employee,
+			to_date(pay_date,'YYMMDD'),
+			period_end,
+			checkn::numeric,
+			cms_acct
 	),
 	--------------Bank Checks-----------------
 	BANK (
@@ -51,34 +58,23 @@ WITH
 			CHK[1]::numeric asc
 	)
 --------merge and get difference-------------
+
 SELECT
-	ADP_COMP,
-	PAY_DATE,
-	SUM(ADP+BANK) OVER (ORDER BY ADP_COMP, PAY_DATE),
-	SUM(BANK) OVER (ORDER BY ADP_COMP, PAY_DATE)
+	ADPC.*,
+	BANK.AODATE,
+	BANK.AMOUNT BAMOUNT,
+	SUM(coalesce(bank.amount,0) + coalesce(adpc.amount,0)) OVER () diff
 FROM
-	(
-		SELECT
-			ADP_COMP, 
-			PAY_DATE, 
-			SUM(AMOUNT) ADP,
-			SUM(BAMOUNT) BANK
-		FROM
-			(
-				SELECT
-					ADPC.*,
-					BANK.AODATE,
-					BANK.AMOUNT BAMOUNT
-				FROM
-					ADPC
-					LEFT JOIN BANK ON
-							BANK.CHECKN = ADPC.CHECKN AND
-							BANK.AMOUNT + ADPC.AMOUNT = 0
-			) X
-		GROUP BY	
-			ADP_COMP,
-			PAY_DATE
-		ORDER BY
-			ADP_COMP,
-			PAY_DATE
-	) S
+	ADPC
+	LEFT JOIN BANK ON
+			BANK.CHECKN = ADPC.CHECKN AND
+			BANK.AMOUNT + ADPC.AMOUNT = 0
+WHERE
+	BANK.AMOUNT IS NULL AND
+	PAY_DATE NOT IN  ('2015-05-15','2015-05-29','2015-06-12','2015-06-26')
+ORDER BY 
+	PAY_DATE ASC
+
+
+--SELECT * FROM tps.trans where rec->>'Reference' ~ '1008' order by unq asc
+--SELECT * FROM payroll.adp_rp where checkn::numeric = 1008 order by cms_acct asc
