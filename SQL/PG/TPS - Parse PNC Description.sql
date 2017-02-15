@@ -47,7 +47,7 @@ from
 	LEFT JOIN LATERAL regexp_matches(rec->>'Reference','([^''0].*)','g') CHK ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','Addenda:(.+?)(?=$|\w+?:)') adde ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','.*(DEBIT|CREDIT).*(USD|CAD).*(DEBIT|CREDIT).*(USD|CAD).*') curr ON TRUE
-	LEFT JOIN LATERAL regexp_matches(rec->>'Description','AC/(\w* ).*AC/(\w* )',) acct(rv) ON TRUE
+	LEFT JOIN LATERAL regexp_matches(rec->>'Description','AC/(\w* ).*AC/(\w* )') acct(rv) ON TRUE
 WHERE
 	srce = 'PNCC'
 order by ini[1] asc
