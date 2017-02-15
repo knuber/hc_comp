@@ -1,11 +1,8 @@
 ﻿
 SELECT 
 	u.srce,
-	u.target,
 	u.unq,
-	--u.retval retval,
-	--v.map value_map,
-	u.retval||coalesce(v.map,'{}'::jsonb) comb
+	tps.jsonb_concat_obj(u.retval||coalesce(v.map,'{}'::jsonb)) comb
 FROM 	
 	--re-aggregate return values and explude any records where one or more regex failed with a null result
 	(
@@ -13,8 +10,9 @@ FROM
 		x.srce,
 		x.target,
 		x.unq, 
-		tps.jsonb_obj_agg_null_atomic(x.rkey) rkey,
-		tps.jsonb_obj_agg_null_atomic(x.retval) AS retval
+		tps.jsonb_concat_obj(x.rkey) rkey,
+		tps.jsonb_concat_obj(x.retval) AS retval,
+		x.seq
 	FROM 
 		--unwrap json instruction and apply regex using a count per original line for re-aggregation
 		( 
@@ -27,7 +25,8 @@ FROM
 				(t.rec -> (e.v ->> 'key'::text))
 			) AS rkey,
 			--array_to_json(mt.mt)::jsonb AS retval,
-			jsonb_build_object(e.v->>'field',array_to_json(mt.mt)) retval
+			jsonb_build_object(e.v->>'field',CASE WHEN array_upper(mt.mt,1)=1 THEN to_json(mt.mt[1]) ELSE array_to_json(mt.mt) END) retval,
+			m.seq
 		FROM 
 			tps.map_rm m
 			LEFT JOIN LATERAL jsonb_array_elements(m.regex->'where') w(v) ON TRUE
@@ -38,6 +37,7 @@ FROM
 			LEFT JOIN LATERAL regexp_matches(t.rec ->> (e.v ->> 'key'::text), e.v ->> 'regex'::text) WITH ORDINALITY mt(mt, rn) ON true
 		ORDER BY 
 			m.srce, 
+			m.seq,
 			m.target, 
 			t.unq, 
 			e.rn
@@ -45,10 +45,14 @@ FROM
 	GROUP BY 
 		x.srce, 
 		x.target, 
-		x.unq
+		x.unq,
+		x.seq
 		
 	) u
 	LEFT OUTER JOIN tps.map_rv v ON
 		v.target = u.target AND
 		v.srce = u.srce AND
 		v.retval <@ u.retval
+GROUP BY
+	u.srce,
+	u.unq

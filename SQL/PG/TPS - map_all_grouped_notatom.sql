@@ -37,7 +37,7 @@ FROM
 					(t.rec -> (e.v ->> 'key'::text))
 				) AS rkey,
 				--array_to_json(mt.mt)::jsonb AS retval,
-				jsonb_build_object(e.v->>'field',array_to_json(mt.mt)) retval
+				jsonb_build_object(e.v->>'field',CASE WHEN array_upper(mt.mt,1)=1 THEN to_json(mt.mt[1]) ELSE array_to_json(mt.mt) END) retval
 			FROM 
 				tps.map_rm m
 				LEFT JOIN LATERAL jsonb_array_elements(m.regex->'where') w(v) ON TRUE
@@ -56,14 +56,12 @@ FROM
 			x.srce, 
 			x.target, 
 			x.unq
-		HAVING
-			tps.jsonb_obj_agg_null_atomic(x.retval) IS NOT NULL
 			
 		) u
 		LEFT OUTER JOIN tps.map_rv v ON
 			v.target = u.target AND
 			v.srce = u.srce AND
-			v.retval = u.retval
+			v.retval <@ u.retval
 		LEFT OUTER JOIN tps.map m ON
 			m.srce = u.srce AND
 			m.item = u.rkey
