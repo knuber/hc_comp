@@ -20,10 +20,8 @@
 	tim[1],
 	chk[1],
 	adde[1],
-	curr[1] cd1,
-	curr[3] cd2,
-	curr[2] cr1,
-	curr[4] cr2,
+	curr1,
+	curr2,
 	acct.rv[1] ac1,
 	acct.rv[2] ac2
 	
@@ -46,7 +44,8 @@ from
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','([\w].*?)(?=$| -|\s[0-9].*?|\s[\w/]+?:)') ini ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Reference','([^''0].*)','g') CHK ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','Addenda:(.+?)(?=$|\w+?:)') adde ON TRUE
-	LEFT JOIN LATERAL regexp_matches(rec->>'Description','.*(DEBIT|CREDIT).*(USD|CAD).*(DEBIT|CREDIT).*(USD|CAD).*') curr ON TRUE
+	LEFT JOIN LATERAL regexp_matches(rec->>'Description','.*(DEBIT|CREDIT).*(USD|CAD).*(?=DEBIT|CREDIT).*(?=USD|CAD).*') curr1 ON TRUE
+	LEFT JOIN LATERAL regexp_matches(rec->>'Description','.*(?=DEBIT|CREDIT).*(?=USD|CAD).*(DEBIT|CREDIT).*(USD|CAD).*') curr2 ON TRUE
 	LEFT JOIN LATERAL regexp_matches(rec->>'Description','AC/(\w* ).*AC/(\w* )') acct(rv) ON TRUE
 WHERE
 	srce = 'PNCC'
