@@ -217,25 +217,17 @@ BEGIN
 		END
 	END
 
-	----------------build oih selectyow--------------------------------------
-	SELECT @SQL = 
-		'SELECT * FROM LGDAT.OIH WHERE '
-		+ '((DHARYR = '+ SUBSTRING(@MINP,1,2)
-		+' AND DHARPR >= ' + SUBSTRING(@MINP,3,2)
-		+ ') OR DHARYR > ' + SUBSTRING(@MINP,1,2)
-		+ ') AND DHTOTI = 0 AND DHINV# NOT  IN ('
-		+ @ILIST + ')'
-
 
 	----------OID--------------------------
 
+	----------------build oid select-----------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SELECT CMD INTO #SD FROM dbo.BUILD_DB2_SELECT('LGDAT','OID') OPTION (MAXRECURSION 1000);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------build oid where cluase-----------------------------------
 	IF @EC = 0
 	BEGIN	
 		SET @SQL = 
@@ -254,42 +246,42 @@ BEGIN
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------make table copy------------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SELECT * INTO #XD FROM LGDAT.OID WHERE 0=1;
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------execute sql to copy--------------------------------------
 	IF @EC = 0
 	BEGIN	
 		INSERT INTO #XD EXECUTE(@SQL) AT CMS;
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------build merge statement------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SELECT * INTO #MD FROM BUILD_MERGE_SMASH('LGDAT','OID','#XD') OPTION (MAXRECURSION 1000);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------move to scalar variable----------------------------------
 	IF @EC = 0
 	BEGIN	
 		SET @SQL = (SELECT CMD FROM #MD);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 	
-	
+	----------------execute sql to copy--------------------------------------
 	IF @EC = 0
 	BEGIN	
 		EXECUTE(@SQL);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------drop temp tables-----------------------------------------
 	IF @EC = 0
 	BEGIN	
 		DROP TABLE #XD;
@@ -302,13 +294,14 @@ BEGIN
 
 	--------------------------OIH--------------------------------
 
+	----------------build select---------------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SELECT CMD INTO #SH FROM dbo.BUILD_DB2_SELECT('LGDAT','OIH') OPTION (MAXRECURSION 1000);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------build where cluase---------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SET @SQL = 
@@ -327,42 +320,42 @@ BEGIN
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------build table copy-----------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SELECT * INTO #XH FROM LGDAT.OIH WHERE 0=1;
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------execute sql to copy--------------------------------------
 	IF @EC = 0
 	BEGIN	
 		INSERT INTO #XH EXECUTE(@SQL) AT CMS;
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------build merge statement------------------------------------
 	IF @EC = 0
 	BEGIN	
 		SELECT * INTO #MH FROM BUILD_MERGE_SMASH('LGDAT','OIH','#XH') OPTION (MAXRECURSION 1000);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------move to scalar variable----------------------------------
 	IF @EC = 0
 	BEGIN	
 		SET @SQL = (SELECT CMD FROM #MH);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 	
-	
+	----------------execute merge--------------------------------------------
 	IF @EC = 0
 	BEGIN	
 		EXECUTE(@SQL);
 		SELECT @EC = @@ERROR, @EM = ERROR_MESSAGE();
 	END
 
-	
+	----------------drop temp tables-----------------------------------------
 	IF @EC = 0
 	BEGIN	
 		DROP TABLE #XH;
