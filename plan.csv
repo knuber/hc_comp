@@ -1,0 +1,78 @@
+QUERY PLAN
+GroupAggregate  (cost=1539350.77..1917348.77 rows=40000 width=68) (actual time=3228.545..3385.427 rows=29836 loops=1)
+  Output: x.srce, x.unq, tps.jsonb_concat_obj(((tps.jsonb_concat_obj(x.retval)) || COALESCE(v.map, '{}'::jsonb)) ORDER BY x.seq)
+  Group Key: x.srce, x.unq
+  Buffers: shared hit=10260
+  ->  Sort  (cost=1539350.77..1542981.52 rows=1452300 width=156) (actual time=3228.489..3232.315 rows=34326 loops=1)
+        Output: x.srce, x.unq, (tps.jsonb_concat_obj(x.retval)), v.map, x.seq
+        Sort Key: x.srce, x.unq
+        Sort Method: quicksort  Memory: 10495kB
+        Buffers: shared hit=10260
+        ->  Merge Left Join  (cost=858933.42..1276535.03 rows=1452300 width=156) (actual time=2141.791..3174.770 rows=34326 loops=1)
+              Output: x.srce, x.unq, (tps.jsonb_concat_obj(x.retval)), v.map, x.seq
+              Merge Cond: ((x.srce = v.srce) AND (x.target = v.target))
+              Join Filter: (v.retval <@ (tps.jsonb_concat_obj(x.retval)))
+              Rows Removed by Join Filter: 1611015
+              Buffers: shared hit=10260
+              ->  GroupAggregate  (cost=858922.60..1254674.35 rows=1452300 width=140) (actual time=2141.650..2388.277 rows=34326 loops=1)
+                    Output: x.srce, x.target, x.unq, NULL::jsonb, tps.jsonb_concat_obj(x.retval), x.seq
+                    Group Key: x.srce, x.target, x.unq, x.seq
+                    Buffers: shared hit=10253
+                    ->  Sort  (cost=858922.60..862553.35 rows=1452300 width=108) (actual time=2141.602..2153.422 rows=106624 loops=1)
+                          Output: x.srce, x.target, x.unq, x.seq, x.retval
+                          Sort Key: x.srce, x.target, x.unq, x.seq
+                          Sort Method: quicksort  Memory: 18067kB
+                          Buffers: shared hit=10253
+                          ->  Subquery Scan on x  (cost=607738.11..625891.86 rows=1452300 width=108) (actual time=1909.278..1933.279 rows=106624 loops=1)
+                                Output: x.srce, x.target, x.unq, x.seq, x.retval
+                                Buffers: shared hit=10253
+                                ->  Sort  (cost=607738.11..611368.86 rows=1452300 width=148) (actual time=1909.276..1920.245 rows=106624 loops=1)
+                                      Output: m.srce, m.target, t.unq, NULL::jsonb, (jsonb_build_object((e.v ->> 'field'::text), CASE WHEN (array_upper(mt.mt, 1) = 1) THEN to_json(mt.mt[1]) ELSE array_to_json(mt.mt) END)), m.seq, e.rn
+                                      Sort Key: m.srce, m.seq, m.target, t.unq, e.rn
+                                      Sort Method: quicksort  Memory: 18067kB
+                                      Buffers: shared hit=10253
+                                      ->  Nested Loop Left Join  (cost=14426.99..349888.88 rows=1452300 width=148) (actual time=50.815..1505.363 rows=106624 loops=1)
+                                            Output: m.srce, m.target, t.unq, NULL::jsonb, jsonb_build_object((e.v ->> 'field'::text), CASE WHEN (array_upper(mt.mt, 1) = 1) THEN to_json(mt.mt[1]) ELSE array_to_json(mt.mt) END), m.seq, e.rn
+                                            Buffers: shared hit=10253
+                                            ->  Nested Loop Left Join  (cost=14426.98..299058.37 rows=1452300 width=851) (actual time=50.730..229.962 rows=106624 loops=1)
+                                                  Output: m.srce, m.target, m.seq, t.unq, t.rec, e.v, e.rn
+                                                  Buffers: shared hit=10253
+                                                  ->  Merge Join  (cost=14426.97..270012.36 rows=14523 width=843) (actual time=50.707..139.781 rows=34326 loops=1)
+                                                        Output: m.srce, m.target, m.seq, m.regex, t.unq, t.rec
+                                                        Merge Cond: (m.srce = t.srce)
+                                                        Join Filter: (t.rec @> w.v)
+                                                        Rows Removed by Join Filter: 144690
+                                                        Buffers: shared hit=10253
+                                                        ->  Nested Loop  (cost=0.16..1277.30 rows=61000 width=136) (actual time=0.024..0.059 rows=6 loops=1)
+                                                              Output: m.srce, m.target, m.seq, m.regex, w.v
+                                                              Buffers: shared hit=2
+                                                              ->  Index Scan using fki_map_rm_srce on tps.map_rm m  (cost=0.15..57.30 rows=610 width=104) (actual time=0.009..0.023 rows=4 loops=1)
+                                                                    Output: m.target, m.srce, m.regex, m.seq
+                                                                    Buffers: shared hit=2
+                                                              ->  Function Scan on pg_catalog.jsonb_array_elements w  (cost=0.01..1.00 rows=100 width=32) (actual time=0.005..0.006 rows=2 loops=4)
+                                                                    Output: w.v
+                                                                    Function Call: jsonb_array_elements((m.regex -> 'where'::text))
+                                                        ->  Sort  (cost=14426.82..14545.86 rows=47617 width=743) (actual time=50.608..77.289 rows=179017 loops=1)
+                                                              Output: t.unq, t.rec, t.srce
+                                                              Sort Key: t.srce
+                                                              Sort Method: quicksort  Memory: 48620kB
+                                                              Buffers: shared hit=10251
+                                                              ->  Seq Scan on tps.trans t  (cost=0.00..10727.17 rows=47617 width=743) (actual time=0.017..16.350 rows=47617 loops=1)
+                                                                    Output: t.unq, t.rec, t.srce
+                                                                    Buffers: shared hit=10251
+                                                  ->  Function Scan on pg_catalog.jsonb_array_elements e  (cost=0.01..1.00 rows=100 width=40) (actual time=0.002..0.002 rows=3 loops=34326)
+                                                        Output: e.v, e.rn
+                                                        Function Call: jsonb_array_elements((m.regex -> 'defn'::text))
+                                            ->  Function Scan on pg_catalog.regexp_matches mt  (cost=0.01..0.02 rows=1 width=32) (actual time=0.010..0.010 rows=1 loops=106624)
+                                                  Output: mt.mt, mt.rn
+                                                  Function Call: regexp_matches((t.rec ->> (e.v ->> 'key'::text)), (e.v ->> 'regex'::text))
+              ->  Sort  (cost=10.82..11.05 rows=90 width=192) (actual time=0.121..165.708 rows=1641407 loops=1)
+                    Output: v.map, v.target, v.srce, v.retval
+                    Sort Key: v.srce, v.target
+                    Sort Method: quicksort  Memory: 50kB
+                    Buffers: shared hit=7
+                    ->  Seq Scan on tps.map_rv v  (cost=0.00..7.90 rows=90 width=192) (actual time=0.024..0.042 rows=90 loops=1)
+                          Output: v.map, v.target, v.srce, v.retval
+                          Buffers: shared hit=7
+Planning time: 0.546 ms
+Execution time: 3396.150 ms
