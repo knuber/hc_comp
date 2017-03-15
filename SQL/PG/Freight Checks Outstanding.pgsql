@@ -1,4 +1,5 @@
-﻿WITH
+\timing
+WITH
 	--------------Bank Checks-----------------
 	BANK (
 		aodate,
@@ -65,8 +66,8 @@ FROM
 	FRTC
 	LEFT JOIN BANK ON
 		BANK.CHECKN = FRTC.CHECKN
-WHERE
-	AODATE IS NULL
+--WHERE
+--	AODATE IS NULL
 GROUP BY
 	VENDOR,
 	INVOICE_DATE,
@@ -76,7 +77,4 @@ GROUP BY
 	BANK.AODATE,
 	frtc.checkn
 ORDER BY
-	INVOICE_DATE DESC
-
-
-
+	check_date DESC
