@@ -7,13 +7,14 @@ Public ADOo_errstring As String
 Public Enum ADOinterface
     MicrosoftJetOLEDB4 = 0
     MicrosoftACEOLEDB12 = 1
-    SQLServer = 2
+    SqlServer = 2
     SQLServerNativeClient = 3
     SQLServerNativeClient10 = 4
     OracleODBC = 5
     OracleOLEDB = 6
     TextFile = 7
     ISeries = 8
+    PostgreSQLODBC = 9
 End Enum
 
 
@@ -672,6 +673,14 @@ On Error GoTo ConnectionProblem
                 stype = ";System="
                 properties = ";Uid=" & UserName
                 properties = properties & ";Pwd=" & Password
+            Case 9
+                interface = "{PostgreSQL Unicode(x64)}"
+                itype = "Driver="
+                source = ConnectTo
+                stype = ";Server="
+                properties = ";Uid=" & UserName
+                properties = properties & ";Pwd=" & Password
+                properties = properties & ";" & textconfigs
                 
         End Select
     
