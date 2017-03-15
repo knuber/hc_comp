@@ -1,0 +1,143 @@
+SET STATISTICS IO ON;
+WITH
+	AGG(
+		PART, 
+		WRKO, 
+		BTID, 
+		DEPT, 
+		RESC, 
+		RDAT, 
+		PDAT, 
+		SEQ, 
+		QTY_CONSUME, 
+		QTY_PRODUCE,	
+		WGT_CONSUME,  
+		WGT_PRODUCE, 
+		UOM
+	) AS (
+			SELECT
+				PART, 
+				WRKO, 
+				BTID, 
+				DEPT, 
+				RESC, 
+				RDAT, 
+				PDAT, 
+				SEQ, 
+				SUM(QTY_CONSUME) QTY_CONSUME, 
+				SUM(QTY_PRODUCE) QTY_PRODUCE,	
+				SUM(WGT_CONSUME) WGT_CONSUME,  
+				SUM(WGT_PRODUCE) WGT_PRODUCE, 
+				UOM
+			FROM
+				(
+					-----RPRM materials consumed--------------
+					SELECT
+						UIPART PART,
+						UIJOB# WRKO,
+						UIBTID BTID,
+						UIDEPT DEPT,
+						UIRESC RESC, 
+						NWRDAT RDAT,
+						CAST(FORMAT(NWFUT9/10,'0000-00-00') AS DATE) PDAT,
+						UISEQ# SEQ,
+						---note:scrap batches included in consumption
+						SUM(
+							UITQTY * 
+							CASE UIRQBY WHEN 'B' THEN -1 ELSE 1 END
+						) QTY_CONSUME,
+						0 QTY_PRODUCE,
+						SUM(
+							UITQTY * 
+							CASE UIRQBY WHEN 'B' THEN -1 ELSE 1 END * 
+							COALESCE(AVNWHT, AWNWHT) * 
+							CASE COALESCE(AVNWUN, AWNWUN) WHEN 'KG' THEN 2.2046 ELSE 1 END
+						) WGT_CONSUME,
+						0 WGT_PRODUCE,
+						CASE COALESCE(AVNWUN, AWNWUN) WHEN 'KG' THEN 'LB' ELSE COALESCE(AVNWUN, AWNWUN) END UOM
+					FROM
+						LGDAT.RPRM
+						INNER JOIN LGDAT.RPRH ON
+							NWBTID = UIBTID
+						LEFT OUTER JOIN LGDAT.STKMM ON
+							AVPART = UIMTLP
+						LEFT OUTER JOIN LGDAT.STKMP ON
+							AWPART = UIMTLP
+					WHERE
+						NWFSYY = 17 AND
+						NWFSPP = 3 AND
+						COALESCE(AWMAJG, AVMAJG) = '710'
+					GROUP BY
+						UIPART,
+						UIJOB#,
+						UIBTID,
+						UIDEPT,
+						UIRESC, 
+						NWRDAT,
+						CAST(FORMAT(NWFUT9/10,'0000-00-00') AS DATE),
+						UISEQ#,
+						CASE COALESCE(AVNWUN, AWNWUN) WHEN 'KG' THEN 'LB' ELSE COALESCE(AVNWUN, AWNWUN) END
+
+					UNION ALL
+
+					--------RPRP materials produced------------------
+					SELECT
+						OAPART PART, 
+						OAJOB# WRKO,  
+						OABTID BTID, 
+						OADEPT DEPT, 
+						OARESC RESC, 
+						NWRDAT RDAT,
+						CAST(FORMAT(NWFUT9/10,'0000-00-00') AS DATE) PDAT,
+						OASEQ# SEQ,
+						0 QTY_CONSUME,
+						---note: scrap included in output
+						SUM(OAQTYG + OAQTYS) QTY_PRODUCE,
+						0 WGT_CONSUME,
+						SUM(
+							(OAQTYG + OAQTYS) * 
+							COALESCE(AVNWHT, AWNWHT) * 
+							CASE COALESCE(AVNWUN, AWNWUN) WHEN 'KG' THEN 2.2046 ELSE 1 END
+						) WGT_PRODUCE,
+						CASE COALESCE(AVNWUN, AWNWUN) WHEN 'KG' THEN 'LB' ELSE COALESCE(AVNWUN, AWNWUN) END UOM
+					FROM
+						LGDAT.RPRR
+						INNER JOIN LGDAT.RPRH ON
+							NWBTID = OABTID
+						LEFT OUTER JOIN LGDAT.STKMM ON
+							AVPART = OAPART
+						LEFT OUTER JOIN LGDAT.STKMP ON
+							AWPART = OAPART
+					WHERE
+						NWFSYY = 17 AND
+						NWFSPP = 3 AND
+						OASEQ# = 10
+					GROUP BY
+						OAPART, 
+						OAJOB#, 
+						OABTID, 
+						OADEPT, 
+						OARESC, 
+						NWRDAT,
+						CAST(FORMAT(NWFUT9/10,'0000-00-00') AS DATE),
+						OASEQ#,
+						CASE COALESCE(AVNWUN, AWNWUN) WHEN 'KG' THEN 'LB' ELSE COALESCE(AVNWUN, AWNWUN) END
+				) X
+			GROUP BY
+				PART, 
+				WRKO, 
+				BTID, 
+				DEPT, 
+				RESC, 
+				RDAT, 
+				PDAT, 
+				SEQ, 
+				UOM
+	)
+SELECT
+	DEPT, UOM, SUM(WGT_CONSUME), SUM(WGT_PRODUCE)
+FROM 
+	AGG
+GROUP BY
+	DEPT, UOM
+			OPTION (MAXDOP 8, RECOMPILE)

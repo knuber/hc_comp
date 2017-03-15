@@ -21023,11 +21023,11 @@ CREATE PROCEDURE RLARP.SB_UD_R2 (
 			DIGITS (DKFSYY) || DIGITS (DKFSPR) = VPERD ; 
 	/* 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
-	|														Unmatched Receipts Accrual																	| 
+	|								Unmatched Receipts Accrual	    						    | 
 	|___________________________________________________________________________________________________________________________________________________|				 
-	|This is the entry that posts for the unmatched receipts in PORCAP. PORCAP receipts do not trigger any GL activity at creation unless they are 	 	| 
-	|inventory related, thus this month-end only entry. Not sure what happens if you post multiple time. This section below leaves as-is given that	 	| 
-	|the required information might not exist at time of execution. A later block addresses this.														| 																																				| 
+	|This is the entry that posts for the unmatched receipts in PORCAP. PORCAP receipts do not trigger any GL activity at creation unless they are 	    | 
+	|inventory related, thus this month-end only entry. Not sure what happens if you post multiple time. This section below leaves as-is given that	    | 
+	|the required information might not exist at time of execution. A later block addresses this.							    | 																																				| 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
 	*/ 
   
@@ -21065,19 +21065,20 @@ CREATE PROCEDURE RLARP.SB_UD_R2 (
 		 
 	/* 
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
-	|																	Check Runs																		| 
+	|								Check Runs						          		    | 
 	|___________________________________________________________________________________________________________________________________________________|				 
-	|Check runs post at the run# level only. In the GL inquirey you can press F3 and get a check list, but these records are not actually on the ledger	| 
-	|This is not a sufficient level of detail for reporting purposes but does accurately reflect the value												| 
-	|The anchor point here is the ledger itself. Other linked components are:																			| 
-	| - CHQR - Check details file																														| 
-	| - AVTX - Open AP transaction file																													| 
-	| - VCHR - Voucher file																																| 
-	| - CHQ  - This is a subquery aggreagting check# totals for gross and discounts taken. There *shouldn't* be duplicates but technically the same		| 
-	|		   check number could be issued under different bank codes. Since the anchor table is the ledger, we have no way to join on that field and	| 
-	|		   so to eliminate chance of duplication, we must first aggregate the target table to the joining fields level								| 
-	| - CHE  - Subquery aggregating gross and discounts taken by run number																				|	   
+	|Check runs post at the run# level only. In the GL inquirey you can press F3 and get a check list, but these records are not actually on the ledger | 
+	|This is not a sufficient level of detail for reporting purposes but does accurately reflect the value					            | 
+	|The anchor point here is the ledger itself. Other linked components are:									    |
+	| - CHQR - Check details file															    | 
+	| - AVTX - Open AP transaction file														    | 
+	| - VCHR - Voucher file																    | 
+	| - CHQ  - This is a subquery aggreagting check# totals for gross and discounts taken. There *shouldn't* be duplicates but technically the same	    | 
+	|	check number could be issued under different bank codes. Since the anchor table is the ledger, we have no way to join on that field and	    | 
+	|	so to eliminate chance of duplication, we must first aggregate the target table to the joining fields level	     			    | 
+	| - CHE  - Subquery aggregating gross and discounts taken by run number										    |	   
 	+---------------------------------------------------------------------------------------------------------------------------------------------------+ 
+	*/ 
 	*/ 
   
   
