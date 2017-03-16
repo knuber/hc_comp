@@ -1,6 +1,6 @@
 \timing
 SET WORK_MEM = 250000;
-EXPLAIN (ANALYZE, BUFFERS)
+--EXPLAIN (ANALYZE, BUFFERS)
 WITH
     chgs(reason, party, idat, fbasis) AS (
         SELECT  
@@ -12,4 +12,4 @@ WITH
             fc.chan c
             LEFT JOIN LATERAL generate_series(current_date,current_date + INTERVAL '15 months', c.frequency) gs(idat) ON TRUE
     )
-SELECT COUNT(*) FROM chgs;
+SELECT * FROM chgs LIMIT 1000;
