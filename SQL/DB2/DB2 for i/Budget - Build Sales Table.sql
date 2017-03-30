@@ -1,4 +1,15 @@
---Build out budget table--
+/*
+Drop table
+Create tables
+Initial populate
+*Copy* open orders to separate version "baseline_open"
+*Move* orders booked before target period to a separate version "baseline_excluded"
+*Copy* orders to plug the remainder of the current year by adding one year to dates "baseline_plug"
+Update budget dates to be + 1 year
+----------------
+Start Adding revions
+(budget dates will not be subject to revision history)
+*/
 
 DROP TABLE QGPL.FFOTEST;
 
@@ -404,13 +415,84 @@ WHERE
 	CALC_STATUS <> 'CANCELED';
 	
 /*---------------------------------------------------------------------------
+	move all open orders to a version called 'open'
+---------------------------------------------------------------------------*/
+
+INSERT INTO 
+	QGPL.FFOTEST
+SELECT
+	PLNT,
+	ORDER,
+	ORDERITEM,
+	BOL,
+	BOLITEM,
+	INVOICE,
+	INVOICEITEM,
+	CUSTPO,
+	RETURNREAS,
+	TERMS,
+	CURRENCY,
+	CUSTPO,
+	ORDERDATE,
+	REQUESTDATE,
+	PROMISEDATE,
+	SHIPDATE,
+	SALESMONTH,
+	BILLREMITO,
+	BILLCUSTCLASS,
+	BILLCUST,
+	BILLREP,
+	BILLDSM,
+	BILLDIRECTOR,
+	SHIPCUSTCLASS,
+	SHIPCUST,
+	SHIPDSM,
+	SHIPDIRECTOR,
+	ACCOUNT,
+	GEO,
+	CHAN,
+	ORIG_CTRY,
+	ORIG_PROV,
+	ORIG_LANE,
+	ORIG_POST,
+	DEST_CTRY,
+	DEST_PROV,
+	DEST_LANE,
+	DEST_POST,
+	PART,
+	GL_CODE,
+	MAJG,
+	MING,
+	MAJS,
+	MINS,
+	GLDC,
+	GLEC,
+	HARM,
+	CLSS,
+	BRAND,
+	ASSC,
+	FB_QTY,
+	FB_VAL_LOC,
+	FB_VAL_USD,
+	FLAG,
+	CALC_STATUS,
+	B_ORDERDATE,
+	B_REQUESTDATE,
+	B_SHIPDATE,
+	'BASELINE_OPEN' VERSION
+FROM
+	QGPL.FFOTEST
+WHERE	
+	CALC_STATUS IN ('OPEN','BACKORDER');
+	
+/*---------------------------------------------------------------------------
 	flag anything prior to the target order date as simply a reporting plug
 ---------------------------------------------------------------------------*/
 
-UPDATE QGPL.FFOTEST SET VERSION = 'REQUESTDATE_PLUG_1606' WHERE ORDERDATE < '2016-04-01';
+UPDATE QGPL.FFOTEST SET VERSION = 'BASELINE_EXCLUDED' WHERE ORDERDATE < '2016-04-01';
 
 /*---------------------------------------------------------------------------
-	Tack on forecast for remainder of current year to get to budget year
+	Add forecast for remainder of current year to get to budget year
 ---------------------------------------------------------------------------*/
 INSERT INTO	
 	QGPL.FFOTEST
@@ -473,10 +555,11 @@ SELECT
 	B_ORDERDATE +1 YEAR,
 	B_REQUESTDATE + 1 YEAR,
 	B_SHIPDATE + 1 YEAR,
-	'BASELINE_ADDON' VERSION
+	'BASELINE_PLUG' VERSION
 FROM 
 	QGPL.FFOTEST 
 WHERE 
+	VERSION = 'BASELINE' AND
 	ORDERDATE >= '2016-04-01' AND 
 	ORDERDATE < '2016-06-01';
 	
