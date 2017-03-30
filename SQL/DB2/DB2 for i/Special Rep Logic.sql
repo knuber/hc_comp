@@ -15,7 +15,7 @@ TRIM(
 			else 
 				IF ( 
 					[Order Details Current].[D_ShipTo Customers].[Retail Rep] is null OR  
-					[Order Details Current].[D_ShipTo Customers].[Retail Rep] is missing 
+					[Order Details Current].[D_ShipTo Customers].[Retail Rep] is missing --BASIS usrcust
 				)
 				---basis billto salesman xref
 				then(
@@ -46,39 +46,50 @@ TRIM(
 		IF ( 
 			[Order Details Current].[Combined Parts Master].[Part GL Expense Code] = '1NU' 
 		)
+		--basis 1NU
 		then(
 			IF ( 
 				[Order Details Current].[D_ShipTo Customers].[Nursery Rep] is null OR  
 				[Order Details Current].[D_ShipTo Customers].[Nursery Rep] is missing 
 			)
-			then(
+			--basis saleman code
+			then(	
 				IF ( 
 					substring( [Order Details Current].[D_BillTo Customers].[BillTo Salesman Code], 1, 3 ) in ('400', '130') 
-				) 
+				)
+				--400/130 = bill to salesman code
 				then (
 					[Order Details Current].[D_BillTo Customers].[BillTo Salesman Code]
 				) 
+				--<>400/130 = ship to salesman code
 				else ( [Order Details Current].[D_ShipTo Customers].[ShipTo Salesman Code]
 				)
 			) 
+			--nursery rep
 			else (  
 				[Order Details Current].[D_ShipTo Customers].[Nursery Rep] 
 			)
 		) 
+		--basis 1GR/2WI & everything else
 		else (
 			IF ( 
 				substring( [Order Details Current].[D_BillTo Customers].[BillTo Salesman Code], 1, 3 ) in ('400', '130')     
 			) 
+			-- 400/130 = bill to salesman code
 			then (
 				[Order Details Current].[D_BillTo Customers].[BillTo Salesman Code]
-			) else ( 
+			) 
+			-- <> 400/130
+			else ( 
 				IF ( 
 					[Order Details Current].[D_ShipTo Customers].[Greenhouse Rep] is null OR  
 					[Order Details Current].[D_ShipTo Customers].[Greenhouse Rep] is missing 
 				)
+				--ship to salesman code
 				then(
 					[Order Details Current].[D_ShipTo Customers].[ShipTo Salesman Code] 
 				)  
+				-- greenhouse rep
 				ELSE (
 					[Order Details Current].[D_ShipTo Customers].[Greenhouse Rep] 
 				)
