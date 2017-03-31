@@ -120,7 +120,6 @@ SELECT
 	DCMDAT PROMISEDATE,
 	DHIDAT INVOICEDATE,
 	FSPR_INV SALESMONTH,
-	
 	--customer data (bill-to)
 	BC.BVCOMP BILLREMITTO,
 	BC.BVCLAS BILLCUSTCLASS, 
@@ -132,12 +131,11 @@ SELECT
 	SC.BVCUST||' - '||RTRIM(SC.BVNAME) SHIPCUST,
 	SR.REPP SHIP_DSM,
 	SR.DIRECTOR SHIP_DIRECTOR,
-
+	'Special Sauce Director', 			--LGPGM.CUS..?
 	--scenario (offline data)
 	COALESCE(CG.CGRP,BC.BVNAME) ACCOUNT,
 	COALESCE(T.GEO,'UNDEFINED') GEO, 
 	COALESCE(C.CHAN,'UNDEFINED') CHAN,
-	
 	--location
 	QZCRYC ORIG_CTRY,
 	QZPROV ORIG_PROV,
@@ -147,9 +145,7 @@ SELECT
 	SC.BVPRCD DEST_PROV,
 	SUBSTRING(SC.BVPOST,1,3) DEST_LANE,
 	SC.BVPOST DEST_POST,
-	
 	--item data
-	
 	PART,
 	GL_CODE,
 	COALESCE(AVMAJG,AWMAJG)||' - '||RTRIM(BQDES) MAJG,  
@@ -162,10 +158,17 @@ SELECT
 	COALESCE(AVCLSS,AWCLSS) CLSS,  
 	SUBSTR(AVCPT#,1,1) BRAND, 
 	COALESCE(AVASSC,AWASSC) ASSC,
-	FB_QTY, 							--flag basis quantity
-	FB_VAL_LOC,							--flag basis value
+	---------values---------
+	AZGROP,					--LGDAT.MAST  LGDAT.FGRP LGDAT.ARMASC
+	CURRENCY,
+	XR.RATE,				--RLARP.FFCRET
+	'PLANT CURRENCY',			--?
+	XC.RATE,				--RLARP.FFCRET	
+	FB_QTY, 				--flag basis quantity
+	FB_VAL_LOC,				--flag basis value
+	FB_VAL_LOC/FB_QTY,			--need to handle div by zero
 	O.FB_VAL_LOC*RATE FB_VAL_USD,		--flag basis flag basis value USD
-	FLAG,								--flag
+	--------Version control-------------------
 	CALC_STATUS,
 	DCODAT ORDERDATE,
 	DDQDAT REQUESTDATE,
