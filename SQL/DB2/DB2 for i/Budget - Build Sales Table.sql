@@ -659,13 +659,13 @@ SELECT
 	C_RATE,
 	QTY,
 	VALUE_LOCAL,
-	PRICE
+	PRICE,
 	STATUS,
 	------version control---------
 	B_ORDERDATE + 1 YEAR,
 	B_REQUESTDATE + 1 YEAR,
 	B_SHIPDATE + 1 YEAR,
-	'BASELINE_PLUG' VERSION
+	'BASELINE' VERSION
 FROM 
 	QGPL.FFOTEST 
 WHERE 
@@ -689,9 +689,20 @@ GROUP BY
 ORDER BY
 	SUBSTR(CHAR(ORDERDATE),3,2)||SUBSTR(CHAR(ORDERDATE),6,2) ASC;
 	
+/*---------------------------------------------------------------------------
+	set B_SHIPDATE to request date or current date for open orders
+---------------------------------------------------------------------------*/
+
+UPDATE
+	QGPL.FFOTEST
+SET
+	B_SHIPDATE = MAX(B_REQUESTDATE,CURRENT_DATE)
+WHERE
+	STATUS IN ('OPEN','BACKORDER')
+	
 	
 /*---------------------------------------------------------------------------
-	increment budget dates by one year
+	increment budget dates by one year (except current open)
 ---------------------------------------------------------------------------*/
 
 UPDATE	
@@ -708,15 +719,6 @@ SET
 	B_REQUESTDATE = B_REQUESTDATE + 1 YEAR,
 	B_SHIPDATE = B_SHIPDATE + 1 YEAR
 WHERE
-	VERSION IN ('BASELINE','BASELINE_PLUG');
+	VERSION = 'BASELINE'
 	
-/*---------------------------------------------------------------------------
-	set B_SHIPDATE to request date or current date for open orders
----------------------------------------------------------------------------*/
 
-UPDATE
-	QGPL.FFOTEST
-SET
-	B_SHIPDATE = MAX(B_REQUESTDATE,CURRENT_DATE)
-WHERE
-	VERSION = 'BASELINE_OPEN'
