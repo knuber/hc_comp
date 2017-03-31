@@ -114,15 +114,15 @@ SELECT
 	RETURN_REAS,
 	TERMS,
 	DCPO CUSTPO,
-	--date-------------------------------
+	--dates-------------------------------
 	DCODAT,
 	DDQDAT,
 	DCMDAT,
 	DHIDAT,
 	FSPR_INV,
-	
-	--customer data (bill-to)------------
+	--customer data----------------------
 	BC.BVCOMP,
+	BC.BVCLAS,
 	BC.BVCUST||' - '||RTRIM(BC.BVNAME) , 
 	BC.BVSALM,
 	BR.REPP,
@@ -131,31 +131,8 @@ SELECT
 	SC.BVCUST||' - '||RTRIM(SC.BVNAME),
 	SR.REPP,
 	SR.DIRECTOR,
-
+	'Special Sauce Rep',
 	--scenario (offline data)------------
-	COALESCE(CG.CGRP,BC.BVNAME) ACCOUNT,
-	COALESCE(T.GEO,'UNDEFINED') GEO, 
-	COALESCE(C.CHAN,'UNDEFINED') CHAN,
-	
-	--location---------------------------
-	DCODAT ORDERDATE,
-	DDQDAT REQUESTDATE,
-	DCMDAT PROMISEDATE,
-	DHIDAT INVOICEDATE,
-	FSPR_INV SALESMONTH,
-	--customer data (bill-to)
-	BC.BVCOMP BILLREMITTO,
-	BC.BVCLAS BILLCUSTCLASS, 
-	BC.BVCUST||' - '||RTRIM(BC.BVNAME) BILLCUST, 
-	BC.BVSALM BILLREP,
-	BR.REPP BILL_DSM,
-	BR.DIRECTOR BILL_DIRECTOR,
-	SC.BVCLAS SHIP_CUSTCLASS, 
-	SC.BVCUST||' - '||RTRIM(SC.BVNAME) SHIPCUST,
-	SR.REPP SHIP_DSM,
-	SR.DIRECTOR SHIP_DIRECTOR,
-	'Special Sauce Director', 			--LGPGM.CUS..?
-	--scenario (offline data)
 	COALESCE(CG.CGRP,BC.BVNAME) ACCOUNT,
 	COALESCE(T.GEO,'UNDEFINED') GEO, 
 	COALESCE(C.CHAN,'UNDEFINED') CHAN,
@@ -168,10 +145,7 @@ SELECT
 	SC.BVPRCD DEST_PROV,
 	SUBSTRING(SC.BVPOST,1,3) DEST_LANE,
 	SC.BVPOST DEST_POST,
-	
 	--item data-------------------------
-	hSC.BVPOST DEST_POST,
-	--item data
 	PART,
 	GL_CODE,
 	COALESCE(AVMAJG,AWMAJG)||' - '||RTRIM(BQDES) MAJG,  
@@ -185,22 +159,16 @@ SELECT
 	SUBSTR(AVCPT#,1,1) BRAND, 
 	COALESCE(AVASSC,AWASSC) ASSC,
 	--values-----------------------------
+	AZGROP||' - '||RTRIM(BQ1TITL),
 	CURRENCY,
-	FB_QTY, 							--flag basis quantity
-	FB_VAL_LOC,							--flag basis value
-	O.FB_VAL_LOC*RATE FB_VAL_USD,		--flag basis flag basis value USD
-	FLAG,								--flag
-	---------values---------
-	AZGROP||' - '||RTRIM(BQ1TITL),									--LGDAT.MAST  LGDAT.FGRP LGDAT.ARMASC
-	CURRENCY,
-	XR.RATE,								--RLARP.FFCRET
-	SUBSTR(A249,242,2),							--Company currency
-	XC.RATE,								--RLARP.FFCRET	
-	FB_QTY, 								--flag basis quantity
-	FB_VAL_LOC,								--flag basis value
+	XR.RATE,
+	SUBSTR(A249,242,2),
+	XC.RATE,
+	FB_QTY,
+	FB_VAL_LOC,
 	CASE WHEN FB_QTY = 0 THEN 0 ELSE FB_VAL_LOC/FB_QTY END,
-	--------Version control-------------------
 	CALC_STATUS,
+	--------Version control-------------------
 	DCODAT ORDERDATE,
 	DDQDAT REQUESTDATE,
 	DHIDAT INVOICEDATE,
