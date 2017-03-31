@@ -457,23 +457,25 @@ WHERE
 INSERT INTO 
 	QGPL.FFOTEST
 SELECT
+	------order info--------------
 	PLNT,
-	ORDER,
+	"ORDER",
 	ORDERITEM,
 	BOL,
 	BOLITEM,
 	INVOICE,
 	INVOICEITEM,
-	CUSTPO,
+	PROMO,
 	RETURNREAS,
 	TERMS,
-	CURRENCY,
 	CUSTPO,
+	------dates-------------------
 	ORDERDATE,
 	REQUESTDATE,
 	PROMISEDATE,
 	SHIPDATE,
 	SALESMONTH,
+	------customer data-----------
 	BILLREMITO,
 	BILLCUSTCLASS,
 	BILLCUST,
@@ -484,9 +486,12 @@ SELECT
 	SHIPCUST,
 	SHIPDSM,
 	SHIPDIRECTOR,
+	SPECIAL_SAUCE_REP,
+	------scenario----------------
 	ACCOUNT,
 	GEO,
 	CHAN,
+	------locations---------------
 	ORIG_CTRY,
 	ORIG_PROV,
 	ORIG_LANE,
@@ -495,6 +500,7 @@ SELECT
 	DEST_PROV,
 	DEST_LANE,
 	DEST_POST,
+	------item info---------------
 	PART,
 	GL_CODE,
 	MAJG,
@@ -507,11 +513,17 @@ SELECT
 	CLSS,
 	BRAND,
 	ASSC,
-	FB_QTY,
-	FB_VAL_LOC,
-	FB_VAL_USD,
-	FLAG,
-	CALC_STATUS,
+	------values------------------
+	STATEMENT_LINE,
+	R_CURRENCY,
+	R_RATE,
+	C_CURRENCY,
+	C_RATE,
+	QTY,
+	VALUE_LOCAL,
+	PRICE
+	STATUS,
+	------version control---------
 	B_ORDERDATE,
 	B_REQUESTDATE,
 	B_SHIPDATE,
@@ -533,23 +545,25 @@ UPDATE QGPL.FFOTEST SET VERSION = 'BASELINE_EXCLUDED' WHERE ORDERDATE < '2016-04
 INSERT INTO	
 	QGPL.FFOTEST
 SELECT 
+------order info--------------
 	PLNT,
-	ORDER,
+	"ORDER",
 	ORDERITEM,
 	BOL,
 	BOLITEM,
 	INVOICE,
 	INVOICEITEM,
-	CUSTPO,
+	PROMO,
 	RETURNREAS,
 	TERMS,
-	CURRENCY,
 	CUSTPO,
+	------dates-------------------
 	ORDERDATE + 1 YEAR,
 	REQUESTDATE + 1 YEAR,
 	PROMISEDATE + 1 YEAR,
 	SHIPDATE + 1 YEAR,
 	CAST(SALESMONTH + 100 AS VARCHAR(4)),
+	------customer data-----------
 	BILLREMITO,
 	BILLCUSTCLASS,
 	BILLCUST,
@@ -560,9 +574,12 @@ SELECT
 	SHIPCUST,
 	SHIPDSM,
 	SHIPDIRECTOR,
+	SPECIAL_SAUCE_REP,
+	------scenario----------------
 	ACCOUNT,
 	GEO,
 	CHAN,
+	------locations---------------
 	ORIG_CTRY,
 	ORIG_PROV,
 	ORIG_LANE,
@@ -571,6 +588,7 @@ SELECT
 	DEST_PROV,
 	DEST_LANE,
 	DEST_POST,
+	------item info---------------
 	PART,
 	GL_CODE,
 	MAJG,
@@ -583,12 +601,18 @@ SELECT
 	CLSS,
 	BRAND,
 	ASSC,
-	FB_QTY,
-	FB_VAL_LOC,
-	FB_VAL_USD,
-	FLAG,
-	CALC_STATUS,
-	B_ORDERDATE +1 YEAR,
+	------values------------------
+	STATEMENT_LINE,
+	R_CURRENCY,
+	R_RATE,
+	C_CURRENCY,
+	C_RATE,
+	QTY,
+	VALUE_LOCAL,
+	PRICE
+	STATUS,
+	------version control---------
+	B_ORDERDATE + 1 YEAR,
 	B_REQUESTDATE + 1 YEAR,
 	B_SHIPDATE + 1 YEAR,
 	'BASELINE_PLUG' VERSION
