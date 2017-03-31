@@ -114,7 +114,6 @@ SELECT
 	RETURN_REAS,
 	TERMS,
 	DCPO CUSTPO,
-<<<<<<< HEAD
 	--date-------------------------------
 	DCODAT,
 	DDQDAT,
@@ -139,7 +138,6 @@ SELECT
 	COALESCE(C.CHAN,'UNDEFINED') CHAN,
 	
 	--location---------------------------
-=======
 	DCODAT ORDERDATE,
 	DDQDAT REQUESTDATE,
 	DCMDAT PROMISEDATE,
@@ -162,7 +160,6 @@ SELECT
 	COALESCE(T.GEO,'UNDEFINED') GEO, 
 	COALESCE(C.CHAN,'UNDEFINED') CHAN,
 	--location
->>>>>>> main_dev
 	QZCRYC ORIG_CTRY,
 	QZPROV ORIG_PROV,
 	SUBSTRING(QZPOST,1,3) ORIG_LANE,
@@ -170,14 +167,11 @@ SELECT
 	SC.BVCTRY DEST_CTRY,
 	SC.BVPRCD DEST_PROV,
 	SUBSTRING(SC.BVPOST,1,3) DEST_LANE,
-<<<<<<< HEAD
 	SC.BVPOST DEST_POST,
 	
 	--item data-------------------------
-=======
 	hSC.BVPOST DEST_POST,
 	--item data
->>>>>>> main_dev
 	PART,
 	GL_CODE,
 	COALESCE(AVMAJG,AWMAJG)||' - '||RTRIM(BQDES) MAJG,  
@@ -190,14 +184,12 @@ SELECT
 	COALESCE(AVCLSS,AWCLSS) CLSS,  
 	SUBSTR(AVCPT#,1,1) BRAND, 
 	COALESCE(AVASSC,AWASSC) ASSC,
-<<<<<<< HEAD
 	--values-----------------------------
 	CURRENCY,
 	FB_QTY, 							--flag basis quantity
 	FB_VAL_LOC,							--flag basis value
 	O.FB_VAL_LOC*RATE FB_VAL_USD,		--flag basis flag basis value USD
 	FLAG,								--flag
-=======
 	---------values---------
 	AZGROP||' - '||RTRIM(BQ1TITL),									--LGDAT.MAST  LGDAT.FGRP LGDAT.ARMASC
 	CURRENCY,
@@ -208,7 +200,6 @@ SELECT
 	FB_VAL_LOC,								--flag basis value
 	CASE WHEN FB_QTY = 0 THEN 0 ELSE FB_VAL_LOC/FB_QTY END,
 	--------Version control-------------------
->>>>>>> main_dev
 	CALC_STATUS,
 	DCODAT ORDERDATE,
 	DDQDAT REQUESTDATE,
@@ -685,8 +676,5 @@ UPDATE
 	QGPL.FFOTEST
 SET
 	B_SHIPDATE = MAX(B_REQUESTDATE,CURRENT_DATE)
-<<<<<<< HEAD
-=======
 WHERE
 	VERSION = 'BASELINE_OPEN'
->>>>>>> main_dev
