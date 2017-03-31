@@ -82,7 +82,7 @@ CREATE TABLE QGPL.FFOTEST
 	------values------------------
 	STATEMENT_LINE VARCHAR(255),
 	R_CURRENCY VARCHAR(10),
-	R_RATE NUMERIC (10,5)
+	R_RATE NUMERIC (10,5),
 	C_CURRENCY VARCHAR(10),
 	C_RATE NUMERIC (10,5),
 	QTY NUMERIC (20,5),
@@ -571,7 +571,7 @@ SELECT
 	C_RATE,
 	QTY,
 	VALUE_LOCAL,
-	PRICE
+	PRICE,
 	STATUS,
 	------version control---------
 	B_ORDERDATE,
@@ -581,7 +581,7 @@ SELECT
 FROM
 	QGPL.FFOTEST
 WHERE	
-	CALC_STATUS IN ('OPEN','BACKORDER');
+	STATUS IN ('OPEN','BACKORDER');
 	
 /*---------------------------------------------------------------------------
 	flag anything prior to the target order date as simply a reporting plug
