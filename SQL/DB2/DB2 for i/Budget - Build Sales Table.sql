@@ -131,7 +131,57 @@ SELECT
 	SC.BVCUST||' - '||RTRIM(SC.BVNAME),
 	SR.REPP,
 	SR.DIRECTOR,
-	'Special Sauce Rep',
+	----special sauce rep...very VERY special sauce-----
+	RTRIM( 
+		--main contorl flow is glec
+		CASE WHEN GLEC IN ('1RE','1CU') THEN
+			THEN
+				CASE RTRIM(BC.BVTERR)
+					WHEN '51' THEN 'DONNA'
+					WHEN '52' THEN 'DORAN'
+					WHEN '53' THEN 'RACHE'
+					WHEN '54' THEN 'KEN S'
+					WHEN '57' THEN 'KEN S'
+					WHEN '58' THEN 'JON H'
+					ELSE 
+						--use retail rep by defualt, if null use bill-to salesman and run through switch
+						CASE CASE COALESCE(CURREP,'') WHEN '' THEN SUBSTR(BC.BVSALM,1,3) ELSE SUBSTR(CURREP,1,3) END
+							WHEN '501' THEN 'DORAN'
+							WHEN '502' THEN 'DORAN'
+							WHEN '503' THEN 'RACHE'
+							WHEN '506' THEN 'JON H'
+							WHEN '508' THEN 'JON H'
+							--use salesman
+							ELSE CASE COALESCE(CURREP,'') WHEN '' THEN SUBSTR(BC.BVSALM,1,3) ELSE SUBSTR(CURREP,1,3) END
+						END
+				END
+			ELSE
+				CASE WHEN GLEC = '1NU'
+					THEN
+						CASE WHEN COALESCE(CUNREP,'') = ''
+							--basis saleman code
+							THEN
+								CASE WHEN SUBSTR(BC.BVSALM,1,3) IN ('400','130')
+									THEN BC.BVSALM
+									ELSE SC.BVSALM
+								END
+							ELSE CUNREP
+						END
+					--basis 1GR/2WI & everything ELSE
+					ELSE (
+						CASE WHEN SUBSTR(BC.BVSALM,1,3) IN ('400','130')
+							-- 400/130 = bill to salesman code
+							THEN BC.BVSALM
+							-- <> 400/130
+							ELSE
+								CASE WHEN COALESCE(CUGREP,'') = ''
+									THEN SC.BVSALM
+									ELSE CUGREP
+								END
+						END
+				END
+		END
+	),
 	--scenario (offline data)------------
 	COALESCE(CG.CGRP,BC.BVNAME) ACCOUNT,
 	COALESCE(T.GEO,'UNDEFINED') GEO, 
@@ -139,11 +189,11 @@ SELECT
 	--location
 	QZCRYC ORIG_CTRY,
 	QZPROV ORIG_PROV,
-	SUBSTRING(QZPOST,1,3) ORIG_LANE,
+	SUBSTR(QZPOST,1,3) ORIG_LANE,
 	QZPOST ORIG_POST,
 	SC.BVCTRY DEST_CTRY,
 	SC.BVPRCD DEST_PROV,
-	SUBSTRING(SC.BVPOST,1,3) DEST_LANE,
+	SUBSTR(SC.BVPOST,1,3) DEST_LANE,
 	SC.BVPOST DEST_POST,
 	--item data-------------------------
 	PART,
@@ -447,6 +497,8 @@ FROM
 		AZCOMP||DIGITS(AZGL#1)||DIGITS(AZGL#2) = ZWSAL#
 	LEFT OUTER JOIN LGDAT.FGRP ON
 		BQ1GRP = AZGROP
+	LEFT OUTER JOIN LGPGM.USRCUST ON
+		CUCUST = BC.BVCUST
 WHERE	
 	CALC_STATUS <> 'CANCELED';
 	
@@ -641,7 +693,7 @@ ORDER BY
 	
 	
 /*---------------------------------------------------------------------------
-	increment all dates by one year
+	increment budget dates by one year
 ---------------------------------------------------------------------------*/
 
 UPDATE	
