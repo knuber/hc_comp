@@ -357,7 +357,6 @@ errh:
 
     
 End Sub
-
 Sub CollapsePvtItem()
 
 On Error GoTo show_det
@@ -465,7 +464,7 @@ drill_down:
 errh:
 
 End Sub
-
+                        
 Sub ColorMatrixExtract()
 
     Dim s() As String
