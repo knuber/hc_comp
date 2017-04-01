@@ -118,7 +118,7 @@ SELECT
 	DCODAT,
 	DDQDAT,
 	DCMDAT,
-	DHIDAT,
+	COALESCE(DHIDAT,FESDAT),
 	FSPR_INV,
 	--customer data----------------------
 	BC.BVCOMP,
@@ -311,8 +311,8 @@ FROM
 			) AS F(FLAG)
 		WHERE
 			(
-				DCODAT >= '2016-03-01' OR
-				DDQDAT >= '2016-06-01' OR
+				DCODAT >= '2016-04-01' OR
+				--DDQDAT >= '2016-06-01' OR
 				CASE DDITST 
 					WHEN 'C' THEN 
 						CASE DDQTSI 
@@ -326,7 +326,7 @@ FROM
 						END 
 				END IN ('OPEN','BACKORDER')
 			) AND
-			DAYS(DDQDAT) - DAYS(DCODAT) < 450 AND
+			--DAYS(DDQDAT) - DAYS(DCODAT) < 450 AND
 			(	
 				(F.FLAG = 'REMAINDER' AND DDQTOI-DDQTSI <> 0) OR 
 				(F.FLAG = 'SHIPMENT' AND FGQSHP*CASE FESIND WHEN 'Y' THEN 1 ELSE 0 END<>0)
@@ -587,7 +587,7 @@ WHERE
 	flag anything prior to the target order date as simply a reporting plug
 ---------------------------------------------------------------------------*/
 
-UPDATE QGPL.FFOTEST SET VERSION = 'BASELINE_EXCLUDED' WHERE ORDERDATE < '2016-04-01';
+--UPDATE QGPL.FFOTEST SET VERSION = 'BASELINE_EXCLUDED' WHERE ORDERDATE < '2016-04-01'
 
 /*---------------------------------------------------------------------------
 	Add forecast for remainder of current year to get to budget year
@@ -678,6 +678,7 @@ WHERE
 	check versions by order month
 ---------------------------------------------------------------------------*/
 
+/*
 SELECT
 	VERSION,
 	SUBSTR(CHAR(ORDERDATE),3,2)||SUBSTR(CHAR(ORDERDATE),6,2)
@@ -688,6 +689,7 @@ GROUP BY
 	SUBSTR(CHAR(ORDERDATE),3,2)||SUBSTR(CHAR(ORDERDATE),6,2)
 ORDER BY
 	SUBSTR(CHAR(ORDERDATE),3,2)||SUBSTR(CHAR(ORDERDATE),6,2) ASC;
+*/
 	
 /*---------------------------------------------------------------------------
 	set B_SHIPDATE to request date or current date for open orders
@@ -698,7 +700,7 @@ UPDATE
 SET
 	B_SHIPDATE = MAX(B_REQUESTDATE,CURRENT_DATE)
 WHERE
-	STATUS IN ('OPEN','BACKORDER')
+	STATUS IN ('OPEN','BACKORDER');
 	
 	
 /*---------------------------------------------------------------------------
@@ -719,6 +721,6 @@ SET
 	B_REQUESTDATE = B_REQUESTDATE + 1 YEAR,
 	B_SHIPDATE = B_SHIPDATE + 1 YEAR
 WHERE
-	VERSION = 'BASELINE'
+	VERSION = 'BASELINE';
 	
 
