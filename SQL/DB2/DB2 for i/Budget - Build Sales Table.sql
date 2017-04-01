@@ -723,4 +723,19 @@ SET
 WHERE
 	VERSION = 'BASELINE';
 	
+/*---------------------------------------------------------------------------
+	adjust ship dates
+---------------------------------------------------------------------------*/
 
+UPDATE	
+	QGPL.FFOTEST
+SET	
+	B_SHIPDATE = B_REQUESTDATE
+WHERE	
+	SUBSTR(DIGITS(YEAR(B_SHIPDATE)),9)||SUBSTR(DIGITS(MONTH(B_SHIPDATE)),9)  = '1706' AND
+	SUBSTR(DIGITS(YEAR(B_REQUESTDATE)),9)||SUBSTR(DIGITS(MONTH(B_REQUESTDATE)),9) = '1707'
+	
+	
+	
+	
+	
