@@ -93,6 +93,9 @@ CREATE TABLE QGPL.FFOTEST
 	B_ORDERDATE DATE,
 	B_REQUESTDATE DATE,
 	B_SHIPDATE DATE,
+	I_ORDERDATE INT,
+	I_REQUESTDATE INT,
+	I_SHIPDATE INT,
 	VERSION VARCHAR(255)
 );
 
@@ -118,7 +121,7 @@ SELECT
 	DCODAT,
 	DDQDAT,
 	DCMDAT,
-	COALESCE(DHIDAT,FESDAT),
+	DHIDAT,
 	FSPR_INV,
 	--customer data----------------------
 	BC.BVCOMP,
@@ -221,7 +224,10 @@ SELECT
 	--------Version control-------------------
 	DCODAT ORDERDATE,
 	DDQDAT REQUESTDATE,
-	DHIDAT INVOICEDATE,
+	DHIDAT SHIPDATE,
+	0,
+	0,
+	0,
 	'BASELINE' VERSION					
 FROM
 	(
@@ -577,10 +583,28 @@ SELECT
 	B_ORDERDATE,
 	B_REQUESTDATE,
 	B_SHIPDATE,
+	0,
+	0,
+	0,
 	'BASELINE_OPEN' VERSION
 FROM
 	QGPL.FFOTEST
 WHERE	
+	STATUS IN ('OPEN','BACKORDER');
+	
+/*---------------------------------------------------------------------------
+	set B_SHIPDATE to request date or current date for open orders
+---------------------------------------------------------------------------*/
+
+UPDATE
+	QGPL.FFOTEST
+SET
+	B_SHIPDATE = 
+		CASE VERSION 
+			WHEN 'BASELINE_OPEN' THEN MAX(B_REQUESTDATE,CURRENT_DATE)
+			ELSE B_REQUESTDATE
+		END
+WHERE
 	STATUS IN ('OPEN','BACKORDER');
 	
 /*---------------------------------------------------------------------------
@@ -665,6 +689,9 @@ SELECT
 	B_ORDERDATE + 1 YEAR,
 	B_REQUESTDATE + 1 YEAR,
 	B_SHIPDATE + 1 YEAR,
+	0,
+	0,
+	0,
 	'BASELINE' VERSION
 FROM 
 	QGPL.FFOTEST 
@@ -691,17 +718,6 @@ ORDER BY
 	SUBSTR(CHAR(ORDERDATE),3,2)||SUBSTR(CHAR(ORDERDATE),6,2) ASC;
 */
 	
-/*---------------------------------------------------------------------------
-	set B_SHIPDATE to request date or current date for open orders
----------------------------------------------------------------------------*/
-
-UPDATE
-	QGPL.FFOTEST
-SET
-	B_SHIPDATE = MAX(B_REQUESTDATE,CURRENT_DATE)
-WHERE
-	STATUS IN ('OPEN','BACKORDER');
-	
 	
 /*---------------------------------------------------------------------------
 	increment budget dates by one year (except current open)
@@ -726,7 +742,7 @@ WHERE
 /*---------------------------------------------------------------------------
 	adjust ship dates
 ---------------------------------------------------------------------------*/
-
+/*
 UPDATE	
 	QGPL.FFOTEST
 SET	
@@ -750,3 +766,4 @@ SET
 	B_SHIPDATE = B_SHIPDATE - ((DAYS(B_SHIPDATE) - DAYS(B_REQUESTDATE))*.5) DAYS
 WHERE	
 	SUBSTR(DIGITS(YEAR(B_REQUESTDATE)),9)||SUBSTR(DIGITS(MONTH(B_REQUESTDATE)),9) >= '1711';
+*/
