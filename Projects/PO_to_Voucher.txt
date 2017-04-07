@@ -1,0 +1,13 @@
+Using 'C' option on PO receipt to match invoice -> calculates PPV and stores properly in POMVAR for reporting
+
+PrePaid
+------------------
+
+Idea:
+3 Items on PO
+ - Downpayment to 1210
+ - Reverse DOwnPayemtn to 1210
+ - Products
+
+Note as collect but customers broker remit-to and carrier remit-to are same so generated receipts can be matched on the same invoice.
+

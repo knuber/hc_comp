@@ -1,0 +1,4 @@
+Can do currency conversion on balance sheet account by specifying a currency and using LGDAT.MAST noted offsets
+
+Can call out acquisition equity account as special treatment with user defined GL field/other field
+
