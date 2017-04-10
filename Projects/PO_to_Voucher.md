@@ -35,7 +35,7 @@ _Invoicing matrix_
 
 
 1. Determine invoicing arrangement & terms
-	> `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
+	> `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not per-item
 	> _would need to test to verify that freight per PO will create multiple receivers_
 	> _would also need to test if duty type invoice is possible_
 2. Add 2 more PO lines calculated by hand
