@@ -10,17 +10,17 @@ Idea is 3 Items on PO:
 * Product
 * Product
 
-###Caveats
+### Caveats
 * Flags are global: separate receivers; freight per line `POMN06 OP 1`
 * Purchasing needs to be aware of the invoicing pattern for proper PO setup
 * If one invoice for freight & duty that is separate from product, need to have carrier & broker setup with same remit-to vendor.
 * If duty/freight/down-payment receipts are not vouchered at month end, may need to edit receipt before accrual posting `APMN07 OP 3`
 
-###Pros:
+### Pros:
 * Account rec is simple
 * Variance is calculated & reportable
 
-###Cons:
+### Cons:
 * PO correctness imperative
 
 New Process Flow:
