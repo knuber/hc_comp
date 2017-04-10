@@ -25,14 +25,18 @@ Idea is 3 Items on PO:
 
 New Process Flow:
 1. Determine invoicing arrangement & terms
-  * Freight (P|C|I) or leave carrier blank 
-      > **6% of PO total**
-    > `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
-    > _would need to test to verify that freight per PO will create multiple receivers_
-  * Duty (C|I), or leave broker blank 
-    > **6% of gross total**
-2. Add freight & customs data to PO (need to have guidance, maybe % of PO value/weight)
-3. Add 2 more PO lines calculated by hand (.3 * PO total)
-4. Add PO receipt for down payment
+|Component	|Prepaid		|Invoice		|Collect		|
+|---------------|-----------------------|-----------------------|-----------------------|
+|Freight	|Leave blank		|Amount only		|amount & carrier code	|
+|Duty		|Leave blank		|Not possible?		|amount & broker code	|
+> `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
+> _would need to test to verify that freight per PO will create multiple receivers_
+> _would also need to test if duty type invoice is possible_
+2. Add 2 more PO lines calculated by hand
+  1. Prepaid is 30% down or whatever terms are _(qty = 1 price = 30%)_
+  2. Prepaid Credit is same with negative price unit as above _(qty = number of pennies, price = .01)_
+3. Add PO receipt for down payment in full qty
+4. Add receipts for goods _(receipts will be created for duty/freight depending on above configuration)_
 5. Edit freight/duty receipts at month end (unless have good estimate up front)
+6. Voucher freight & duty using the C option to true up to invoice
 
