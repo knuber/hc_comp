@@ -25,10 +25,10 @@ Cons:
 
 New Process Flow:
 * Determine invoicing arrangement & terms
-	*Freight (P|C|I) or leave carrier blank **6% of PO total**
-	>`POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
-	>_would need to test to verify that freight per PO will create multiple receivers_
-	*Duty (C|I), or leave broker blank **6% of gross total**
+	* Freight (P|C|I) or leave carrier blank **6% of PO total**
+	> `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
+	> _would need to test to verify that freight per PO will create multiple receivers_
+	* Duty (C|I), or leave broker blank **6% of gross total**
 * Add freight & customs data to PO (need to have guidance, maybe % of PO value/weight)
 * Add 2 more PO lines calculated by hand (.3 * PO total)
 * Add PO receipt for down payment
