@@ -26,7 +26,7 @@ Idea is 3 Items on PO:
 New Process Flow:
 ---------------------
 
-_Invoincing matrix_
+_Invoicing matrix_
 
 |Component		|Prepaid				|Invoice				|Collect				|
 |---------------|-----------------------|-----------------------|-----------------------|
