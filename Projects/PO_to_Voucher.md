@@ -27,6 +27,7 @@ New Process Flow:
 ---------------------
 
 _Invoincing matrix_
+
 |Component		|Prepaid				|Invoice				|Collect				|
 |---------------|-----------------------|-----------------------|-----------------------|
 |Freight		|Leave blank			|Amount only			|amount & carrier code	|
