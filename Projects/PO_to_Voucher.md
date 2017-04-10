@@ -3,8 +3,7 @@ Using 'C' option on PO receipt to match invoice -> calculates PPV and stores pro
 PrePaid
 ---
 
-Idea:
- * 3 Items on PO
+Idea is 3 Items on PO:
  * Down Payment to 1210
  * Down Payment Credit to 1210
  * Product
