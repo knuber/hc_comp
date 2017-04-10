@@ -24,11 +24,11 @@ Idea is 3 Items on PO:
 * PO correctness imperative
 
 New Process Flow:
-1. Determine invoicing arrangement & terms
 |Component	|Prepaid		|Invoice		|Collect		|
 |---------------|-----------------------|-----------------------|-----------------------|
 |Freight	|Leave blank		|Amount only		|amount & carrier code	|
 |Duty		|Leave blank		|Not possible?		|amount & broker code	|
+1. Determine invoicing arrangement & terms
 > `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
 > _would need to test to verify that freight per PO will create multiple receivers_
 > _would also need to test if duty type invoice is possible_
