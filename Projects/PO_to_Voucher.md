@@ -33,9 +33,9 @@ New Process Flow:
 
 New Process Flow:
 1. Determine invoicing arrangement & terms
-> `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
-> _would need to test to verify that freight per PO will create multiple receivers_
-> _would also need to test if duty type invoice is possible_
+  > `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
+  > _would need to test to verify that freight per PO will create multiple receivers_
+  > _would also need to test if duty type invoice is possible_
 2. Add 2 more PO lines calculated by hand
   1. Prepaid is 30% down or whatever terms are _(qty = 1 price = 30%)_
   2. Prepaid Credit is same with negative price unit as above _(qty = number of pennies, price = .01)_
