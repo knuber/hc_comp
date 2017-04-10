@@ -10,24 +10,24 @@ Idea is 3 Items on PO:
 * Product
 * Product
 
-Caveats
+###Caveats
 * Flags are global: separate receivers; freight per line `POMN06 OP 1`
 * Purchasing needs to be aware of the invoicing pattern for proper PO setup
 * If one invoice for freight & duty that is separate from product, need to have carrier & broker setup with same remit-to vendor.
 * If duty/freight/down-payment receipts are not vouchered at month end, may need to edit receipt before accrual posting `APMN07 OP 3`
 
-Pros:
+###Pros:
 * Account rec is simple
 * Variance is calculated & reportable
 
-Cons:
+###Cons:
 * PO correctness imperative
 
 New Process Flow:
 * Determine invoicing arrangement & terms
   * Freight (P|C|I) or leave carrier blank **6% of PO total**
-  > `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
-  > _would need to test to verify that freight per PO will create multiple receivers_
+    > `POMN06 OP 1` default flagged as calculate seprately and freight is singular per PO, not items
+    > _would need to test to verify that freight per PO will create multiple receivers_
   * Duty (C|I), or leave broker blank **6% of gross total**
 * Add freight & customs data to PO (need to have guidance, maybe % of PO value/weight)
 * Add 2 more PO lines calculated by hand (.3 * PO total)
