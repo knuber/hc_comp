@@ -28,10 +28,16 @@ New Process Flow:
 
 _Invoicing matrix_
 
-|Component		|Prepaid				|Invoice				|Collect				|
-|---------------|-----------------------|-----------------------|-----------------------|
-|Freight		|Leave blank			|Amount only			|amount & carrier code	|
-|Duty			|Leave blank			|Not possible?			|amount & broker code	|
+|Freight		|Prepaid				|Invoice					|Collect				|
+|---------------|-----------------------|-----------------------	|-----------------------|
+|Code			|Blank					|Blank						|Pick One				|
+|Amt			|Blank					|6%							|6%						|
+
+|Duty & Customs	|Prepaid				|Invoice					|Collect				|
+|---------------|-----------------------|-----------------------	|-----------------------|
+|Code			|Blank					|Blank						|Pick One				|
+|Amt			|Blank					|6%							|6%						|
+
 
 
 1.	Determine invoicing arrangement & terms
@@ -43,11 +49,10 @@ _Invoicing matrix_
 	*	_would also need to test if duty type invoice is possible_
 
 2. Add 2 more PO lines calculated by hand
-	1. Prepaid is 30% down or whatever terms are _(qty = 1 price = 30%)_
-	2. Prepaid Credit is same with negative price unit as above _(qty = number of pennies, price = .01)_
+	1. Prepaid is 30% down or whatever terms are _(qty = `30%` price = `$1`)_
+	2. Prepaid Credit is same with negative price unit as above _(qty = `30%`, price = `-$1`)_
 3. Add PO receipt for down payment in full qty
 4. Add receipts for goods _(receipts will be created for duty/freight depending on above configuration)_
 5. Add receipt for credit based on invoice amount
 6. Voucher goods final ivoice to product & credit receivers using 'C' option
 7. Voucher freight & duty using the C option to true up to invoice (_container to PO association will be needed_)
-
