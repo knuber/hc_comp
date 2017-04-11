@@ -30,12 +30,12 @@ _Invoicing matrix_
 
 |Freight		|Prepaid				|Invoice					|Collect				|
 |---------------|-----------------------|-----------------------	|-----------------------|
-|Code			|Blank					|Blank						|Pick One				|
+|Carrier Code	|Blank					|Blank						|Pick One				|
 |Amt			|Blank					|6%							|6%						|
 
 |Duty & Customs	|Prepaid				|Invoice					|Collect				|
 |---------------|-----------------------|-----------------------	|-----------------------|
-|Code			|Blank					|Blank						|Pick One				|
+|Customs Broker	|Blank					|Blank						|Pick One				|
 |Amt			|Blank					|6%							|6%						|
 
 
