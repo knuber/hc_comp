@@ -57,3 +57,10 @@ FROM
 		P.N1FSYP = B.PERD
 	LEFT OUTER JOIN dbo.COMP T on
 		COMP = AZCOMP
+WHERE   
+    B.PERD >= '1601' AND
+    B.PERD <= '1612' AND
+    (
+            B.OB <> 0 OR
+            B.TT <> 0
+    )
