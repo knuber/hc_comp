@@ -6,11 +6,17 @@ Correct
 3. Warehouse Transfers Rebuild
 4. Returns & Credits Policy
 5. CMS Currency Type 3
+6. Offline master data
+    - family
+    - color
+    - style
+    - dimensions
+    - channels
 
 Clarify
 -------------------------
 
-* Centralized Data Pool
+* Centralized Data Store (Live)
     * CMS Tables
     * CMS top layer
     * TMS
@@ -46,7 +52,9 @@ Clarify
     * Non-Financial
         * OEE
         * Scrap Rate
-    
+* Orders Matrix
+    * Timing
+    * Open Orders Rebuild
 * Capital Tracking
 * Freight & Duty Processing
 * Journal Numbering
@@ -59,4 +67,10 @@ Automate
 2. Statements
 3. Bank Rec
 4. Production Reporting
+
+Better-than-market complexity management investment
+--------------------------
+1. Production Scheduling Optimization & Forecasting
+2. In house route planning; on-premise geo-spatial store with KNN algorithm (POSTGis; pgRouting)
+
 
