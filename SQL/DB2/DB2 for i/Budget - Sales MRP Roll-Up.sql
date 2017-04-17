@@ -1,0 +1,63 @@
+SELECT
+    MAST,
+    MPLT,
+    SUM(COALESCE(BASEX,0)+COALESCE(FRTX,0)+COALESCE(CURRX,0)+COALESCE(SUBCX,0)+COALESCE(OTHMX,0)) MAT,
+    SUM(LABRX) LAB_RUN,
+    SUM(VARRX) VAR_RUN,
+    SUM(FIXRX) FIX_RUN,
+    SUM(LABSX) LAB_SET,
+    SUM(VARSX) VAR_SET,
+    SUM(FIXSX) FIX_SET,
+    SUM(
+            COALESCE(BASEXS,0)+
+            COALESCE(FRTXS,0)+
+            COALESCE(CURRXS,0)+
+            COALESCE(OTHMXS,0)+
+            COALESCE(SUBCXS,0)+
+            COALESCE(LABRXS,0)+
+            COALESCE(VARRXS,0)+
+            COALESCE(FIXRXS,0)+
+            COALESCE(LABSXS,0)+
+            COALESCE(VARSXS,0)+
+            COALESCE(FIXSXS,0)
+    ) SCRAP,
+    SUM(
+            COALESCE(BASEX,0)+
+            COALESCE(FRTX,0)+
+            COALESCE(CURRX,0)+
+            COALESCE(OTHMX,0)+ 
+            COALESCE(SUBCX,0)+
+            COALESCE(LABRX,0)+
+            COALESCE(VARRX,0)+
+            COALESCE(FIXRX,0)+
+            COALESCE(LABSX,0)+
+            COALESCE(VARSX,0)+
+            COALESCE(FIXSX,0)+
+            COALESCE(BASEXS,0)+
+            COALESCE(FRTXS,0)+
+            COALESCE(CURRXS,0)+
+            COALESCE(OTHMXS,0)+
+            COALESCE(SUBCXS,0)+
+            COALESCE(LABRXS,0)+
+            COALESCE(VARRXS,0)+
+            COALESCE(FIXRXS,0)+
+            COALESCE(LABSXS,0)+
+            COALESCE(VARSXS,0)+
+            COALESCE(FIXSXS,0)
+    ) TOTAL_CALC,
+    COALESCE(CGSTCS, CHSTCS, Y0STCS) TOT_STD
+FROM
+    QGPL.FFBSMRPC
+    LEFT OUTER JOIN LGDAT.ICSTM ON
+        CGPART = MAST AND
+        CGPLNT = MPLT
+    LEFT OUTER JOIN LGDAT.ICSTP ON
+        CHPART = MAST AND
+        CHPLNT = MPLT
+    LEFT OUTER JOIN LGDAT.ICSTR ON
+        Y0PART = MAST AND
+        Y0PLNT = MPLT
+GROUP BY
+    MAST,
+    MPLT,
+    COALESCE(CGSTCS, CHSTCS, Y0STCS)
