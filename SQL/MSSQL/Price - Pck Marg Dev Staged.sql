@@ -44,6 +44,8 @@ WITH
 		BRANDING,
 		ORD_AMT_LOCAL,
 		ORD_AMT_USD,
+		ORD_MATCOST_LOCAL,
+		ORD_MATCOST_USD,
 		ORD_COST_LOCAL,
 		ORD_COST_USD,
 		ORD_TERMS,
@@ -213,7 +215,7 @@ WITH
 					COALESCE(CGMATS,CHSUC,Y0SMAT)
 					--+COALESCE(CGLABS,Y0SLAB,0)
 				)
-			,2) ORD_COST_LOCAL,
+			,2) ORD_MATCOST_LOCAL,
 		ROUND(
 			CASE DDITST 
 				WHEN 'C' THEN 
@@ -225,6 +227,37 @@ WITH
 			END*
 			(
 				COALESCE(CGMATS,CHSUC,Y0SMAT)
+				--+COALESCE(CGLABS,Y0SLAB,0)
+			)*XC.RATE
+		,2) ORD_MATCOST_USD,
+		--total standard cost
+			ROUND(
+				--if status is closed then used ship qty else use order qty
+				CASE DDITST 
+					WHEN 'C' THEN 
+						CASE DDQTSI 
+							WHEN 0 THEN DDQTOI 
+							ELSE DDQTSI 
+						END 
+					ELSE DDQTOI 
+				END*
+				--material & labor std cost @ current definition
+				(
+					COALESCE(CGSTCS, CHSTCS, Y0STCS)
+					--+COALESCE(CGLABS,Y0SLAB,0)
+				)
+			,2) ORD_COST_LOCAL,
+		ROUND(
+			CASE DDITST 
+				WHEN 'C' THEN 
+					CASE DDQTSI 
+						WHEN 0 THEN DDQTOI 
+						ELSE DDQTSI 
+					END 
+				ELSE DDQTOI 
+			END*
+			(
+				COALESCE(CGSTCS, CHSTCS, Y0STCS)
 				--+COALESCE(CGLABS,Y0SLAB,0)
 			)*XC.RATE
 		,2) ORD_COST_USD,
