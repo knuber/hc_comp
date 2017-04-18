@@ -128,6 +128,8 @@ SELECT
 	-----parent sort key-----
 	CASE PP.V6RPLN
 		WHEN 1 THEN
+			--if there are sequences less than 10, then then parent sequence of 9 must be 10 and the parent sequence of 8 must be 9 etc.
+			--the parent of sequence 10 does not exist because it is the last one and can simply inherit the pse.pline sort key
 			CASE WHEN AOSEQ# < 10 
 				THEN 
 					--parent line
