@@ -315,7 +315,7 @@ FROM
 		M.AQPLNT = PSE.SPLNT AND
 		M.AQSEQ# = PSE.SEQ AND
 		PP.V6RPLN = 1 AND
-		PSE.RTYP IN = 'R'
+		PSE.RTYP = 'R'
 		--this is going to have to accomodate type 1's that don't have a BOM in order to stop the explosion, otherwise it will recurse infinately
 		--dependency that there is only one os sequence
 	---join the the procurement path of the BOM children
@@ -366,12 +366,12 @@ FROM
 		B86RTTY = 'S'		 
 WHERE 
 	LVL <= 10 
-	AND PSE.REPL <> '2' 
+	AND PSE.REPL <> '2' AND
+	COALESCE(AOPLNT,AQPLNT,PP.V6TPLN,'') <> ''
+
 ) 
   
 SELECT 
-	PSE.*
-	/*
 	MAST, 
 	MPLT, 
 	REPEAT ('.  ', LVL) || LVL AS TLVL, 
@@ -390,7 +390,7 @@ SELECT
 	DEP, 
 	RESC, 
 	OPC, 
-	AOREPP, 
+	REPP, 
 	REFF, 
 	XREFF, 
 	RQBY, 
@@ -503,7 +503,6 @@ SELECT
 	CASE ABLABR WHEN 0 THEN AASTDR ELSE ABLABR END * AOSETP * AOSCRW / V6OPTR * ERQTY * (1 / XREFF - 1) LABSXS, 
 	CASE ABBRDR WHEN 0 THEN AABRDR ELSE ABBRDR END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) FIXSXS, 
 	CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) VARSXS
-	*/
 FROM 
 	PSE PSE 
 	LEFT OUTER JOIN LGDAT.ICSTM IM ON 
@@ -523,7 +522,8 @@ FROM
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = CHLD AND 
 		AOPLNT = SPLNT AND 
-		AOSEQ# = SEQ 
+		AOSEQ# = SEQ AND
+		PSE.RTYP = 'R'
 	LEFT OUTER JOIN LGDAT.STKA ON 
 		V6PART = CHLD AND 
 		V6PLNT = SPLNT 
