@@ -60,7 +60,7 @@ SELECT
 	CASE A.V6RPLN
 		WHEN 1 THEN
 			SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) 
-		WHEN 3 THEN A.V6TPLN	
+		WHEN 3 THEN 'T' || A.V6TPLN	
 		WHEN 2 THEN ''
 	END AS CLINE, 
 	---------------------------
@@ -143,11 +143,29 @@ SELECT
 				ELSE 
 					VARCHAR (PSE.CLINE, 100) 
 			END 
-		WHEN 3 THEN
-			PSE.CLINE ||'-'||
+		ELSE
+			PSE.CLINE
 	END PLINE, 
 	-----child sort key------
-	PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3) CLINE, 
+	CASE PP.V6RPLN
+		WHEN 1 THEN
+			--parent sort key
+			PSE.CLINE || '-' || 
+			--BOM line# leading 0's
+			REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
+			--BOM line#'s
+			VARCHAR (M.AQLIN#) || 
+			--method sequence #'s
+			SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3) 
+		WHEN 3 THEN
+			--parent sort key
+			PSE.CLINE || '-' ||
+			--transfer plant
+			'00T'||PP.V6TPLN
+		WHEN 2 THEN
+			PSE.CLINE
+	END CLINE,
+	-------------------------
 	PSE.MAST, 
 	PSE.MPLT, 
 	PSE.CHLD PRNT, 
@@ -171,17 +189,42 @@ SELECT
 	AOREPP, 
 	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8), 
 	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8) * PSE.XREFF, 
-	M.AQRQBY, 
-	M.AQBACK, 
-	FLOAT (1 - M.AQSCRP / 100), 
-	1, 
-	M.AQQPPC, 
-	M.AQQTYM, 
-	FLOAT (M.AQQPPC / M.AQQTYM) / FLOAT (1 - M.AQSCRP / 100) * CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END, 
-	FLOAT (M.AQQPPC / M.AQQTYM) * FLOAT (PSE.ERQTY) / FLOAT (1 - M.AQSCRP / 100) * CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END, 
-	A.V6UNTI, 
-	M.AQUNIT, 
-	FLOAT (COALESCE (U.MULT_BY, 1)) * FLOAT (COALESCE (U2.MULT_BY, 1)) * PSE.CONV, 
+	COALESCE(M.AQRQBY,'R') RQBY, 
+	COALESCE(M.AQBACK,'') BACK, 
+	COALESCE(FLOAT (1 - M.AQSCRP / 100),1.0) SCRP, 
+	1 EFF, 
+	COALESCE(M.AQQPPC,1) QTY, 
+	COALESCE(M.AQQTYM,1) BQTY, 
+	COALESCE(
+			--qty required per 1 parent
+			FLOAT (M.AQQPPC / M.AQQTYM) / 
+			--scrap factor in BOM
+			FLOAT (1 - M.AQSCRP / 100) * 
+			--byproduct flag
+			CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
+		,1) RQTY, 
+	COALESCE(
+			--qty required per 1 parent
+			FLOAT (M.AQQPPC / M.AQQTYM) * 
+			--parent extended required qty
+			FLOAT (PSE.ERQTY) / 
+			--scrap in BOM
+			FLOAT (1 - M.AQSCRP / 100) * 
+			--byproduct flag
+			CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
+		--parent extended req qty
+		,PSE.ERQTY
+	) ERQTY, 
+	---build in transfer conversion here.
+	--A2 is going to be either the BOM uom in the source plant (or consumption plant if none) or the uom of the parent part in the transfer plant if pass-through
+	CASE PP.V6RPLN 
+		WHEN 1 THEN 
+			A2.V6UNTI
+		ELSE
+			PP.V6UNTI 
+	END UNIT,
+	COALESCE(M.AQUNIT,A2.V6UNTI) BUOM, 
+	FLOAT (COALESCE (U.MULT_BY, 1)) * FLOAT (COALESCE (U2.MULT_BY, 1)) * PSE.CONV CONV, 
 	PSE.SPLNT CPLNT, 
 	--the consumption plant coudl be either a pass through transfer or otherwise need to get the procurement of the BOM components to see if they need transfered
 	CASE PP.V6RPLN
@@ -220,7 +263,8 @@ FROM
 	LEFT OUTER JOIN LGDAT.STKA A2 ON 
 		A2.V6PART = CASE PP.V6RPLN 
 						WHEN 3 THEN PSE.CHLD
-						ELSE M.AQMTLP
+						WHEN 1 THEN M.AQMTLP
+						ELSE PP.V6PART
 					END AND
 		A2.V6PLNT = CASE PP.V6RPLN
 						WHEN 3 THEN PP.V6TPLN 
