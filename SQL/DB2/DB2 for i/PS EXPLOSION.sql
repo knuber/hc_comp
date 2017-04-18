@@ -126,18 +126,23 @@ UNION ALL
 SELECT 
 	PSE.LVL + 1, 
 	-----parent sort key-----
-	CASE WHEN AOSEQ# < 10 
-		THEN 
-			--parent line
-			PSE.CLINE || '-' || 
-			--BOM line # leading 0's
-			REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
-			--BOM line #
-			VARCHAR (M.AQLIN#) || 
-			--Method sequence
-			SUBSTR (DIGITS (COALESCE (- AOSEQ# + 9, AQSEQ#)), 2, 3) 
-		ELSE 
-			VARCHAR (PSE.CLINE, 100) 
+	CASE PP.V6RPLN
+		WHEN 1 THEN
+			CASE WHEN AOSEQ# < 10 
+				THEN 
+					--parent line
+					PSE.CLINE || '-' || 
+					--BOM line # leading 0's
+					REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
+					--BOM line #
+					VARCHAR (M.AQLIN#) || 
+					--previous method sequence (assumption that 10 is final sequence and prior seq increment in order by 1 until they reach 10)
+					SUBSTR (DIGITS (COALESCE (- AOSEQ# + 9, AQSEQ#)), 2, 3) 
+				ELSE 
+					VARCHAR (PSE.CLINE, 100) 
+			END 
+		WHEN 3 THEN
+			PSE.CLINE ||'-'||
 	END PLINE, 
 	-----child sort key------
 	PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3) CLINE, 
