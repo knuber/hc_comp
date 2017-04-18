@@ -32,12 +32,38 @@ WITH RECURSIVE PSE
 (
 SELECT 
 	0, 
-	VARCHAR (SUBSTR (DIGITS (INT (RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC))), 6, 5), 100) || 
+	/* sort key must accomodate pass-through transfers & multiple sequences*/
+	------parent sort key----------
+	VARCHAR (
+		SUBSTR (
+			DIGITS (
+				INT (
+					RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC)
+				)
+			)
+		, 6, 5)
+	, 100) || 
 	CASE WHEN AOSEQ# < 10 
 		THEN SUBSTR (DIGITS (- AOSEQ# + 9), 2, 3) 
 		ELSE '' 
 	END AS PLINE, 
-	VARCHAR (SUBSTR (DIGITS (INT (RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC))), 6, 5), 100) || SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) AS CLINE, 
+	------child sort key (master)----------
+	VARCHAR (
+		SUBSTR (
+			DIGITS (
+				INT (
+					RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC)
+				)
+			)
+		, 6, 5)
+	, 100) || 
+	CASE A.V6RPLN
+		WHEN 1 THEN
+			SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) 
+		WHEN 3 THEN A.V6TPLN	
+		WHEN 2 THEN ''
+	END AS CLINE, 
+	---------------------------
 	A.V6PART, 
 	A.V6PLNT, 
 	A.V6PART, 
@@ -71,7 +97,8 @@ FROM
 	LGDAT.STKA A 
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = A.V6PART AND 
-		AOPLNT = CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE A.V6PLNT END 
+		AOPLNT = A.V6PLNT AND
+		A.V6RPLN = 1
 	LEFT OUTER JOIN LGDAT.METHDO ON 
 		APPART = A.V6PART AND 
 		APPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND 
@@ -91,24 +118,45 @@ FROM
 		B86CURC = SUBSTR (CC.A215, 152, 2) AND 
 		B86RTTY = 'S' 
 WHERE 
-	V6PART = 'SVP03250A10K120' AND 
-	V6PLNT = '152'
+	V6PART = 'AZE06000B71C036LRT44' AND 
+	V6PLNT = '112'
   
 UNION ALL 
   
 SELECT 
 	PSE.LVL + 1, 
+	-----parent sort key-----
 	CASE WHEN AOSEQ# < 10 
-		THEN PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 9, AQSEQ#)), 2, 3) 
-		ELSE VARCHAR (PSE.CLINE, 100) 
-	END, 
-	PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3), 
+		THEN 
+			--parent line
+			PSE.CLINE || '-' || 
+			--BOM line # leading 0's
+			REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
+			--BOM line #
+			VARCHAR (M.AQLIN#) || 
+			--Method sequence
+			SUBSTR (DIGITS (COALESCE (- AOSEQ# + 9, AQSEQ#)), 2, 3) 
+		ELSE 
+			VARCHAR (PSE.CLINE, 100) 
+	END PLINE, 
+	-----child sort key------
+	PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3) CLINE, 
 	PSE.MAST, 
 	PSE.MPLT, 
-	PSE.CHLD, 
-	M.AQMTLP, 
-	A.V6STAT, 
-	A.V6RPLN, 
+	PSE.CHLD PRNT, 
+	CASE PP.V6RPLN
+		WHEN 3 THEN PSE.CHLD
+		WHEN 1 THEN M.AQMTLP
+		WHEN 2 THEN ''
+	END CHLD, 
+	CASE PP.V6RPLN
+		WHEN 1 THEN A.V6STAT
+		ELSE PP.V6STAT
+	END STAT,
+	CASE PP.V6RPLN
+		WHEN 1 THEN A.V6RPLN
+		ELSE PP.V6RPLN
+	END RPLN, 
 	COALESCE (AOSEQ#, AQSEQ#), 
 	AODEPT, 
 	COALESCE (APVEND, AORESC), 
@@ -127,33 +175,63 @@ SELECT
 	A.V6UNTI, 
 	M.AQUNIT, 
 	FLOAT (COALESCE (U.MULT_BY, 1)) * FLOAT (COALESCE (U2.MULT_BY, 1)) * PSE.CONV, 
-	M.AQPLNT, 
-	CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE M.AQPLNT END, 
+	PSE.SPLNT CPLNT, 
+	--the consumption plant coudl be either a pass through transfer or otherwise need to get the procurement of the BOM components to see if they need transfered
+	CASE PP.V6RPLN
+		WHEN 3 THEN PP.V6TPLN 
+		WHEN 1 THEN	
+			CASE A.V6RPLN
+				WHEN 3 THEN A.V6TPLN
+				ELSE A.V6PLNT
+			END
+		ELSE PP.V6PLNT
+	END SPLNT,
 	SUBSTR (CC.A215, 152, 2), 
 	SUBSTR (SC.A215, 152, 2), 
 	B86SRTE * PSE.FXR 
 FROM 
 	PSE PSE 
-	INNER JOIN LGDAT.METHDM M ON 
+	---join last leaf on tree to its procurement path
+	INNER JOIN LGDAT.STKA PP ON
+		PP.V6PART = PSE.CHLD AND
+		PP.V6PLNT = PSE.SPLNT
+	---the join to the bill of materials may not be used if transfered through a plant
+	---if just tranfering through a plant, need to accomodate change in unit of measure !!!!
+	---		-> get unit of measure in source plant and apply conversion?
+	---			-> could possibly use the existing a2 table to join on a switch (either a pass-through or BOM component)
+	LEFT OUTER JOIN LGDAT.METHDM M ON 
 		M.AQPART = PSE.CHLD AND 
 		M.AQPLNT = PSE.SPLNT AND 
 		M.AQSEQ# = IFNULL (PSE.SEQ, M.AQSEQ#) AND 
-		 ----------MOD 10/20/15------------- 
-		PSE.REPL <> '2' 
+		PP.V6RPLN = 1
+		--this is going to have to accomodate type 1's that don't have a BOM in order to stop the explosion, otherwise it will recurse infinately
+	---join the the procurement path of the BOM children
 	LEFT OUTER JOIN LGDAT.STKA A ON 
 		A.V6PART = M.AQMTLP AND 
 		A.V6PLNT = M.AQPLNT 
+	---join to the procurement of the BOM child in the source plant if different from the consumption plant to get the unit of measure there
 	LEFT OUTER JOIN LGDAT.STKA A2 ON 
-		A2.V6PART = M.AQMTLP AND 
-		A2.V6PLNT = A.V6TPLN 
+		A2.V6PART = CASE PP.V6RPLN 
+						WHEN 3 THEN PSE.CHLD
+						ELSE M.AQMTLP
+					END AND
+		A2.V6PLNT = CASE PP.V6RPLN
+						WHEN 3 THEN PP.V6TPLN 
+						WHEN 1 THEN	
+							CASE A.V6RPLN
+								WHEN 3 THEN A.V6TPLN
+								ELSE A.V6PLNT
+							END
+						ELSE PP.V6PLNT
+					END
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = M.AQMTLP AND 
 		AOPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND
-		A.V6RPLN = 1
+		PP.V6RPLN = 1
 	LEFT OUTER JOIN LGDAT.METHDO ON 
 		APPART = M.AQMTLP AND 
 		APPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND 
-		A.V6RPLN = 1 
+		PP.V6RPLN = 1 
 	LEFT OUTER JOIN 
 	(
 	SELECT 
@@ -195,9 +273,17 @@ FROM
 		LTRIM (RTRIM (U2.UNT1)) = A.V6UNTI AND 
 		LTRIM (RTRIM (U2.UNT2)) = A2.V6UNTI 
 	LEFT OUTER JOIN LGDAT.PLNT CP ON 
-		CP.YAPLNT = M.AQPLNT 
+		CP.YAPLNT = PSE.SPLNT
 	LEFT OUTER JOIN LGDAT.PLNT SP ON 
-		SP.YAPLNT = CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE M.AQPLNT END 
+		SP.YAPLNT = CASE PP.V6RPLN
+						WHEN 3 THEN PP.V6TPLN 
+						WHEN 1 THEN	
+							CASE A.V6RPLN
+								WHEN 3 THEN A.V6TPLN
+								ELSE A.V6PLNT
+							END
+						ELSE PP.V6PLNT
+					END
 	LEFT OUTER JOIN LGDAT.CODE CC ON 
 		LTRIM (RTRIM (CC.A9)) = CP.YACOMP AND 
 		CC.A2 = 'AA' 
@@ -210,7 +296,7 @@ FROM
 		B86RTTY = 'S'		 
 WHERE 
 	LVL <= 10 
-	AND PSE.REPL <> '4' 
+	AND PSE.REPL <> '2' 
 ) 
   
 SELECT 
