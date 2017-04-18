@@ -147,10 +147,14 @@ SELECT
 					--the parent of sequence 10 does not exist because it is the last one and can simply inherit the pse.pline sort key
 					CASE WHEN AOSEQ# < 10 
 						THEN 
+							--parent line
 							PSE.CLINE || '-' || 
-							REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
-							VARCHAR (M.AQLIN#) || 
-							SUBSTR (DIGITS (COALESCE (- AOSEQ# + 9, AQSEQ#)), 2, 3) 
+							--BOM line # leading 0's
+							REPEAT ('0', 3 - LENGTH (VARCHAR (R.AOLIN#))) || 
+							--BOM line #
+							VARCHAR (R.AOLIN#) ||
+							--previous method sequence (assumption that 10 is final sequence and prior seq increment in order by 1 until they reach 10)
+							SUBSTR (DIGITS (- AOSEQ# + 9), 2, 3) 
 						ELSE 
 							PSE.CLINE
 					END 
@@ -161,10 +165,26 @@ SELECT
 	-----child sort key------
 	CASE PP.V6RPLN
 		WHEN 1 THEN
-			PSE.CLINE || '-' || 
-			REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
-			VARCHAR (M.AQLIN#) || 
-			SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3)
+			CASE PSE.RTYP
+				WHEN 'R' THEN
+					--parent sort key
+					PSE.CLINE || '-' || 
+					--BOM line# leading 0's
+					REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
+					--BOM line#'s
+					VARCHAR (M.AQLIN#) || 
+					--method sequence #'s
+					SUBSTR (DIGITS (AQSEQ#), 2, 3) 
+				ELSE
+					--parent sort key
+					PSE.CLINE || '-' || 
+					--BOM line# leading 0's
+					REPEAT ('0', 3 - LENGTH (VARCHAR (R.AOLIN#))) || 
+					--BOM line#'s
+					VARCHAR (R.AOLIN#) || 
+					--method sequence #'s
+					SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) 
+			END
 		WHEN 3 THEN
 			--parent sort key
 			PSE.CLINE || '-' ||
@@ -185,12 +205,7 @@ SELECT
 	CASE PSE.RTYP
 		WHEN 'R' THEN
 			CASE PP.V6RPLN
-				WHEN 1 THEN 
-					CASE A.V6RPLN
-						WHEN 1 THEN 'R'
-						ELSE 'B'
-					END
-				ELSE ''
+				WHEN 1 THEN 'B'
 			END
 		WHEN 'B' THEN
 			CASE PP.V6RPLN
@@ -287,8 +302,7 @@ FROM
 		AOPART = PSE.CHLD AND
 		AOPLNT = PSE.SPLNT AND
 		PP.V6RPLN = 1 AND
-		PSE.RTYP IN ('R','T')
-		--need to exclude linking in the ro
+		PSE.RTYP IN ('B','T')
 	LEFT OUTER JOIN LGDAT.DEPTS ON
 		AADEPT = AODEPT
 	LEFT OUTER JOIN LGDAT.METHDO ON
@@ -301,7 +315,7 @@ FROM
 		M.AQPLNT = PSE.SPLNT AND
 		M.AQSEQ# = PSE.SEQ AND
 		PP.V6RPLN = 1 AND
-		PSE.RTYP IN ('R','B')
+		PSE.RTYP = 'R'
 		--this is going to have to accomodate type 1's that don't have a BOM in order to stop the explosion, otherwise it will recurse infinately
 		--dependency that there is only one os sequence
 	---join the the procurement path of the BOM children
@@ -352,12 +366,12 @@ FROM
 		B86RTTY = 'S'		 
 WHERE 
 	LVL <= 10 
-	AND PSE.REPL <> '2' 
+	AND PSE.REPL <> '2' AND
+	COALESCE(AOPLNT,AQPLNT,PP.V6TPLN,'') <> ''
+
 ) 
   
 SELECT 
-	PSE.*
-	/*
 	MAST, 
 	MPLT, 
 	REPEAT ('.  ', LVL) || LVL AS TLVL, 
@@ -376,7 +390,7 @@ SELECT
 	DEP, 
 	RESC, 
 	OPC, 
-	AOREPP, 
+	REPP, 
 	REFF, 
 	XREFF, 
 	RQBY, 
@@ -489,7 +503,6 @@ SELECT
 	CASE ABLABR WHEN 0 THEN AASTDR ELSE ABLABR END * AOSETP * AOSCRW / V6OPTR * ERQTY * (1 / XREFF - 1) LABSXS, 
 	CASE ABBRDR WHEN 0 THEN AABRDR ELSE ABBRDR END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) FIXSXS, 
 	CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) VARSXS
-	*/
 FROM 
 	PSE PSE 
 	LEFT OUTER JOIN LGDAT.ICSTM IM ON 
@@ -509,7 +522,8 @@ FROM
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = CHLD AND 
 		AOPLNT = SPLNT AND 
-		AOSEQ# = SEQ 
+		AOSEQ# = SEQ AND
+		PSE.RTYP = 'R'
 	LEFT OUTER JOIN LGDAT.STKA ON 
 		V6PART = CHLD AND 
 		V6PLNT = SPLNT 
