@@ -10,8 +10,7 @@
 --duty, shipping and warehousing on the ICSTR file and the misc1 & 2 cost categories functions are not known but included here anyways 
 --it is assumed any conversion issues are handled in a single step by the PUNIT file, which doesn't always have a single step conversion 
 ---------------------------------------------------------------------------------------------------------------------------------------- 
-CREATE TABLE QGPL.FFBSREQF AS
-(
+
 WITH RECURSIVE PSE 
 	(
 		 ------------EXPLOSION TRACKING---------------- 
@@ -545,5 +544,4 @@ FROM
 	LEFT OUTER JOIN LGDAT.MMGP MMGP ON 
 		MMGP.BRMGRP = COALESCE (AWMING, AVMING) AND 
 		MMGP.BRGRP = COALESCE (AWMAJG, AVMAJG) 
-ORDER BY CLINE ASC 
-) WITH NO DATA
+ORDER BY CLINE ASC
