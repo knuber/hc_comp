@@ -75,7 +75,7 @@ SELECT
         )
     ,5) TOTAL_CALC
 FROM
-    QGPL.FFBSMRPC
+    QGPL.FFBSREQC
 GROUP BY
     MAST,
     MPLT
@@ -157,7 +157,7 @@ SELECT
         )
     ,5) TOTAL_CALC
 FROM
-    QGPL.FFBSMRPF
+    QGPL.FFBSREQF
 GROUP BY
     MAST,
     MPLT   
