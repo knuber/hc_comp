@@ -10,8 +10,8 @@
 --duty, shipping and warehousing on the ICSTR file and the misc1 & 2 cost categories functions are not known but included here anyways 
 --it is assumed any conversion issues are handled in a single step by the PUNIT file, which doesn't always have a single step conversion 
 ---------------------------------------------------------------------------------------------------------------------------------------- 
-
-  
+CREATE TABLE QGPL.FFBSREQC AS
+(
 WITH RECURSIVE PSE 
 	(
 		 ------------EXPLOSION TRACKING---------------- 
@@ -99,15 +99,21 @@ SELECT
 	SUBSTR (SC.A215, 152, 2) SPC, 
 	B86SRTE FXR
 FROM 
-	LGDAT.STKA A 
+	QGPL.FFBSUPP S
+	INNER JOIN  LGDAT.STKA A  ON
+		S.PART = V6PART AND
+		S.PLNT = V6PLNT
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = A.V6PART AND 
 		AOPLNT = A.V6PLNT AND
 		A.V6RPLN = 1
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		AADEPT = AODEPT
 	LEFT OUTER JOIN LGDAT.METHDO ON 
 		APPART = A.V6PART AND 
 		APPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND 
-		A.V6RPLN = 1 
+		A.V6RPLN = 1 AND
+		AAOSRV = 'Y'
 	LEFT OUTER JOIN LGDAT.PLNT CP ON 
 		CP.YAPLNT = A.V6PLNT 
 	LEFT OUTER JOIN LGDAT.PLNT SP ON 
@@ -122,9 +128,6 @@ FROM
 		B86COMN = SP.YACOMP AND 
 		B86CURC = SUBSTR (CC.A215, 152, 2) AND 
 		B86RTTY = 'S' 
-WHERE 
-	V6PART = 'AZE06000B71C036LRT44' AND 
-	V6PLNT = '112'
   
 UNION ALL 
 /*
@@ -541,4 +544,4 @@ FROM
 		MMGP.BRMGRP = COALESCE (AWMING, AVMING) AND 
 		MMGP.BRGRP = COALESCE (AWMAJG, AVMAJG) 
 ORDER BY CLINE ASC 
-
+) WITH NO DATA
