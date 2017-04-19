@@ -1,4 +1,28 @@
 
+DROP TABLE QGPL.FFBSUPP;
+
+CREATE TABLE QGPL.FFBSUPP(PLNT VARCHAR(3), PART VARCHAR(20), SEQ INT);
+
+INSERT INTO 
+	QGPL.FFBSUPP
+SELECT
+	PLNT,
+	PART,
+	ROW_NUMBER() OVER (ORDER BY PLNT, PART)
+FROM
+	QGPL.FFBS0403
+WHERE
+	SUBSTR(GLEC,1,1) IN ('1','2') AND
+	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
+	B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01'
+GROUP BY
+	PLNT,
+	PART
+ORDER BY 
+	PLNT,
+	PART;
+
+
 --PRODUCT STRUCTURE EXPLOSION DETAILS-- 
 --REVISION LEVEL 3
 ---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -10,8 +34,23 @@
 --duty, shipping and warehousing on the ICSTR file and the misc1 & 2 cost categories functions are not known but included here anyways 
 --it is assumed any conversion issues are handled in a single step by the PUNIT file, which doesn't always have a single step conversion 
 ---------------------------------------------------------------------------------------------------------------------------------------- 
-CREATE TABLE QGPL.FFBSREQC AS
+
+--DROP TABLE QGPL.FFBSMRPC;
+
+/*
+optional to create the table do 
+CREATE TABLE
+	QGPL.FFBSMRC AS
+
 (
+	CTE
+) WITH NO DATA
+*/
+
+DELETE FROM QGPL.FFBSREQC;
+
+INSERT INTO 
+	QGPL.FFBSREQC
 WITH RECURSIVE PSE 
 	(
 		 ------------EXPLOSION TRACKING---------------- 
@@ -113,7 +152,7 @@ FROM
 		APPART = A.V6PART AND 
 		APPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND 
 		A.V6RPLN = 1 AND
-		AAOSRV = 'Y'
+		AAOSRCE = 'Y'
 	LEFT OUTER JOIN LGDAT.PLNT CP ON 
 		CP.YAPLNT = A.V6PLNT 
 	LEFT OUTER JOIN LGDAT.PLNT SP ON 
@@ -543,5 +582,4 @@ FROM
 	LEFT OUTER JOIN LGDAT.MMGP MMGP ON 
 		MMGP.BRMGRP = COALESCE (AWMING, AVMING) AND 
 		MMGP.BRGRP = COALESCE (AWMAJG, AVMAJG) 
-ORDER BY CLINE ASC 
-) WITH NO DATA
+ORDER BY CLINE ASC ;
