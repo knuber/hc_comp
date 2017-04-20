@@ -1,115 +1,3 @@
-/*
-DROP TABLE QGPL.FFBSMRPC;
-CREATE TABLE QGPL.FFBSMRPC(
-    MAST VARCHAR(20), 
-	MPLT VARCHAR(3), 
-	TLVL VARCHAR(4011), 
-	TPART VARCHAR(4020), 
-	DESCR VARCHAR(4030), 
-	PLINE VARCHAR(4113), 
-	CLINE VARCHAR(4113), 
-	PART VARCHAR(20), 
-	CPLNT VARCHAR(3), 
-	STAT VARCHAR(1), 
-    REPL VARCHAR(1), 
-    SPLNT VARCHAR(3), 
-    SEQ NUMERIC(3,0), 
-    OUTS VARCHAR(1), 
-    DEP VARCHAR(5), 
-    RESC VARCHAR(10), 
-    OPC VARCHAR(30), 
-    AOREPP VARCHAR(1), 
-	REFF FLOAT, 
-    XREFF FLOAT, 
-	RQBY VARCHAR(1), 
-    BACK VARCHAR(1), 
-	MAJG VARCHAR(3), 
-	MING VARCHAR(24), 
-	GLCD VARCHAR(3), 
-	GLED VARCHAR(3), 
-	SCRP FLOAT, 
-	RQTY FLOAT, 
-	ERQTY FLOAT, 
-	ERQTYS FLOAT, 
-	UNTI VARCHAR(3),
-    BUOM VARCHAR(3),
-    CONV FLOAT, 
-	CPC VARCHAR(2), 
-    SPC VARCHAR(2), 
-	DT DATE, 
-	BASE NUMERIC(11,5), 
-	FRT NUMERIC(11,5), 
-	DUTY NUMERIC(11,5), 
-	MISC1 NUMERIC(11,5), 
-	MISC2 NUMERIC(11,5), 
-	CURR NUMERIC(16,5), 
-	"S&H" NUMERIC(11,5), 
-	"FRT-TO" NUMERIC(11,5), 
-	"FRT-FROM" NUMERIC(11,5), 
-	SUBC NUMERIC(11,5), 
-	RUNTIME NUMERIC(10,4), 
-	RUNCREW NUMERIC(31,29), 
-	SETTIME NUMERIC(8,2), 
-	RUNSIZE NUMERIC(15,5), 
-	SETCREW NUMERIC(2,0), 
-	LABRATE NUMERIC(6,2), 
-	FIXRATE NUMERIC(6,2), 
-	VARRATE NUMERIC(6,2), 
-	LABRUN NUMERIC(31,23), 
-	FIXRUN NUMERIC(31,23), 
-	VARRUN NUMERIC(31,23), 
-	LABSET NUMERIC(31,14), 
-	FIXSET NUMERIC(31,16), 
-	VARSET NUMERIC(31,16), 
-	BASEX FLOAT, 
-	FRTX FLOAT, 
-	CURRX FLOAT, 
-	OTHMX FLOAT, 
-	SUBCX FLOAT, 
-	LABRX FLOAT, 
-	FIXRX FLOAT, 
-	VARRX FLOAT, 
-	LABSX FLOAT, 
-	FIXSX FLOAT, 
-	VARSX FLOAT, 
-	BASEXS FLOAT, 
-	FRTXS FLOAT, 
-	CURRXS FLOAT, 
-	OTHMXS FLOAT, 
-	SUBCXS FLOAT, 
-	LABRXS FLOAT, 
-	FIXRXS FLOAT, 
-	VARRXS FLOAT, 
-	LABSXS FLOAT, 
-	FIXSXS FLOAT, 
-	VARSXS FLOAT
-
-);
-*/
-
-DROP TABLE QGPL.FFBSUPP;
-
-CREATE TABLE QGPL.FFBSUPP(PLNT VARCHAR(3), PART VARCHAR(20), SEQ INT);
-
-INSERT INTO 
-	QGPL.FFBSUPP
-SELECT
-	PLNT,
-	PART,
-	ROW_NUMBER() OVER (ORDER BY PLNT, PART)
-FROM
-	QGPL.FFBS0403
-WHERE
-	SUBSTR(GLEC,1,1) IN ('1','2') AND
-	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
-	B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01'
-GROUP BY
-	PLNT,
-	PART
-ORDER BY 
-	PLNT,
-	PART;
-
 
 --PRODUCT STRUCTURE EXPLOSION DETAILS-- 
 --REVISION LEVEL 3
@@ -122,28 +10,12 @@ ORDER BY
 --duty, shipping and warehousing on the ICSTR file and the misc1 & 2 cost categories functions are not known but included here anyways 
 --it is assumed any conversion issues are handled in a single step by the PUNIT file, which doesn't always have a single step conversion 
 ---------------------------------------------------------------------------------------------------------------------------------------- 
-
---DROP TABLE QGPL.FFBSMRPC;
-
-/*
-optional to create the table do 
-CREATE TABLE
-	QGPL.FFBSMRC AS
-
+CREATE TABLE QGPL.FFBSREQC AS
 (
-	CTE
-) WITH NO DATA
-*/
-
-DELETE FROM QGPL.FFBSMRPC;
-
-INSERT INTO
-	QGPL.FFBSMRPC
-WITH
-	RECURSIVE PSE 
+WITH RECURSIVE PSE 
 	(
 		 ------------EXPLOSION TRACKING---------------- 
-		LVL, PLINE, CLINE, MAST, MPLT, PRNT, CHLD, 
+		LVL, PLINE, CLINE, MAST, MPLT, PRNT, CHLD, RTYP,
 		 ------------PROCUREMENT----------------------- 
 		STAT, REPL, 
 		 ------------ROUTING--------------------------- 
@@ -160,53 +32,88 @@ WITH
 (
 SELECT 
 	0, 
-	VARCHAR (SUBSTR (DIGITS (INT (RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC))), 6, 5), 100) || 
+	/* sort key must accomodate pass-through transfers & multiple sequences*/
+	------parent sort key----------
+	VARCHAR (
+		SUBSTR (
+			DIGITS (
+				INT (
+					RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC)
+				)
+			)
+		, 6, 5)
+	, 100) || 
 	CASE WHEN AOSEQ# < 10 
 		THEN SUBSTR (DIGITS (- AOSEQ# + 9), 2, 3) 
 		ELSE '' 
 	END AS PLINE, 
-	VARCHAR (SUBSTR (DIGITS (INT (RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC))), 6, 5), 100) || SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) AS CLINE, 
-	A.V6PART, 
-	A.V6PLNT, 
-	A.V6PART, 
-	A.V6PART, 
-	A.V6STAT, 
-	A.V6RPLN, 
-	AOSEQ#, 
-	AODEPT, 
-	COALESCE (APVEND, AORESC), 
-	COALESCE (APODES, AOOPNM), 
-	AOREPP, 
-	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8), 
-	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8), 
-	'R', 
-	' ', 
-	1, 
-	1, 
-	1, 
-	1, 
-	1, 
-	1, 
-	A.V6UNTI, 
-	A.V6UNTI, 
-	FLOAT (1), 
-	A.V6PLNT, 
-	CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE A.V6PLNT END, 
-	SUBSTR (CC.A215, 152, 2), 
-	SUBSTR (SC.A215, 152, 2), 
-	B86SRTE 
+	------child sort key (master)----------
+	VARCHAR (
+		SUBSTR (
+			DIGITS (
+				INT (
+					RANK () OVER (ORDER BY A.V6PART ASC, A.V6PLNT ASC)
+				)
+			)
+		, 6, 5)
+	, 100) || 
+	CASE A.V6RPLN
+		WHEN 1 THEN
+			SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) 
+		WHEN 3 THEN 'T' || A.V6TPLN	
+		WHEN 2 THEN ''
+	END AS CLINE, 
+	---------------------------
+	A.V6PART MAST, 
+	A.V6PLNT MPLT, 
+	A.V6PART PRNT, 
+	A.V6PART CHLD, 
+	CASE A.V6RPLN
+		WHEN 1 THEN 'R'
+		WHEN 2 THEN 'B'
+		WHEN 3 THEN 'T'
+	END RTYP,
+	A.V6STAT STAT, 
+	A.V6RPLN RPLN, 
+	AOSEQ# SEQ, 
+	AODEPT DEP, 
+	COALESCE (APVEND, AORESC) RESC, 
+	COALESCE (APODES, AOOPNM) OPC, 
+	AOREPP REPP, 
+	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8) REFF, 
+	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8) XREFF, 
+	'R' RQBY, 
+	' ' BACK, 
+	1 SCRP, 
+	1 EFF, 
+	1 QTY,  
+	1 BQTY, 
+	1 RQTY, 
+	1 ERQTY, 
+	A.V6UNTI UNIT, 
+	A.V6UNTI BUOM, 
+	FLOAT (1) CONV, 
+	A.V6PLNT CPLNT, 
+	CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE A.V6PLNT END SPLNT, 
+	SUBSTR (CC.A215, 152, 2) CPC, 
+	SUBSTR (SC.A215, 152, 2) SPC, 
+	B86SRTE FXR
 FROM 
-	QGPL.FFBSUPP SALES
-	LEFT OUTER JOIN LGDAT.STKA A ON
-		V6PART = SALES.PART AND
-		V6PLNT = SALES.PLNT
+	QGPL.FFBSUPP S
+	INNER JOIN  LGDAT.STKA A  ON
+		S.PART = V6PART AND
+		S.PLNT = V6PLNT
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = A.V6PART AND 
-		AOPLNT = CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE A.V6PLNT END 
+		AOPLNT = A.V6PLNT AND
+		A.V6RPLN = 1
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		AADEPT = AODEPT
 	LEFT OUTER JOIN LGDAT.METHDO ON 
 		APPART = A.V6PART AND 
 		APPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND 
-		A.V6RPLN = 1 
+		A.V6RPLN = 1 AND
+		AAOSRV = 'Y'
 	LEFT OUTER JOIN LGDAT.PLNT CP ON 
 		CP.YAPLNT = A.V6PLNT 
 	LEFT OUTER JOIN LGDAT.PLNT SP ON 
@@ -223,20 +130,114 @@ FROM
 		B86RTTY = 'S' 
   
 UNION ALL 
-  
+/*
+===============================================================================================================================================================================================================
+*/  
+
 SELECT 
 	PSE.LVL + 1, 
-	CASE WHEN AOSEQ# < 10 
-		THEN PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 9, AQSEQ#)), 2, 3) 
-		ELSE VARCHAR (PSE.CLINE, 100) 
-	END, 
-	PSE.CLINE || '-' || REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || VARCHAR (M.AQLIN#) || SUBSTR (DIGITS (COALESCE (- AOSEQ# + 10, AQSEQ#)), 2, 3), 
+	-----parent sort key-----
+	CASE PP.V6RPLN
+		WHEN 1 THEN
+			CASE PSE.RTYP
+				WHEN 'R' THEN
+					PSE.CLINE
+				ELSE
+					--should evaluate to a scenario where the incoming parent is a make but is not a routing (thus the initial routing linkage)
+					--it is assumed that all the sequnces at play will be present in the routing and sync with all other method file sequences of the same number
+
+					--if there are sequences less than 10, then then parent sequence of 9 must be 10 and the parent sequence of 8 must be 9 etc.
+					--the parent of sequence 10 does not exist because it is the last one and can simply inherit the pse.pline sort key
+					CASE WHEN AOSEQ# < 10 
+						THEN 
+							--parent line
+							PSE.CLINE || '-' || 
+							--BOM line # leading 0's
+							REPEAT ('0', 3 - LENGTH (VARCHAR (R.AOLIN#))) || 
+							--BOM line #
+							VARCHAR (R.AOLIN#) ||
+							--previous method sequence (assumption that 10 is final sequence and prior seq increment in order by 1 until they reach 10)
+							SUBSTR (DIGITS (- AOSEQ# + 9), 2, 3) 
+						ELSE 
+							PSE.CLINE
+					END 
+			END
+		ELSE
+			PSE.CLINE
+	END PLINE, 
+	-----child sort key------
+	CASE PP.V6RPLN
+		WHEN 1 THEN
+			CASE PSE.RTYP
+				WHEN 'R' THEN
+					--parent sort key
+					PSE.CLINE || '-' || 
+					--BOM line# leading 0's
+					REPEAT ('0', 3 - LENGTH (VARCHAR (M.AQLIN#))) || 
+					--BOM line#'s
+					VARCHAR (M.AQLIN#) || 
+					--method sequence #'s
+					SUBSTR (DIGITS (AQSEQ#), 2, 3) 
+				ELSE
+					--parent sort key
+					PSE.CLINE || '-' || 
+					--BOM line# leading 0's
+					REPEAT ('0', 3 - LENGTH (VARCHAR (R.AOLIN#))) || 
+					--BOM line#'s
+					VARCHAR (R.AOLIN#) || 
+					--method sequence #'s
+					SUBSTR (DIGITS (- AOSEQ# + 10), 2, 3) 
+			END
+		WHEN 3 THEN
+			--parent sort key
+			PSE.CLINE || '-' ||
+			--transfer plant
+			'00T'||PP.V6TPLN
+		WHEN 2 THEN
+			PSE.CLINE
+	END CLINE,
+	-------------------------
 	PSE.MAST, 
 	PSE.MPLT, 
-	PSE.CHLD, 
-	M.AQMTLP, 
-	A.V6STAT, 
-	A.V6RPLN, 
+	PSE.CHLD PRNT, 
+	CASE PP.V6RPLN
+		WHEN 3 THEN PSE.CHLD
+		WHEN 1 THEN COALESCE(M.AQMTLP,PSE.CHLD)
+		WHEN 2 THEN ''
+	END CHLD, 
+	CASE PSE.RTYP
+		WHEN 'R' THEN
+			CASE PP.V6RPLN
+				WHEN 1 THEN 'B'
+			END
+		WHEN 'B' THEN
+			CASE PP.V6RPLN
+				WHEN 1 THEN 'R'
+				WHEN 3 THEN 'T'
+				ELSE ''
+			END
+		WHEN 'T' THEN
+			CASE PP.V6RPLN
+				WHEN 1 THEN 'R'
+				WHEN 2 THEN 'B'
+				WHEN 3 THEN 'T'
+			END
+	END RTYP,
+	CASE PP.V6RPLN
+		WHEN 1 THEN 
+			CASE PSE.RTYP
+				WHEN 'R' THEN
+				 	A.V6STAT
+				ELSE
+					PP.V6STAT
+			END
+		ELSE
+			PP.V6STAT
+	END STAT,
+	CASE PP.V6RPLN
+		WHEN 1 THEN A.V6RPLN
+		ELSE PP.V6RPLN
+	END RPLN, 
 	COALESCE (AOSEQ#, AQSEQ#), 
 	AODEPT, 
 	COALESCE (APVEND, AORESC), 
@@ -244,44 +245,86 @@ SELECT
 	AOREPP, 
 	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8), 
 	ROUND (FLOAT (1 / IFNULL (AOEFC1, 1)), 8) * PSE.XREFF, 
-	M.AQRQBY, 
-	M.AQBACK, 
-	FLOAT (1 - M.AQSCRP / 100), 
-	1, 
-	M.AQQPPC, 
-	M.AQQTYM, 
-	FLOAT (M.AQQPPC / M.AQQTYM) / FLOAT (1 - M.AQSCRP / 100) * CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END, 
-	FLOAT (M.AQQPPC / M.AQQTYM) * FLOAT (PSE.ERQTY) / FLOAT (1 - M.AQSCRP / 100) * CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END, 
-	A.V6UNTI, 
-	M.AQUNIT, 
-	FLOAT (COALESCE (U.MULT_BY, 1)) * FLOAT (COALESCE (U2.MULT_BY, 1)) * PSE.CONV, 
-	M.AQPLNT, 
-	CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE M.AQPLNT END, 
-	SUBSTR (CC.A215, 152, 2), 
-	SUBSTR (SC.A215, 152, 2), 
+	COALESCE(M.AQRQBY,'R') RQBY, 
+	COALESCE(M.AQBACK,'') BACK, 
+	COALESCE(FLOAT (1 - M.AQSCRP / 100),1.0) SCRP, 
+	1 EFF, 
+	COALESCE(M.AQQPPC,1) QTY, 
+	COALESCE(M.AQQTYM,1) BQTY, 
+	COALESCE(
+			--qty required per 1 parent
+			FLOAT (M.AQQPPC / M.AQQTYM) / 
+			--scrap factor in BOM
+			FLOAT (1 - M.AQSCRP / 100) * 
+			--byproduct flag
+			CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
+		,1) RQTY, 
+	COALESCE(
+			--qty required per 1 parent
+			FLOAT (M.AQQPPC / M.AQQTYM) * 
+			--parent extended required qty
+			FLOAT (PSE.ERQTY) / 
+			--scrap in BOM
+			FLOAT (1 - M.AQSCRP / 100) * 
+			--byproduct flag
+			CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
+		--parent extended req qty
+		,PSE.ERQTY
+	) ERQTY, 
+	---build in transfer conversion here.
+	--A2 is going to be either the BOM uom in the source plant (or consumption plant if none) or the uom of the parent part in the transfer plant if pass-through
+	CASE PP.V6RPLN 
+		WHEN 1 THEN 
+			A.V6UNTI
+		ELSE
+			PP.V6UNTI 
+	END UNIT,
+	M.AQUNIT BUOM, 
+	FLOAT (COALESCE (U.MULT_BY, 1)) * PSE.CONV CONV, 
+	PSE.SPLNT CPLNT, 
+	--the consumption plant coudl be either a pass through transfer or otherwise need to get the procurement of the BOM components to see if they need transfered
+	CASE PP.V6RPLN
+		WHEN 3 THEN PP.V6TPLN 
+		WHEN 1 THEN	
+			CASE A.V6RPLN
+				WHEN 3 THEN A.V6TPLN
+				ELSE A.V6PLNT
+			END
+		ELSE PP.V6PLNT
+	END SPLNT,
+	SUBSTR (CC.A215, 152, 2) CPC, 
+	SUBSTR (SC.A215, 152, 2) SPC, 
 	B86SRTE * PSE.FXR 
 FROM 
 	PSE PSE 
-	INNER JOIN LGDAT.METHDM M ON 
-		M.AQPART = PSE.CHLD AND 
-		M.AQPLNT = PSE.SPLNT AND 
-		M.AQSEQ# = IFNULL (PSE.SEQ, M.AQSEQ#) AND 
-		 ----------MOD 10/20/15------------- 
-		PSE.REPL <> '2' 
+	---join last leaf on tree to its procurement path
+	INNER JOIN LGDAT.STKA PP ON
+		PP.V6PART = PSE.CHLD AND
+		PP.V6PLNT = PSE.SPLNT
+	LEFT OUTER JOIN LGDAT.METHDR R ON
+		AOPART = PSE.CHLD AND
+		AOPLNT = PSE.SPLNT AND
+		PP.V6RPLN = 1 AND
+		PSE.RTYP IN ('B','T')
+	LEFT OUTER JOIN LGDAT.DEPTS ON
+		AADEPT = AODEPT
+	LEFT OUTER JOIN LGDAT.METHDO ON
+		AAOSRV = 'Y' AND
+		APPART = AOPART AND
+		APPLNT = AOPLNT AND
+		APSEQ# = AOSEQ#
+	LEFT OUTER JOIN LGDAT.METHDM M ON
+		M.AQPART = PSE.CHLD AND
+		M.AQPLNT = PSE.SPLNT AND
+		M.AQSEQ# = PSE.SEQ AND
+		PP.V6RPLN = 1 AND
+		PSE.RTYP = 'R'
+		--this is going to have to accomodate type 1's that don't have a BOM in order to stop the explosion, otherwise it will recurse infinately
+		--dependency that there is only one os sequence
+	---join the the procurement path of the BOM children
 	LEFT OUTER JOIN LGDAT.STKA A ON 
-		A.V6PART = M.AQMTLP AND 
-		A.V6PLNT = M.AQPLNT 
-	LEFT OUTER JOIN LGDAT.STKA A2 ON 
-		A2.V6PART = M.AQMTLP AND 
-		A2.V6PLNT = A.V6TPLN 
-	LEFT OUTER JOIN LGDAT.METHDR ON 
-		AOPART = M.AQMTLP AND 
-		AOPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND
-		A.V6RPLN = 1
-	LEFT OUTER JOIN LGDAT.METHDO ON 
-		APPART = M.AQMTLP AND 
-		APPLNT = CASE A.V6TPLN WHEN '' THEN A.V6PLNT ELSE A.V6TPLN END AND 
-		A.V6RPLN = 1 
+		A.V6PART = COALESCE(M.AQMTLP,PSE.CHLD) AND 
+		A.V6PLNT = PSE.SPLNT
 	LEFT OUTER JOIN 
 	(
 	SELECT 
@@ -302,30 +345,18 @@ FROM
 	) U ON 
 		U.UNT1 = M.AQUNIT AND 
 		U.UNT2 = A.V6UNTI 
-	LEFT OUTER JOIN 
-	(
-	SELECT 
-		IHUNT1 AS UNT1, IHUNT2 AS UNT2, IHCNV2 / IHCNV1 AS MULT_BY 
-	FROM 
-		LGDAT.PUNIT 
-	WHERE 
-		IHPART = '&&GLOBAL' 
-  
-	UNION ALL 
-  
-	SELECT 
-		IHUNT2 AS UNT1, IHUNT1 AS UNT2, IHCNV1 / IHCNV2 AS MULT_BY 
-	FROM 
-		LGDAT.PUNIT 
-	WHERE 
-		IHPART = '&&GLOBAL' 
-	) U2 ON 
-		LTRIM (RTRIM (U2.UNT1)) = A.V6UNTI AND 
-		LTRIM (RTRIM (U2.UNT2)) = A2.V6UNTI 
 	LEFT OUTER JOIN LGDAT.PLNT CP ON 
-		CP.YAPLNT = M.AQPLNT 
+		CP.YAPLNT = PSE.SPLNT
 	LEFT OUTER JOIN LGDAT.PLNT SP ON 
-		SP.YAPLNT = CASE A.V6RPLN WHEN '3' THEN A.V6TPLN ELSE M.AQPLNT END 
+		SP.YAPLNT = CASE PP.V6RPLN
+						WHEN 3 THEN PP.V6TPLN 
+						WHEN 1 THEN	
+							CASE A.V6RPLN
+								WHEN 3 THEN A.V6TPLN
+								ELSE A.V6PLNT
+							END
+						ELSE PP.V6PLNT
+					END
 	LEFT OUTER JOIN LGDAT.CODE CC ON 
 		LTRIM (RTRIM (CC.A9)) = CP.YACOMP AND 
 		CC.A2 = 'AA' 
@@ -338,9 +369,11 @@ FROM
 		B86RTTY = 'S'		 
 WHERE 
 	LVL <= 10 
-	AND PSE.REPL <> '4' 
-) 
+	AND PSE.REPL <> '2' AND
+	COALESCE(AOPLNT,AQPLNT,PP.V6TPLN,'') <> ''
 
+) 
+  
 SELECT 
 	MAST, 
 	MPLT, 
@@ -349,6 +382,7 @@ SELECT
 	REPEAT ('.  ', LVL) || COALESCE (AWDES1, AVDES1) DESCR, 
 	PLINE, 
 	CLINE, 
+	RTYP,
 	PSE.CHLD PART, 
 	CPLNT, 
 	STAT, 
@@ -359,7 +393,7 @@ SELECT
 	DEP, 
 	RESC, 
 	OPC, 
-	AOREPP, 
+	REPP, 
 	REFF, 
 	XREFF, 
 	RQBY, 
@@ -381,7 +415,10 @@ SELECT
 	 --FXR, 
 	 --COALESCE(IP.CHCURR, IR.Y0FUT1) AS CURR, 
 	COALESCE (IP.CHSDAT, IR.Y0SDAT, IM.CGSDAT) DT, 
-	IP.CHSUC BASE, 
+	CASE REPL 
+		WHEN 2 THEN COALESCE(IP.CHSUC, IM.CGSTCS, IR.Y0STCS)
+		ELSE IP.CHSUC
+	END BASE
 	IP.CHSFC FRT, 
 	IP.CHSDC DUTY, 
 	IP.CHS1C MISC1, 
@@ -439,7 +476,10 @@ SELECT
 	CASE ABBRDR WHEN 0 THEN AABRDR ELSE ABBRDR END * AOSETP / V6OPTR FIXSET, 
 	CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END * AOSETP / V6OPTR VARSET, 
 	 ----------EXTENDED VALUES---------- 
-	IP.CHSUC * ERQTY BASEX, 
+	CASE REPL 
+		WHEN 2 THEN COALESCE(IP.CHSUC, IM.CGSTCS, IR.Y0STCS)
+		ELSE IP.CHSUC
+	END * ERQTY BASEX, 
 	IP.CHSFC * ERQTY FRTX, 
 	IP.CHSDC * ERQTY DUTYX,
 	IP.CHS1C * ERQTY MULT1X,
@@ -456,7 +496,10 @@ SELECT
 	CASE ABBRDR WHEN 0 THEN AABRDR ELSE ABBRDR END * AOSETP / V6OPTR * ERQTY FIXSX, 
 	CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END * AOSETP / V6OPTR * ERQTY VARSX, 
 	 --------SCRAP---------- 
-	IP.CHSUC * ERQTY * (1 / XREFF - 1) BASEXS, 
+	CASE REPL 
+		WHEN 2 THEN COALESCE(IP.CHSUC, IM.CGSTCS, IR.Y0STCS)
+		ELSE IP.CHSUC
+	END * ERQTY * (1 / XREFF - 1) BASEXS, 
 	IP.CHSFC * ERQTY * (1 / XREFF - 1) FRTXS, 
 	IP.CHSDC * ERQTY * (1 / XREFF - 1) DUTYXS,
 	IP.CHS1C * ERQTY * (1 / XREFF - 1) MULT1XS,
@@ -471,7 +514,7 @@ SELECT
 	CASE WHEN AAOSRV = 'Y' THEN 0 ELSE CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END / AORUNS * ERQTY * (1 / XREFF - 1) END VARRXS, 
 	CASE ABLABR WHEN 0 THEN AASTDR ELSE ABLABR END * AOSETP * AOSCRW / V6OPTR * ERQTY * (1 / XREFF - 1) LABSXS, 
 	CASE ABBRDR WHEN 0 THEN AABRDR ELSE ABBRDR END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) FIXSXS, 
-	CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) VARSXS 
+	CASE ABVBRD WHEN 0 THEN AAVBRD ELSE ABVBRD END * AOSETP / V6OPTR * ERQTY * (1 / XREFF - 1) VARSXS
 FROM 
 	PSE PSE 
 	LEFT OUTER JOIN LGDAT.ICSTM IM ON 
@@ -491,7 +534,8 @@ FROM
 	LEFT OUTER JOIN LGDAT.METHDR ON 
 		AOPART = CHLD AND 
 		AOPLNT = SPLNT AND 
-		AOSEQ# = SEQ 
+		AOSEQ# = SEQ AND
+		PSE.RTYP = 'R'
 	LEFT OUTER JOIN LGDAT.STKA ON 
 		V6PART = CHLD AND 
 		V6PLNT = SPLNT 
@@ -508,4 +552,5 @@ FROM
 	LEFT OUTER JOIN LGDAT.MMGP MMGP ON 
 		MMGP.BRMGRP = COALESCE (AWMING, AVMING) AND 
 		MMGP.BRGRP = COALESCE (AWMAJG, AVMAJG) 
-ORDER BY CLINE ASC;
+ORDER BY CLINE ASC 
+) WITH NO DATA
