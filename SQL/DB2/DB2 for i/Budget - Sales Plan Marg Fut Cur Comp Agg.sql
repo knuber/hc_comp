@@ -2,6 +2,7 @@ WITH CUR AS (
 SELECT
     MAST,
     MPLT,
+	------resin requirement qty--------------------------------------------
 	SUM(
 			CASE MAJG||RQBY||REPL
 				WHEN '710R2' THEN 
@@ -9,6 +10,7 @@ SELECT
 				ELSE 0
 			END
 	) RES_REQ_QTY,
+	------resin byproduct qty----------------------------------------------
 	SUM(
 			CASE MAJG||RQBY||REPL
 				WHEN '710B2' THEN 
@@ -16,6 +18,7 @@ SELECT
 				ELSE 0
 			END
 	) RES_BYP_QTY,
+	--------------------------------------------------
 		SUM(
 			CASE MAJG||RQBY||REPL
 				WHEN '710R2' THEN 
@@ -23,6 +26,7 @@ SELECT
 				ELSE 0
 			END
 	) RES_REQ_VAL,
+	--------------------------------------------------
 	SUM(
 			CASE MAJG||RQBY||REPL
 				WHEN '710B2' THEN 
@@ -30,6 +34,7 @@ SELECT
 				ELSE 0
 			END
 	) RES_BYP_VAL,
+	--------------------------------------------------
 	SUM(
 		CASE MAJG
 			WHEN '910' THEN
@@ -40,6 +45,7 @@ SELECT
 			ELSE 0
 		END
 	) D10_CORRUGATE,
+	--------------------------------------------------
 	SUM(
 		CASE MAJG
 			WHEN '910' THEN
@@ -86,6 +92,7 @@ SELECT
 				0
 		END
 	) SCRPVAL710,
+	SUM((ERQTY+ERQTYS)*(1/RUNTIME)) EH,
     SUM(COALESCE(BASEX,0)) BASE,
     SUM(COALESCE(FRTX,0)) FREIGHT,
     SUM(COALESCE(DUTYX,0)) DUTY,
@@ -252,6 +259,7 @@ SELECT
 				0
 		END
 	) SCRPVAL710,
+	SUM((ERQTY+ERQTYS)*(1/RUNTIME)) EH,
     SUM(COALESCE(BASEX,0)) BASE,
     SUM(COALESCE(FRTX,0)) FREIGHT,
     SUM(COALESCE(DUTYX,0)) DUTY,
@@ -398,6 +406,7 @@ SELECT
 	C.D13_WRAP * S.QTY CD13_WRAP,
 	C.SCRPQTY710 * S.QTY CSCRPQTY,
 	C.SCRPVAL710 * S.QTY CSCRPVAL,
+	C.EH * S.QTY CEH,
 	C.BASE * S.QTY CBASE,
 	C.FREIGHT * S.QTY CFREIGHT,
 	C.DUTY * S.QTY CDUTY,
@@ -426,6 +435,7 @@ SELECT
 	F.D13_WRAP * S.QTY FD13_WRAP,
 	F.SCRPQTY710 * S.QTY FSCRPQTY,
 	F.SCRPVAL710 * S.QTY FSCRPVAL,
+	F.EH * S.QTY FEH,
 	F.BASE * S.QTY FBASE,
 	F.FREIGHT * S.QTY FFREIGHT,
 	F.DUTY * S.QTY FDUTY,
