@@ -68,12 +68,13 @@ indexing a tsrange column of 1M rows takes 33 sec
         lose the gl pattern column and rely on specific implementation below?
 
 **participation**
-| flow name     | vendor        | split         |
-|---------------|---------------|---------------|
-|raw_mat        |i. stern       |.50            |
-|raw_mat        |trademark      |.50            |
+| flow name     | vendor        | split         | range         |
+|---------------|---------------|---------------|---------------|
+|raw_mat        |i. stern       |.50            |[1/1/01, 12/31/20]|
+|raw_mat        |trademark      |.50            |[1/1/01, 12/31/20]|
 
-        is this singular or defined per period?
+        add a column for range? yes. default to wide, but will be available if needs split
+        this will MANDATE consideration in the join logic
 
 **vendor schedule** 
 | flow name     | party         | gl action     | sequence      | interval      |
