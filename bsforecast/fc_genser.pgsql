@@ -1,9 +1,11 @@
 \timing
 SET MAX_PARALLEL_WORKERS_PER_GATHER = 8;
 SET WORK_MEM = 250000;
-EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
+--EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 
 ------build temo table & populate--------------------
+DROP TABLE IF EXISTS _t ;
+EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 CREATE TEMP TABLE _t AS
 SELECT  
     c.reason,
@@ -20,6 +22,7 @@ FROM
 CREATE INDEX x ON _t USING GIST (dayrange);
 
 -------final select----------------------------
+EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 SELECT 
 	reason,
     x.t,
@@ -48,14 +51,20 @@ GROUP BY
 
 -----when a forecast point overlaps multiple forecast basis periods, allocate by days
 
---EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
+EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 SELECT
 	b.a forecast_point,
+	lower(b.a)::date,
+	upper(b.a)::date,
+	/*
 	b.a * x.t intersect_basis,
 	x.t forecast_bases,
 	extract(days from upper(b.a * x.t) - lower(b.a * x.t) + interval '1 days') intersent_interval,
 	extract(days from upper(b.a) - lower(b.a) + interval '1 days') forecast_point_range,
-	extract(days from upper(b.a * x.t) - lower(b.a * x.t) + interval '1 days') / extract(days from upper(b.a) - lower(b.a) + interval '1 days') allocation_to_basis
+	extract(days from upper(b.a * x.t) - lower(b.a * x.t) + interval '1 days') / extract(days from upper(b.a) - lower(b.a) + interval '1 days') allocation_to_basis,
+	x.p,
+	*/
+	SUM(extract(days from upper(b.a * x.t) - lower(b.a * x.t) + interval '1 days') / extract(days from upper(b.a) - lower(b.a) + interval '1 days') * x.p)
 FROM 
 	(VALUES ('[2017-08-27, 2017-09-02]'::tsrange)) b(a)
 	LEFT OUTER JOIN (
@@ -63,7 +72,9 @@ FROM
         		('[2017-06-01, 2017-06-30]'::tsrange, 1300),
         		('[2017-07-01, 2017-07-31]'::tsrange, 1250),
         		('[2017-08-01, 2017-08-31]'::tsrange, 1700),
-        		('[2017-09-01, 2017-09-30]'::tsrange, 1650),
+        		('[2017-09-01, 2017-09-30]'::tsrange, 2000),
         		('[2017-10-01, 2017-10-31]'::tsrange, 900)
    	) x(t, p) ON
 		b.a && x.t
+GROUP BY
+	b.a
