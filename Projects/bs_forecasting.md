@@ -47,27 +47,64 @@ explore
 building out a table with tsrange and 1M rows takes 8 sec
 indexing a tsrange column of 1M rows takes 33 sec
 
-**event master** _equates to fc.chnl_
 
-| flow name     |  gl pattern   |  frequency    |
+**forecast**
+| driver        | fcst range    | amount        |
 |---------------|---------------|---------------|
+|fpv            |[1/1-2/1)      |10,000,000     |
+|fpv            |[2/1-3/1)      |10,000,000     |
+|emh            |[1/1-2/1)      |500,000        |
+|emh            |[2/1-3/1)      |475,000        |
 
-**forecast**            _how are these forecasts generated?_
-| flow name     | fcst range    | amount        |
-|---------------|---------------|---------------|
+        a manual load
 
-**gl pattern**
-| gl pattern    |  defn         |
-|---------------|---------------|
+**event master**
+
+| flow name     |  gl pattern   |  frequency    |forecast       |relation       |
+|---------------|---------------|---------------|---------------|---------------|
+|raw mat        |incur-pay-clear|-              | fpv           |.5             |
+|fg prepay      |incur pay clear relcass|-      | fpv           |.1             |
+
+        lose the gl pattern column and rely on specific implementation below?
 
 **participation**
 | flow name     | vendor        | split         |
 |---------------|---------------|---------------|
+|raw_mat        |i. stern       |.50            |
+|raw_mat        |trademark      |.50            |
 
-**implement gl**
-| vendor        | flow name     | gl pattern    | implementation        | schedule      |
-|---------------|---------------|---------------|-----------------------|---------------|
+        is this singular or defined per period?
 
-**schedules**
-| vendor        | schedule      |
-|---------------|---------------|
+**vendor schedule** 
+| flow name     | party         | gl action     | sequence      | interval      |
+|---------------|---------------|---------------|---------------|---------------|
+|raw_mat        |i. stern       |incur          |1              | 0 days        |
+|raw_mat        |i. stern       |pay            |2              | 60 days       |
+|raw_mat        |i. stern       |clear          |3              | 20 days       |
+|raw_mat        |i. stern       |borrow         |4              | 0 days        |
+
+        do we really need the flow name column? wouldn't this be strictly vendor behaviour?
+        need to be able to snap the pay date to a schedule of check run dates that includes holding AP
+
+
+**valuation**
+| flow name     | party         | gl action     | flag          | account       | sign  |
+|---------------|---------------|---------------|---------------|---------------|-------|
+|raw_mat        |i. stern       |incur          |debit          | 7000-00       |1      |
+|raw_mat        |i. stern       |incur          |credit         | 2000-21       |-1     |
+|raw_mat        |i. stern       |pay            |debit          | 2000-21       |1      |
+|raw_mat        |i. stern       |pay            |credit         | 2000-99       |-1     |
+|raw_mat        |i. stern       |clear          |debit          | 2000-21       |1      |
+|raw_mat        |i. stern       |clear          |credit         | 1010-01       |-1     |
+|raw_mat        |i. stern       |revolver       |debit          | 1010-01       |1      |
+|raw_mat        |i. stern       |revolver       |credit         | 3000-01       |-1     |
+
+
+        do we need a column for `gl_pattern` if a vendor has mutliple patterns involved?
+
+        there are 2k flow/vendor combinations and that doesn't include any customer info
+
+        this table could be built and static or the logic coudl be live but that requires more tables import cms tables?
+                a static table build out would facilitate using logic eventually wihtout needing it right now
+
+        
