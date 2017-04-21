@@ -91,7 +91,8 @@ indexing a tsrange column of 1M rows takes 33 sec
 
         do we really need the flow name column? wouldn't this be strictly vendor behaviour?
         need to be able to snap the pay date to a schedule of check run dates that includes holding AP
-
+        
+        what to do about amortization schedules?
 
 **valuation**
 `fc.dble`
