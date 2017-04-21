@@ -45,3 +45,25 @@ GROUP BY
     x.p;
 
 --DROP TEMP TABLE _t;
+
+-----when a forecast point overlaps multiple forecast basisi periods
+--assumption is that the forecast point is less wide than the forecast basis period
+
+SELECT
+	b.a forecast_point,
+	b.a * x.t intersect_basis,
+	x.t forecast_bases,
+	extract(days from upper(b.a * x.t) - lower(b.a * x.t) + interval '1 days') intersent_interval,
+	extract(days from upper(b.a) - lower(b.a) + interval '1 days'),
+	extract(days from upper(b.a * x.t) - lower(b.a * x.t) + interval '1 days') / extract(days from upper(b.a) - lower(b.a) + interval '1 days')
+FROM 
+	(VALUES ('[2017-08-27, 2017-09-02]'::tsrange)) b(a)
+	LEFT OUTER JOIN (
+        	VALUES
+        		('[2017-06-01, 2017-06-30]'::tsrange, 1300),
+        		('[2017-07-01, 2017-07-31]'::tsrange, 1250),
+        		('[2017-08-01, 2017-08-31]'::tsrange, 1700),
+        		('[2017-09-01, 2017-09-30]'::tsrange, 1650),
+        		('[2017-10-01, 2017-10-31]'::tsrange, 900)
+   	) x(t, p) ON
+		b.a && x.t
