@@ -49,25 +49,25 @@ indexing a tsrange column of 1M rows takes 33 sec
 
 **event master** _equates to fc.chnl_
 
-|`flow_name`    | `gl_pattern`  | `frequency`   |
+| flow name     |  gl pattern   |  frequency    |
 |---------------|---------------|---------------|
 
 **forecast**            _how are these forecasts generated?_
-|`flow_name`    |`fcst_range`   |`amount`       |
+| flow name     | fcst range    | amount        |
 |---------------|---------------|---------------|
 
 **gl pattern**
-|`gl_pattern`   | `defn`        |
+| gl pattern    |  defn         |
 |---------------|---------------|
 
 **participation**
-|`flow_name`    |`vendor`       |`split`        |
+| flow name     | vendor        | split         |
 |---------------|---------------|---------------|
 
 **implement gl**
-|`vendor`       |`flow_name`    |`gl_pattern`   |`implementation`       |`schedule`     |
+| vendor        | flow name     | gl pattern    | implementation        | schedule      |
 |---------------|---------------|---------------|-----------------------|---------------|
 
 **schedules**
-|`vendor`       |`schedule`     |
+| vendor        | schedule      |
 |---------------|---------------|
