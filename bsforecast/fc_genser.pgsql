@@ -1,4 +1,6 @@
+
 \timing
+/*
 SET MAX_PARALLEL_WORKERS_PER_GATHER = 8;
 SET WORK_MEM = 250000;
 --EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
@@ -77,4 +79,50 @@ FROM
    	) x(t, p) ON
 		b.a && x.t
 GROUP BY
-	b.a
+	b.a;
+
+INSERT INTO
+	fc.fcst
+SELECT 
+	'fpc', 
+	('['||g.t::TEXT||', '||g.t + INTERVAL '1 MONTH'||')')::tsrange  , 
+	10000000, 
+	'curr' 
+FROM 
+	generate_series('2017-06-01'::TIMESTAMP,'2018-05-01'::TIMESTAMP,INtERVAL '1 month') g(t);
+*/
+
+/*
+SELECT
+	f.driver,
+	f.perd,
+	f.amount,
+	e.flow,
+	e.factor,
+	p.party,
+	p.split,
+	p.freq
+FROM
+	fc.fcst f
+	INNER JOIN fc.evnt e ON
+		e.driver = f.driver
+	LEFT OUTER JOIN fc.party p ON
+		p.flow = e.flow
+*/
+
+--EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
+SELECT  
+	count(*)
+	/*
+    p.flow,
+    p.party,
+    gs.idat,
+    ('['||gs.idat::text||','||(gs.idat + p.freq)::text||')')::tsrange dayrange,
+    p.freq,
+	p.split
+    --to_char(gs.idat,c.fcst_basis) fbasis
+*/
+FROM    
+    fc.party p
+    LEFT JOIN LATERAL generate_series('2017-06-01'::TIMESTAMP,'2017-06-01'::TIMESTAMP + INTERVAL '12 months', p.freq) gs(idat) ON TRUE
+LIMIT 100;

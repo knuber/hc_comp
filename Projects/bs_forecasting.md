@@ -115,4 +115,4 @@ indexing a tsrange column of 1M rows takes 33 sec
         this table could be built and static or the logic coudl be live but that requires more tables import cms tables?
                 a static table build out would facilitate using logic eventually wihtout needing it right now
 
-        
+# will need to look at adding a location/entity identifier
