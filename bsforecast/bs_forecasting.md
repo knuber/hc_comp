@@ -49,55 +49,63 @@ indexing a tsrange column of 1M rows takes 33 sec
 
 
 **forecast**
-| driver        | fcst range    | amount        |
-|---------------|---------------|---------------|
-|fpv            |[1/1-2/1)      |10,000,000     |
-|fpv            |[2/1-3/1)      |10,000,000     |
-|emh            |[1/1-2/1)      |500,000        |
-|emh            |[2/1-3/1)      |475,000        |
+`fc.fcst`
+
+| driver        | fcst range    | amount        |version        |
+|---------------|---------------|---------------|---------------|
+|fpv            |[1/1-2/1)      |10,000,000     |               |
+|fpv            |[2/1-3/1)      |10,000,000     |               |
+|emh            |[1/1-2/1)      |500,000        |               |
+|emh            |[2/1-3/1)      |475,000        |               |
 
         a manual load
 
 **event master**
+`fc.evnt`
 
-| flow name     |  gl pattern   |  frequency    |forecast       |relation       |
-|---------------|---------------|---------------|---------------|---------------|
-|raw mat        |incur-pay-clear|-              | fpv           |.5             |
-|fg prepay      |incur pay clear relcass|-      | fpv           |.1             |
+| flow name     |  gl pattern   |  frequency    |forecast       |relation       |version        |
+|---------------|---------------|---------------|---------------|---------------|---------------|
+|raw mat        |incur-pay-clear|-              | fpv           |.5             |               |
+|fg prepay      |incur pay clear relcass|-      | fpv           |.1             |               |
 
         lose the gl pattern column and rely on specific implementation below?
 
 **participation**
-| flow name     | vendor        | split         |
-|---------------|---------------|---------------|
-|raw_mat        |i. stern       |.50            |
-|raw_mat        |trademark      |.50            |
+`fc.party`
+| flow name     | vendor        | split         | range                 | frequency  |
+|---------------|---------------|---------------|-----------------------|------------|
+|rawmat         |i. stern       |.50            |[1/1/01, 12/31/20]     | 1 days     |
+|rawmat         |trademark      |.50            |[1/1/01, 12/31/20]     | 3 days     |
 
-        is this singular or defined per period?
+        add a column for range? yes. default to wide, but will be available if needs split
+        this will MANDATE consideration in the join logic
 
 **vendor schedule** 
+`fc.schd`
 | flow name     | party         | gl action     | sequence      | interval      |
 |---------------|---------------|---------------|---------------|---------------|
-|raw_mat        |i. stern       |incur          |1              | 0 days        |
-|raw_mat        |i. stern       |pay            |2              | 60 days       |
-|raw_mat        |i. stern       |clear          |3              | 20 days       |
-|raw_mat        |i. stern       |borrow         |4              | 0 days        |
+|rawmat         |i. stern       |incur          |1              | 0 days        |
+|rawmat         |i. stern       |pay            |2              | 60 days       |
+|rawmat         |i. stern       |clear          |3              | 20 days       |
+|rawmat         |i. stern       |borrow         |4              | 0 days        |
 
         do we really need the flow name column? wouldn't this be strictly vendor behaviour?
         need to be able to snap the pay date to a schedule of check run dates that includes holding AP
-
+        
+        what to do about amortization schedules?
 
 **valuation**
+`fc.dble`
 | flow name     | party         | gl action     | flag          | account       | sign  |
 |---------------|---------------|---------------|---------------|---------------|-------|
-|raw_mat        |i. stern       |incur          |debit          | 7000-00       |1      |
-|raw_mat        |i. stern       |incur          |credit         | 2000-21       |-1     |
-|raw_mat        |i. stern       |pay            |debit          | 2000-21       |1      |
-|raw_mat        |i. stern       |pay            |credit         | 2000-99       |-1     |
-|raw_mat        |i. stern       |clear          |debit          | 2000-21       |1      |
-|raw_mat        |i. stern       |clear          |credit         | 1010-01       |-1     |
-|raw_mat        |i. stern       |revolver       |debit          | 1010-01       |1      |
-|raw_mat        |i. stern       |revolver       |credit         | 3000-01       |-1     |
+|rawmat         |i. stern       |incur          |debit          | 7000-00       |1      |
+|rawmat         |i. stern       |incur          |credit         | 2000-21       |-1     |
+|rawmat         |i. stern       |pay            |debit          | 2000-21       |1      |
+|rawmat         |i. stern       |pay            |credit         | 2000-99       |-1     |
+|rawmat         |i. stern       |clear          |debit          | 2000-21       |1      |
+|rawmat         |i. stern       |clear          |credit         | 1010-01       |-1     |
+|rawmat         |i. stern       |revolver       |debit          | 1010-01       |1      |
+|rawmat         |i. stern       |revolver       |credit         | 3000-01       |-1     |
 
 
         do we need a column for `gl_pattern` if a vendor has mutliple patterns involved?
@@ -107,4 +115,4 @@ indexing a tsrange column of 1M rows takes 33 sec
         this table could be built and static or the logic coudl be live but that requires more tables import cms tables?
                 a static table build out would facilitate using logic eventually wihtout needing it right now
 
-        
+# will need to look at adding a location/entity identifier
