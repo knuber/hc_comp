@@ -146,4 +146,8 @@ FROM
 	LEFT JOIN fc.fcst f ON
 		f.driver = e.driver AND
 		f.perd && ('['||gs.idat::text||','||(gs.idat + p.freq)::text||')')::tsrange
-LIMIT 100;
+ORDER BY
+	flow,
+	dr,
+	party
+LIMIT 1000;
