@@ -133,7 +133,7 @@ SELECT
             extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq)))
             /extract(days from upper(f.perd) - lower(f.perd))::numeric
             *(extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) / extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))))
-        ) * f.amount * e.factor)::numeric
+        ) * f.amount * e.factor * p.split)::numeric
         ,2
 	)
 	AS fcst
