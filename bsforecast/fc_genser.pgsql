@@ -1,8 +1,9 @@
 
 \timing
-/*
+
 SET MAX_PARALLEL_WORKERS_PER_GATHER = 8;
 SET WORK_MEM = 250000;
+/*
 --EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 
 ------build temo table & populate--------------------
@@ -111,18 +112,38 @@ FROM
 */
 
 --EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
+
 SELECT  
-	count(*)
-	/*
     p.flow,
     p.party,
-    gs.idat,
-    ('['||gs.idat::text||','||(gs.idat + p.freq)::text||')')::tsrange dayrange,
-    p.freq,
-	p.split
+    --gs.idat,
+    tsrange(gs.idat,gs.idat + p.freq) dr,
+    --p.freq,
+	p.split,
+	e.driver,
+	e.factor,
+	f.perd,
+	f.amount,
+	--dayrange
+	extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) intersent_interval,
+	extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))) forecast_point_range,
+	extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) / extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))) allocation_to_basis,
+	round(
+        ((
+            extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq)))
+            /extract(days from upper(f.perd) - lower(f.perd))::numeric
+            *(extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) / extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))))
+        ) * f.amount * e.factor)::numeric
+        ,2
+	)
+	AS fcst
     --to_char(gs.idat,c.fcst_basis) fbasis
-*/
 FROM    
     fc.party p
     LEFT JOIN LATERAL generate_series('2017-06-01'::TIMESTAMP,'2017-06-01'::TIMESTAMP + INTERVAL '12 months', p.freq) gs(idat) ON TRUE
+	LEFT JOIN fc.evnt e ON
+		e.flow = p.flow
+	LEFT JOIN fc.fcst f ON
+		f.driver = e.driver AND
+		f.perd && ('['||gs.idat::text||','||(gs.idat + p.freq)::text||')')::tsrange
 LIMIT 100;
