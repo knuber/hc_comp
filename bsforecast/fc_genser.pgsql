@@ -125,12 +125,27 @@ SELECT
 	f.perd,
 	f.amount,
 	--dayrange
-	extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) intersent_interval,
-	extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))) forecast_point_range,
-	extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) / extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))) allocation_to_basis,
+	extract(days from 
+		upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - 
+		lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)
+	) intersent_interval,
+	extract(days from 
+		upper(tsrange(gs.idat,gs.idat + p.freq)) - 
+		lower(tsrange(gs.idat,gs.idat + p.freq))
+	) forecast_point_range,
+	extract(days from 
+		upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - 
+		lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)
+	) / extract(days from 
+		upper(tsrange(gs.idat,gs.idat + p.freq)) -
+		lower(tsrange(gs.idat,gs.idat + p.freq))
+	) allocation_to_basis,
 	round(
         ((
-            extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq)))
+            extract(days from 
+				upper(tsrange(gs.idat,gs.idat + p.freq)) - 
+				lower(tsrange(gs.idat,gs.idat + p.freq))
+			)
             /extract(days from upper(f.perd) - lower(f.perd))::numeric
             *(extract(days from upper(tsrange(gs.idat,gs.idat + p.freq) * f.perd) - lower(tsrange(gs.idat,gs.idat + p.freq) * f.perd)) / extract(days from upper(tsrange(gs.idat,gs.idat + p.freq)) - lower(tsrange(gs.idat,gs.idat + p.freq))))
         ) * f.amount * e.factor * p.split)::numeric
@@ -150,4 +165,4 @@ ORDER BY
 	flow,
 	dr,
 	party
-LIMIT 1000;
+LIMIT 10;

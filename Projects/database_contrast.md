@@ -8,23 +8,27 @@ postgres & mssql
 
 
 * data minupulation
-    * regular expressions
-    * order by clauses
-        - functions not permitted
-        - views not permitted
-        - stored procs permitted but callable as a table
-    * temp tables
-        - use prohibited in anything other than stored proc which cannot be called as table
-    * left joins
-        - not permited in recursive CTE
-        - not permited in indexed view
-    * cannot specify option on stored proc call which is necessary if maxrecursion > 100
-    * type casting
-    * user defined aggregate require clr integration
-    * standard function library (no least/greates)
-    * text type & indexes
-    * filter on aggregates (example pivoting)
-    * dollar quoting
+    * **regular expressions**
+    * **order by clauses**
+        - mssql functions not permitted
+        - mssql views not permitted
+        - mssql stored procs permitted but not callable as a table
+    * **temp tables**
+        - mssql use prohibited in anything other than stored proc which cannot be called as table
+    * **left joins**
+        - mssql not permited in recursive CTE
+        - mssql not permited in indexed view
+    * **mssql cannot specify option on stored proc call which is necessary if maxrecursion > 100**
+    * **types (char, nchar, varchar, nvarchar, & text versus text)**
+    * **user defined aggregate (mssql requires clr integration)**
+    * function overloading (ergonomics)
+    * order by clause inside of aggregate SUM(column ORDER BY othercol)
+    * filter on aggregates SUM(column WHERE thing = true) (ergonomics)
+    * **WITH ORINALITY for set-returning functions joins**
+    * **standard function library (least/greatest, pad, stringagg) (ergonomics)**
+    * dollar quoting (ergonomics)
+    * **generate_series**
+    * write-able CTE (ergonomics)
     * languages 
         * python
         * java
@@ -35,18 +39,22 @@ postgres & mssql
 * persisting data
 
     * namespace/schema division
-    * descriptions
-    * arrays
-    * ranges
-    * interval
-    * json
+    * **descriptions**
+    * **arrays**
+    * **range types**
+    * **interval type**
+    * **json**
     * geospatial
     * inheritance
+    * **simple text & date types (fully indexable and ready for full text search, utf-8)**
+    * partitioning
+    * replication
 
 * peripherals
 
-    * ssms gui is better
-    * reporting & analysis services (enterprise license)
-    * sql agent is better
-
-
+    * gui (pg is not great)
+    * mssql reporting & analysis services (enterprise license, pg = no offering)
+    * agent (pg version is just ok)
+    * command line (pg is better)
+    * tuning
+    * geospatial
