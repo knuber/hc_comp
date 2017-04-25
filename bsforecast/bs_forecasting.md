@@ -84,10 +84,11 @@ indexing a tsrange column of 1M rows takes 33 sec
 `fc.schd`
 | flow name     | party         | gl action     | sequence      | interval      |
 |---------------|---------------|---------------|---------------|---------------|
-|rawmat         |i. stern       |incur          |1              | 0 days        |
-|rawmat         |i. stern       |pay            |2              | 60 days       |
-|rawmat         |i. stern       |clear          |3              | 20 days       |
-|rawmat         |i. stern       |borrow         |4              | 0 days        |
+|rawmat         |i. stern       |recpt          |1              | 0 days        |
+|rawmat         |i. stern       |voucher        |2              | 5 days        |
+|rawmat         |i. stern       |pay            |3              | 45 days       |
+|rawmat         |i. stern       |clear          |4              | 7 days        |
+|rawmat         |i. stern       |borrow         |5              | 0 days        |
 
         do we really need the flow name column? wouldn't this be strictly vendor behaviour?
         need to be able to snap the pay date to a schedule of check run dates that includes holding AP
@@ -96,16 +97,19 @@ indexing a tsrange column of 1M rows takes 33 sec
 
 **valuation**
 `fc.dble`
-| flow name     | party         | gl action     | flag          | account       | sign  |
-|---------------|---------------|---------------|---------------|---------------|-------|
-|rawmat         |i. stern       |incur          |debit          | 7000-00       |1      |
-|rawmat         |i. stern       |incur          |credit         | 2000-21       |-1     |
-|rawmat         |i. stern       |pay            |debit          | 2000-21       |1      |
-|rawmat         |i. stern       |pay            |credit         | 2000-99       |-1     |
-|rawmat         |i. stern       |clear          |debit          | 2000-21       |1      |
-|rawmat         |i. stern       |clear          |credit         | 1010-01       |-1     |
-|rawmat         |i. stern       |revolver       |debit          | 1010-01       |1      |
-|rawmat         |i. stern       |revolver       |credit         | 3000-01       |-1     |
+| flow name     | party         | gl action     | flag          | account       | sign  | % total       |
+|---------------|---------------|---------------|---------------|---------------|-------|---------------|
+|rawmat         |i. stern       |recpt          |debit          | 1200-00       |1      |.95            |
+|rawmat         |i. stern       |recpt          |debit          | 6502-00       |1      |.05            |
+|rawmat         |i. stern       |recpt          |credit         | 2004-00       |-1     |1              |
+|rawmat         |i. stern       |voucher        |debit          | 2004-00       |-1     |1              |
+|rawmat         |i. stern       |voucher        |credit         | 2000-00       |-1     |1              |
+|rawmat         |i. stern       |pay            |debit          | 2000-21       |1      |1              |
+|rawmat         |i. stern       |pay            |credit         | 2000-99       |-1     |1              |
+|rawmat         |i. stern       |clear          |debit          | 2000-21       |1      |1              |
+|rawmat         |i. stern       |clear          |credit         | 1010-01       |-1     |1              |
+|rawmat         |i. stern       |revolver       |debit          | 1010-01       |1      |1              |
+|rawmat         |i. stern       |revolver       |credit         | 3000-01       |-1     |1              |
 
 
         do we need a column for `gl_pattern` if a vendor has mutliple patterns involved?
@@ -122,10 +126,19 @@ the party table shoudl convert from account to party.that evnt table should conv
 This could be different for different areas. (plant spend versus general twinsburg spend number)
 
 Populate Data Tasks
-* Frequency of incur by party
+* frequency of incur by party
     1. copy vchr to postgres
     2. cust aggregate to get average between dates, or get sample range and count of vouchers in that range
     3. if re-cur on regular basis, need to determine maybe week of month and exclude forecasting if this has occured
-* Time to pay, or hold time
+* timing receipt to voucher
+* time to pay, or hold time (voucher to check)
    1. select vouchers where last date has a balance of 0
-   
+* check oustanding time
+* need to understand how many flows per vendor
+
+Should there be a separate event for receipt versus voucher? yes
+
+                Sometimes a new account is involved at voucher time like inbound freight.
+                Modeling this kind of spend and matching forecasted P&L totals is going to be difficule
+
+                could simply ignore this and treat it as a separate invoice with it's own pay schedule

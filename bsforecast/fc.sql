@@ -57,6 +57,8 @@ CREATE TABLE dble (
     flag text,
     account text,
     sign integer,
+    pct numeric,
+    loc text,
     vers text
 );
 
@@ -125,6 +127,7 @@ CREATE TABLE evnt (
     flow text,
     driver text,
     factor numeric,
+    loc text,
     vers text
 );
 
@@ -229,6 +232,7 @@ CREATE TABLE party (
     split numeric,
     effr tsrange,
     freq interval,
+    loc text,
     vers text
 );
 
@@ -250,6 +254,7 @@ CREATE TABLE schd (
     event text,
     seq integer,
     duration interval,
+    loc text,
     vers text
 );
 
