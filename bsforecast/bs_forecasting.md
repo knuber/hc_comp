@@ -115,8 +115,17 @@ indexing a tsrange column of 1M rows takes 33 sec
         this table could be built and static or the logic coudl be live but that requires more tables import cms tables?
                 a static table build out would facilitate using logic eventually wihtout needing it right now
 
-# will need to look at adding a location/entity identifier (**done**)
+### will need to look at adding a location/entity identifier (**done**)
 
 the party table shoudl convert from account to party.that evnt table should convert from whatever the forecast spend level is to the account level. 
 
 This could be different for different areas. (plant spend versus general twinsburg spend number)
+
+Populate Data Tasks
+* Frequency of incur by party
+    1. copy vchr to postgres
+    2. cust aggregate to get average between dates, or get sample range and count of vouchers in that range
+    3. if re-cur on regular basis, need to determine maybe week of month and exclude forecasting if this has occured
+* Time to pay, or hold time
+   1. select vouchers where last date has a balance of 0
+   
