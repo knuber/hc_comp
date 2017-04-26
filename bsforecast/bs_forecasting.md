@@ -72,6 +72,7 @@ indexing a tsrange column of 1M rows takes 33 sec
 
 **participation**
 `fc.party`
+
 | flow name     | vendor        | split         | range                 | frequency  |
 |---------------|---------------|---------------|-----------------------|------------|
 |rawmat         |i. stern       |.50            |[1/1/01, 12/31/20]     | 1 days     |
@@ -82,6 +83,7 @@ indexing a tsrange column of 1M rows takes 33 sec
 
 **vendor schedule** 
 `fc.schd`
+
 | flow name     | party         | gl action     | sequence      | interval      |
 |---------------|---------------|---------------|---------------|---------------|
 |rawmat         |i. stern       |recpt          |1              | 0 days        |
@@ -90,6 +92,8 @@ indexing a tsrange column of 1M rows takes 33 sec
 |rawmat         |i. stern       |clear          |4              | 7 days        |
 |rawmat         |i. stern       |borrow         |5              | 0 days        |
 
+        **the interval shoudl be total not incremental**
+
         do we really need the flow name column? wouldn't this be strictly vendor behaviour?
         need to be able to snap the pay date to a schedule of check run dates that includes holding AP
         
@@ -97,11 +101,12 @@ indexing a tsrange column of 1M rows takes 33 sec
 
 **valuation**
 `fc.dble`
+
 | flow name     | party         | gl action     | flag          | account       | sign  | % total       |
 |---------------|---------------|---------------|---------------|---------------|-------|---------------|
 |rawmat         |i. stern       |recpt          |debit          | 1200-00       |1      |.95            |
 |rawmat         |i. stern       |recpt          |debit          | 6502-00       |1      |.05            |
-|rawmat         |i. stern       |recpt          |credit         | 2004-00       |-1     |1              |
+|rawmat         |i. stern       |recpt          |credit         | 2004-00       |-1     |1              |       
 |rawmat         |i. stern       |voucher        |debit          | 2004-00       |-1     |1              |
 |rawmat         |i. stern       |voucher        |credit         | 2000-00       |-1     |1              |
 |rawmat         |i. stern       |pay            |debit          | 2000-21       |1      |1              |
@@ -140,5 +145,19 @@ Should there be a separate event for receipt versus voucher? yes
 
                 Sometimes a new account is involved at voucher time like inbound freight.
                 Modeling this kind of spend and matching forecasted P&L totals is going to be difficule
-
                 could simply ignore this and treat it as a separate invoice with it's own pay schedule
+                this could be done for PPV but only if the timing is identical to the offset entry
+
+                could join the dble table to the allocated forecast. would need to ensure that all GL have a match in the dble
+                aligning split to account must be managed such that all split out accounts have a match in each vendor's schedule
+                maybe setup the vendor schedules first and then split to those accounts
+
+How to setup initial dble?
+should only be activity that ends with cash?
+
+intial incur from hist? look at APVN accounts and just substitute for 2004 if necessary
+payroll entry
+withholding relief
+
+
+forecast level -> 2 digit department 4 digits P&L
