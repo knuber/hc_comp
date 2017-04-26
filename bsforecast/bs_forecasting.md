@@ -161,3 +161,17 @@ withholding relief
 
 
 forecast level -> 2 digit department 4 digits P&L
+
+
+new idea
+------------
+
+1. use flows to first split forecast drivers to vendor
+2. then use GL patterns to implement whatever forecast accounts they have to work with
+    * I guess this assumes that the forecast element is an account lol
+        * if not the flow must exclusively flow the driver 100% with no overlap with other flows
+        * flows are in a tree or graph?
+        * assign forecasted items to a flow-tree entry point and the allocation is a the leaf nodes?
+    * a flow could also be 2 things, a list of vendors & seprarately a GL pattern and they intersect
+
+
