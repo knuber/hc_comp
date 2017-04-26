@@ -225,17 +225,19 @@ another new idea
 **vendor schedule** 
 `fc.schd`
 
-| flow name     | party         | gl action     | sequence      | interval      | range                 | location      | versions      |
-|---------------|---------------|---------------|---------------|---------------|-----------------------|---------------|---------------|
-|rawmat         |i. stern       |recpt          |1              | 0 days        |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       |voucher        |2              | 5 days        |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       |pay            |3              | 45 days       |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       |clear          |4              | 7 days        |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       |borrow         |5              | 0 days        |[1/1/01, 12/31/20]     |               |               |
+| flow name     | party         | sched         | gl action     | sequence      | interval      | range                 | location      | versions      |
+|---------------|---------------|---------------|---------------|---------------|---------------|-----------------------|---------------|---------------|
+|rawmat         |i. stern       | MATCH-CHECK   |recpt          |1              | 0 days        |[1/1/01, 12/31/20]     |               |               |
+|rawmat         |i. stern       | MATCH-CHECK   |voucher        |2              | 5 days        |[1/1/01, 12/31/20]     |               |               |
+|rawmat         |i. stern       | MATCH-CHECK   |pay            |3              | 45 days       |[1/1/01, 12/31/20]     |               |               |
+|rawmat         |i. stern       | MATCH-CHECK   |clear          |4              | 7 days        |[1/1/01, 12/31/20]     |               |               |
+|rawmat         |i. stern       | MATCH-CHECK   |borrow         |5              | 0 days        |[1/1/01, 12/31/20]     |               |               |
 
         - the interval is going to have to be cumulative
         - each flow/vendor will have to implement it's pattern
         - each amortization schedule will have to have it's own pattern
+        - do we really need a flow here?
+        - should there be a schedule master or does it really matter? 
 
 **gl patern**
 `fc.patern`
