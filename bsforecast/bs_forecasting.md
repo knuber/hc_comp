@@ -237,11 +237,13 @@ another new idea
         - each party will have to implement it's pattern
         - each amortization schedule will have to have it's own pattern
         - should there be a schedule master or does it really matter? 
+        - should the version be a effective range? or maybe integers?
+        - will merging with unvouchered, open ap, & os checks require partial schedules?
 
 **gl patern**
 `fc.patt`
 
-| flow name     | sched         |gl action     | flag          | account       | sign  | factor        | element       | 
+| flow name     | sched         |gl action      | flag          | account       | sign  | factor        | element       | 
 |---------------|---------------|---------------|---------------|---------------|-------|---------------|---------------|
 |rawmat         | MATCH-CHECK   |recpt          |debit          | 1200-00       |1      |1              |RMSTD          |
 |rawmat         | MATCH-CHECK   |recpt          |debit          | 6502-00       |1      |1              |PPV            |
