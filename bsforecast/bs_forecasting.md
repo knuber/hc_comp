@@ -173,7 +173,7 @@ new idea
         * assign forecasted items to a flow-tree entry point and the allocation is a the leaf nodes?
         
 another new idea
------------
+==========
 1. a flow has claims on forecasted elements so as to ensure complete allocation
 2. the flow then has participants with their own timing characteristics
 3. the flow also exposes several possible gl patterns that the particpants can singularly use
@@ -190,7 +190,7 @@ another new idea
             * they just need to run in sync
 
 **forecast**
-`fc.element`
+`fc.fcst`
 
 | driver        | fcst range    | amount        |version        |loc    |
 |---------------|---------------|---------------|---------------|-------|
@@ -220,7 +220,7 @@ another new idea
 |rawmat         |i. stern       |.50            |[1/1/01, 12/31/20]     | MATCH-CHECK   | 1 days   |            |               |
 |rawmat         |trademark      |.50            |[1/1/01, 12/31/20]     | NOPO-ACH      | 3 days   |            |               |
 
-
+        does this range need to be narrower than the forecast period?
 
 **vendor schedule** 
 `fc.schd`
@@ -233,15 +233,12 @@ another new idea
 |rawmat         |i. stern       |clear          |4              | 7 days        |[1/1/01, 12/31/20]     |               |               |
 |rawmat         |i. stern       |borrow         |5              | 0 days        |[1/1/01, 12/31/20]     |               |               |
 
-        **the interval shoudl be total not incremental**
+        - the interval is going to have to be cumulative
+        - each flow/vendor will have to implement it's pattern
+        - each amortization schedule will have to have it's own pattern
 
-        do we really need the flow name column? wouldn't this be strictly vendor behaviour?
-        need to be able to snap the pay date to a schedule of check run dates that includes holding AP
-        
-        what to do about amortization schedules?
-
-**valuation**
-`fc.dble`
+**gl patern**
+`fc.patern`
 
 | flow name     | party         | gl action     | flag          | account       | sign  | factor        | element       | 
 |---------------|---------------|---------------|---------------|---------------|-------|---------------|---------------|
@@ -256,3 +253,5 @@ another new idea
 |rawmat         |i. stern       |clear          |credit         | 1010-01       |-1     |1              |RMACT          |
 |rawmat         |i. stern       |revolver       |debit          | 1010-01       |1      |1              |RMACT          |
 |rawmat         |i. stern       |revolver       |credit         | 3000-01       |-1     |1              |RMACT          |
+
+        does this pattern really need a vendor?
