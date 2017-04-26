@@ -225,13 +225,13 @@ another new idea
 **vendor schedule** 
 `fc.schd`
 
-| flow name     | party         | sched         | gl action     | sequence      | interval      | range                 | location      | versions      |
-|---------------|---------------|---------------|---------------|---------------|---------------|-----------------------|---------------|---------------|
-|rawmat         |i. stern       | MATCH-CHECK   |recpt          |1              | 0 days        |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       | MATCH-CHECK   |voucher        |2              | 5 days        |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       | MATCH-CHECK   |pay            |3              | 45 days       |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       | MATCH-CHECK   |clear          |4              | 7 days        |[1/1/01, 12/31/20]     |               |               |
-|rawmat         |i. stern       | MATCH-CHECK   |borrow         |5              | 0 days        |[1/1/01, 12/31/20]     |               |               |
+| party         | sched         | gl action     | sequence      | interval      | range                 | location      | versions      |
+|---------------|---------------|---------------|---------------|---------------|-----------------------|---------------|---------------|
+|i. stern       | MATCH-CHECK   |recpt          |1              | 0 days        |[1/1/01, 12/31/20]     |               |               |
+|i. stern       | MATCH-CHECK   |voucher        |2              | 5 days        |[1/1/01, 12/31/20]     |               |               |
+|i. stern       | MATCH-CHECK   |pay            |3              | 45 days       |[1/1/01, 12/31/20]     |               |               |
+|i. stern       | MATCH-CHECK   |clear          |4              | 7 days        |[1/1/01, 12/31/20]     |               |               |
+|i. stern       | MATCH-CHECK   |borrow         |5              | 0 days        |[1/1/01, 12/31/20]     |               |               |
 
         - the interval is going to have to be cumulative
         - each flow/vendor will have to implement it's pattern
@@ -240,20 +240,20 @@ another new idea
         - should there be a schedule master or does it really matter? 
 
 **gl patern**
-`fc.patern`
+`fc.patt`
 
-| flow name     | party         | gl action     | flag          | account       | sign  | factor        | element       | 
-|---------------|---------------|---------------|---------------|---------------|-------|---------------|---------------|
-|rawmat         |i. stern       |recpt          |debit          | 1200-00       |1      |1              |RMSTD          |
-|rawmat         |i. stern       |recpt          |debit          | 6502-00       |1      |1              |PPV            |
-|rawmat         |i. stern       |recpt          |credit         | 2004-00       |-1     |1              |RMACT          |
-|rawmat         |i. stern       |voucher        |debit          | 2004-00       |1      |1              |RMACT          |
-|rawmat         |i. stern       |voucher        |credit         | 2000-00       |-1     |1              |RMACT          |
-|rawmat         |i. stern       |pay            |debit          | 2000-21       |1      |1              |RMACT          |
-|rawmat         |i. stern       |pay            |credit         | 2000-99       |-1     |1              |RMACT          |
-|rawmat         |i. stern       |clear          |debit          | 2000-21       |1      |1              |RMACT          |
-|rawmat         |i. stern       |clear          |credit         | 1010-01       |-1     |1              |RMACT          |
-|rawmat         |i. stern       |revolver       |debit          | 1010-01       |1      |1              |RMACT          |
-|rawmat         |i. stern       |revolver       |credit         | 3000-01       |-1     |1              |RMACT          |
+| flow name     | gl action     | flag          | account       | sign  | factor        | element       | 
+|---------------|---------------|---------------|---------------|-------|---------------|---------------|
+|rawmat         |recpt          |debit          | 1200-00       |1      |1              |RMSTD          |
+|rawmat         |recpt          |debit          | 6502-00       |1      |1              |PPV            |
+|rawmat         |recpt          |credit         | 2004-00       |-1     |1              |RMACT          |
+|rawmat         |voucher        |debit          | 2004-00       |1      |1              |RMACT          |
+|rawmat         |voucher        |credit         | 2000-00       |-1     |1              |RMACT          |
+|rawmat         |pay            |debit          | 2000-21       |1      |1              |RMACT          |
+|rawmat         |pay            |credit         | 2000-99       |-1     |1              |RMACT          |
+|rawmat         |clear          |debit          | 2000-21       |1      |1              |RMACT          |
+|rawmat         |clear          |credit         | 1010-01       |-1     |1              |RMACT          |
+|rawmat         |revolver       |debit          | 1010-01       |1      |1              |RMACT          |
+|rawmat         |revolver       |credit         | 3000-01       |-1     |1              |RMACT          |
 
         does this pattern really need a vendor?
