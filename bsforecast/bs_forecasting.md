@@ -234,26 +234,23 @@ another new idea
 |i. stern       | MATCH-CHECK   |borrow         |5              | 0 days        |[1/1/01, 12/31/20]     |               |               |
 
         - the interval is going to have to be cumulative
-        - each flow/vendor will have to implement it's pattern
+        - each party will have to implement it's pattern
         - each amortization schedule will have to have it's own pattern
-        - do we really need a flow here?
         - should there be a schedule master or does it really matter? 
 
 **gl patern**
 `fc.patt`
 
-| flow name     | gl action     | flag          | account       | sign  | factor        | element       | 
-|---------------|---------------|---------------|---------------|-------|---------------|---------------|
-|rawmat         |recpt          |debit          | 1200-00       |1      |1              |RMSTD          |
-|rawmat         |recpt          |debit          | 6502-00       |1      |1              |PPV            |
-|rawmat         |recpt          |credit         | 2004-00       |-1     |1              |RMACT          |
-|rawmat         |voucher        |debit          | 2004-00       |1      |1              |RMACT          |
-|rawmat         |voucher        |credit         | 2000-00       |-1     |1              |RMACT          |
-|rawmat         |pay            |debit          | 2000-21       |1      |1              |RMACT          |
-|rawmat         |pay            |credit         | 2000-99       |-1     |1              |RMACT          |
-|rawmat         |clear          |debit          | 2000-21       |1      |1              |RMACT          |
-|rawmat         |clear          |credit         | 1010-01       |-1     |1              |RMACT          |
-|rawmat         |revolver       |debit          | 1010-01       |1      |1              |RMACT          |
-|rawmat         |revolver       |credit         | 3000-01       |-1     |1              |RMACT          |
-
-        does this pattern really need a vendor?
+| flow name     | sched         |gl action     | flag          | account       | sign  | factor        | element       | 
+|---------------|---------------|---------------|---------------|---------------|-------|---------------|---------------|
+|rawmat         | MATCH-CHECK   |recpt          |debit          | 1200-00       |1      |1              |RMSTD          |
+|rawmat         | MATCH-CHECK   |recpt          |debit          | 6502-00       |1      |1              |PPV            |
+|rawmat         | MATCH-CHECK   |recpt          |credit         | 2004-00       |-1     |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |voucher        |debit          | 2004-00       |1      |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |voucher        |credit         | 2000-00       |-1     |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |pay            |debit          | 2000-21       |1      |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |pay            |credit         | 2000-99       |-1     |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |clear          |debit          | 2000-21       |1      |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |clear          |credit         | 1010-01       |-1     |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |revolver       |debit          | 1010-01       |1      |1              |RMACT          |
+|rawmat         | MATCH-CHECK   |revolver       |credit         | 3000-01       |-1     |1              |RMACT          |
