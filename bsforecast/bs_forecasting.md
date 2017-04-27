@@ -100,7 +100,7 @@ indexing a tsrange column of 1M rows takes 33 sec
         what to do about amortization schedules?
 
 **valuation**
-`fc.dble`
+`fc.patt`
 
 | flow name     | party         | gl action     | flag          | account       | sign  | % total       |
 |---------------|---------------|---------------|---------------|---------------|-------|---------------|
@@ -173,7 +173,7 @@ new idea
         * assign forecasted items to a flow-tree entry point and the allocation is a the leaf nodes?
         
 another new idea
-==========
+=========================================================================================================================================================================
 1. a flow has claims on forecasted elements so as to ensure complete allocation
 2. the flow then has participants with their own timing characteristics
 3. the flow also exposes several possible gl patterns that the particpants can singularly use
@@ -209,8 +209,10 @@ another new idea
 |rawmat         |RMACT          |1              | SPARKS        |2018B          |
 |rawmat         |RMSTD          |1              | SPARKS        |2018B          |
 |rawmat         |PPV            |1              | SPARKS        |2018B          |
+|5702010AP      |5702010        |.75            | SPARKS        |2018B          |
+|5702010MJE     |5702010        |.25            | SPARKS        |2018B          |
 
-
+                this is generally going to be 1-1 except in cases like above 1-many
 
 **participation**
 `fc.party`
@@ -256,3 +258,75 @@ another new idea
 |rawmat         | MATCH-CHECK   |clear          |credit         | 1010-01       |-1     |1              |RMACT          |
 |rawmat         | MATCH-CHECK   |revolver       |debit          | 1010-01       |1      |1              |RMACT          |
 |rawmat         | MATCH-CHECK   |revolver       |credit         | 3000-01       |-1     |1              |RMACT          |
+
+Populating
+============
+
+`fc.fcst`
+-----------------------
+1. spend type items
+    * base period split by activity source (ap, payroll, manual entries)
+
+                - need to build out P&L roll-up by source to do this
+
+        * ap module
+            1. reliable on-going forecasted items
+            2. base period splits or budgeted splits
+            3. split out to underlying element allowing for fixed bevaiors by location and better party selection
+            4. load
+
+        * payroll
+           1. identify payroll run groups (B3X, UDV; department)
+           2. get base period
+           3. singular party forecast going to be tightly linked to the balance sheet
+        
+        * manual entries
+           1. identify & set up base period splits
+
+2. production & consumption
+    * triangulate the different components from supplied elements
+
+                rm consumed = fpv - absorption - scrap - muv
+                rm purchased = planned change in inventory + ppv
+
+    * Absorption
+    * FPV
+    * RM @ std
+    * PPV-RM
+    * RM @ act
+    * Inventory Factor
+    * Shipments
+    * FG @ std
+    * PPV-FG
+    * FG @ act
+
+3. sales
+    
+    * detail sales plan
+        * REV_USD
+        * COGS_USD
+        * rebates
+        * credits
+        * returns
+
+4. capital
+    * should receive capital schedule
+
+5. amortization
+6. l/t debt & interest factors
+
+`fc.claim`
+----------------
+1. link flows to elements based on common gl components 
+                
+                - rm @ std & ppv = raw mat purch
+                - rev, cogs, (R&A?) = sales flow
+
+this should be a relatively non-changing exercise
+
+`fc.party`
+-----------------
+
+1. party split in base period
+2. party schedule
+3. 

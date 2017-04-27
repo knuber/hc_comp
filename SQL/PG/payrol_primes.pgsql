@@ -1,0 +1,23 @@
+SELECT
+        SUBSTRING(cms_acct,7,4) prime,
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1601')  "2016_JAN",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1602')  "2016_FEB",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1603')  "2016_MAR",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1604')  "2016_APR",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1605')  "2016_MAY",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1606')  "2016_JUN",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1607')  "2016_JUL",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1608')  "2016_AUG",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1609')  "2016_SEP",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1610')  "2016_OCT",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1611')  "2016_NOV",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1612')  "2016_DEC",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1701')  "2017_JAN",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1702')  "2017_FEB",
+        SUM(amount) FILTER (WHERE SUBSTRING(PAY_DATE,1,4) = '1703')  "2017_MAR"
+FROM
+        payroll.adp_rp
+WHERE
+        pay_date >= '160101'
+GROUP BY
+        SUBSTRING(cms_acct,7,4);
