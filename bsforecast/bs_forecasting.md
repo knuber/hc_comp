@@ -199,7 +199,8 @@ another new idea
 |emh            |[1/1-2/1)      |500,000        |               |       |
 |emh            |[2/1-3/1)      |475,000        |               |       |
 
-        a manual load
+        a manual load of items forecasted from what is at this point seperate logic
+        the starting point will be the regular layou
 
 **event master**
 `fc.claim`
