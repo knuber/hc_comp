@@ -277,7 +277,7 @@ Populating
             4. load
 
         * payroll
-           1. identify payroll run groups (B3X, UDV; department)
+           1. identify payroll run groups (B3X, UDV; variable/fixed)
            2. get base period
            3. singular party forecast going to be tightly linked to the balance sheet
         
