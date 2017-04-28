@@ -1,5 +1,8 @@
+\timing
+explain (analyze,  buffers)
 SELECT
-        adp_dep_worked,
+        cms_tb,
+        gl_dep,
         SUBSTRING(cms_acct,7,4) prime,
         sum(amount)
 FROM
@@ -7,8 +10,10 @@ FROM
 WHERE
         pay_date >= '160401'
 GROUP BY
-        adp_dep_worked,
+        cms_tb,
+        gl_dep,
         SUBSTRING(cms_acct,7,4)
 ORDER BY
-        adp_dep_worked,
+        cms_tb,
+        gl_dep,
         SUBSTRING(cms_acct,7,4);
