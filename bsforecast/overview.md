@@ -46,11 +46,12 @@ Complications needing worked through
 Platform
 ---------
 
-* PostgreSQL ([text link](https://www.bigsql.org/))
+* PostgreSQL (prefered ditsro: [bigsql.org](https://www.bigsql.org/)  &  homepage: [PostgtreSQL.org](https://www.postgresql.org/))
     * regular expressions & json data for bank loading & parsing
     * ranges, intervals, series for spooling out forecasts
     * can replicate
 * SQL Server
     * replciated core data store
+    * coming out with a graph engine (but does not implement cypher query language)
 * DB2 for i
     * core data store
