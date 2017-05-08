@@ -1,14 +1,17 @@
+\timing
 --DELETE FROM r.ffsbglr1;
 --COPY r.ffsbglr1 FROM 'C:\users\ptrowbridge\downloads\ffsbglr1.csv' WITH (FORMAT CSV, HEADER TRUE, QUOTE '"');
 
 WITH 
-BL AS (
+------GROUP BY ACCOUNT NUMBER-----------
+AL AS (
 SELECT
 	BATCH,
 	MODULE,
 	SUBSTR(ACCT,7,4) PRIME,
+	ACCT,
 	REC->>'CUSVEND' party,
-	SUM(AMT) FILTER (WHERE SUBSTR(ACCT,7,1) <= '4') AMT
+	SUM(AMT) FILTER (WHERE SUBSTR(ACCT,7,1) > '4') AMT
 FROM
 	r.ffsbglr1
 WHERE
@@ -18,32 +21,46 @@ GROUP BY
 	BATCH,
 	MODULE,
 	SUBSTR(ACCT,7,4),
+	ACCT,
 	REC->>'CUSVEND'
 ),
-GR AS (
+------GROUP BY PRIME-----------
+PG AS (
 SELECT
-	BATCH, 
+	BATCH,
 	MODULE,
-	JSONB_AGG(PRIME) ACCTS,
+	PRIME,
+	tps.jsonb_concat_arr(ACCT::jsonb) ACCTS,
 	party,
-	SUM(AMT) AMT
+	SUM(AMT)  AMT
 FROM
-	BL
+	AL
 GROUP BY
 	BATCH,
 	MODULE,
-	party
+	PRIME,
+	PARTY
+),
+---------GROUP PRIMES-------------
+GR AS (
+SELECT
+	BATCH,
+	MODULE,
+	PRIMES,
+	tps.jsonb_concat_arr(ACCTS) ACCTS,
+	JSONB_AGG(party) PARTY,
+	SUM(AMT) AMT
+FROM
+	PG
+GROUP BY
+	BATCH,
+	MODULE
 )
 SELECT
-	MODULE, 
-	JSONB_PRETTY(ACCTS) ACCTS, 
+	MODULE,
+	PRIMES PRIMES,
+	ACCTS ACCTS,
 	party,
-	TO_CHAR(SUM(AMT),'$9,999,999')
+	AMT
 FROM
 	GR
-GROUP BY
-	MODULE,
-	ACCTS,
-	party
-ORDER BY 
-	MODULE
