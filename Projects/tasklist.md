@@ -3,6 +3,7 @@ Tasks
 
 ## High Priority
 
+* Investigate material changes in cost roll
 * Add pricing goals to sales budget
 * Account Recs (including bank statements)
 * April 2017 Close
