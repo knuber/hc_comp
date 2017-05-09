@@ -1,7 +1,7 @@
 Tasks
 ==============
 
-## High Priority
+**High Priority**
 
 * Investigate material changes in cost roll
 * Add pricing goals to sales budget
@@ -13,15 +13,14 @@ Tasks
 
 Projects
 ==========
-## High Priority
+**High Priority**
 
 * Balance sheet forecast
 * Duty/Freight/Prepaid
 * Capital Tracking
 * Financial Statements Environment
 
-## Low Priority
-
+**Low Priority**
 
 * RSM Audit List
     * 6/19  Copies of bank statements for all accounts for 5/31/17, 6/30/17, and 7/31/17
