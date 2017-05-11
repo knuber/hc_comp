@@ -192,11 +192,11 @@ another new idea
 **forecast**
 `fc.fcst`
 
-| driver        | fcst range    | amount        |version        |loc    |
+| element       | fcst range    | amount        |version        |loc    |
 |---------------|---------------|---------------|---------------|-------|
-|fpv            |[1/1-2/1)      |10,000,000     |               |       |
-|fpv            |[2/1-3/1)      |10,000,000     |               |       |
-|emh            |[1/1-2/1)      |500,000        |               |       |
+|RMACT          |[1/1-2/1)      |10,000,000     |               |       |
+|RMSTD          |[2/1-3/1)      | 9,000,000     |               |       |
+|PPV            |[1/1-2/1)      | 1,000,000     |               |       |
 |emh            |[2/1-3/1)      |475,000        |               |       |
 
         a manual load of items forecasted from what is at this point seperate logic
