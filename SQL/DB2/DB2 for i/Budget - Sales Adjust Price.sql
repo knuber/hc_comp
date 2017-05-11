@@ -1151,7 +1151,87 @@ WHERE
     );
 
 ------------Retail Distribution Adjustments---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Adjustments';
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Adjustments - Price';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.02 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Distribution Adjustments - Price'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    BILLCUSTCLASS IN ('GDIS','RDIS') AND
+    GLEC = '1RE - RETAIL PRODUCT' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------Retail Distribution Adjustments---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Adjustments - Vol';
 INSERT INTO 
 	QGPL.FFBS0403
 SELECT 
@@ -1211,7 +1291,7 @@ SELECT
     C_CURRENCY,
     C_RATE,
     QTY*.07 QTY,
-    VALUE_LOCAL*.09 VALUE_LOCAL,
+    VALUE_LOCAL*.07 VALUE_LOCAL,
     0 PRICE,
     STATUS,
     FLAG,
@@ -1221,11 +1301,170 @@ SELECT
     I_ORDERDATE,
     I_REQUESTDATE,
     I_SHIPDATE,
-    'Distribution Adjustments'
+    'Distribution Adjustments - Vol'
 FROM 
 	QGPL.FFBS0403 
 WHERE 
     BILLCUSTCLASS IN ('GDIS','RDIS') AND
     GLEC = '1RE - RETAIL PRODUCT' AND
-    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE','Distribution Adjustments - Price') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------Dan Pricing Adjustments Non-Black---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Dan Pricing Adjustments - Non-Black';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.03 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Dan Pricing Adjustments - Non-Black'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    GLEC = '1NU - NURSERY PRODUCT' AND
+    SUBSTR(PART,9,3) <> 'G18' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE','Dan Pricing Adjustments') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------17x17 Adjustment---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = '17x17 Adjustment';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    -QTY QTY,
+    -VALUE_LOCAL VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    '17x17 Adjustment'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    GLEC = '1NU - NURSERY PRODUCT' AND
+    SUBSTR(PART,1,8) = 'NIT60005' AND
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
