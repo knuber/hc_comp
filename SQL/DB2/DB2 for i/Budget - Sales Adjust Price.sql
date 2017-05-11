@@ -165,7 +165,7 @@ WHERE
 	PROMO LIKE 'LOBLAWS 2017%' AND 
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
 	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01'
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 -------------------DISTRIBUTION VOLUME-----------------------------------------------------
 DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Volume Risk';
@@ -326,6 +326,7 @@ WHERE
 	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 -------------------Lowes & Wal-Mart Price-----------------------------------------------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Lowes & Wal-Mart Price';
 INSERT INTO 
 	QGPL.FFBS0403
 SELECT 
@@ -401,10 +402,11 @@ FROM
 WHERE 
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
-	SUBSTR(PART,1,8) IN ('PSC0800','PSH1000','PSP1000','HMH1000','HMP1000','QUH1000','FSH1000','QUP1000') AND
+	SUBSTR(PART,1,7) IN ('PSC0800','PSH1000','PSP1000','HMH1000','HMP1000','QUH1000','FSH1000','QUP1000') AND
 	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 ------------lobllaws price gain---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Loblaw''s Win';
 INSERT INTO 
 	QGPL.FFBS0403
 SELECT 
@@ -481,7 +483,7 @@ WHERE
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
 	PROMO LIKE 'LOBLAWS 2017%' AND 
-	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01'
+	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 ------------Weathered Wood---------------
 DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'X1000 Weathered Wood';
@@ -563,9 +565,10 @@ WHERE
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
 	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
     B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01'
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------6 ct Tray---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = '6 ct Tray';
 INSERT INTO 
 	QGPL.FFBS0403
 SELECT 
@@ -644,4 +647,585 @@ WHERE
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
 	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
     B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01'
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------Proven Winners Increase---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Proven Winners Increase';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.07 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Proven Winners Increase'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    MING = 'B52 - PROVEN WINNERS' AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------Printing Increase---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'General Printing Increase';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.05 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'General Printing Increase'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    MING = 'B11 - PRINTED' AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    PROMO NOT LIKE 'LOBLAWS 2017%' AND 
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------Warehouse Shipment Increase---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Warehouse Shipment Increase';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.047 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Warehouse Shipment Increase'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    BILLCUSTCLASS IN ('GDIS','NDIS') AND
+    SHIPCUSTCLASS IN ('GDIS','NDIS') AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+------------Direct Price Increase---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Warehouse Shipment Increase';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.047 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Warehouse Shipment Increase'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    BILLCUSTCLASS IN ('GDIS','NDIS') AND
+    SHIPCUSTCLASS IN ('GDIS','NDIS') AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
+---------ALL OTHER DIRECT INCREASE----------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'All Other Direct Increase';
+INSERT INTO 
+    QGPL.FFBS0403
+SELECT
+	PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.03 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'All Other Direct Increase'
+FROM
+	QGPL.FFBS0403
+WHERE
+	(B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
+	GLEC = '1GR - GREENHOUSE PRODUCT' AND
+	CHAN = 'DIRECT' AND
+	ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0403
+        WHERE
+            (B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
+            VERSION IN ('Loblaw''s Risk','Lowes & Wal-Mart Price','Loblaw''s Win','X1000 Weathered Wood','6 ct Tray','Lowes & Wal-Mart Price','Proven Winners Increase','General Printing Increase','Warehouse Shipment Increase') AND
+            GLEC = '1GR - GREENHOUSE PRODUCT'
+    );
+
+---------ALL OTHER DROPSHIP INCREASE----------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'All Other Drop-Ship Increase';
+INSERT INTO 
+    QGPL.FFBS0403
+SELECT
+	PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.03 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'All Other Drop-Ship Increase'
+FROM
+	QGPL.FFBS0403
+WHERE
+	(B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
+	GLEC = '1GR - GREENHOUSE PRODUCT' AND
+	CHAN = 'DISTRIB DROP SHIP' AND
+	ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0403
+        WHERE
+            (B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
+            VERSION IN ('Loblaw''s Risk','Lowes & Wal-Mart Price','Loblaw''s Win','X1000 Weathered Wood','6 ct Tray','Lowes & Wal-Mart Price','Proven Winners Increase','General Printing Increase','Warehouse Shipment Increase') AND
+            GLEC = '1GR - GREENHOUSE PRODUCT'
+    );
+
+------------Retail Distribution Adjustments---------------
+DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Adjustments';
+INSERT INTO 
+	QGPL.FFBS0403
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    QTY*.07 QTY,
+    VALUE_LOCAL*.09 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Distribution Adjustments'
+FROM 
+	QGPL.FFBS0403 
+WHERE 
+    BILLCUSTCLASS IN ('GDIS','RDIS') AND
+    GLEC = '1RE - RETAIL PRODUCT' AND
+    VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
