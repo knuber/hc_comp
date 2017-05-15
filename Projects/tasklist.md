@@ -12,6 +12,8 @@ Tasks
 * Add more verbose descriptions
 * drop 310 volume by 66% in June
 * Leave Lowe's pricing out
+* Add fiber volumes
+* add in PPV coordinated through Bennet
 * ~~pounds roll-forward of inventory~~
 * ~~Investigate material changes in cost roll~~
 * ~~Add pricing goals to sales budget~~
