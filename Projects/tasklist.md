@@ -2,14 +2,28 @@ Tasks
 ==============
 
 **High Priority**
+* Resequence sales revisions
+    1	Baseline	(exclude 3M normalization)
+    2	Takes	    (on baseline)
+    3	Risk	    (on baseline)
+    4	Price	    (on 1-3)
+    5	Puts	    (on baseline)
 
-* Investigate material changes in cost roll
-* Add pricing goals to sales budget
+* Add more verbose descriptions
+* drop 310 volume by 66% in June
+* Leave Lowe's pricing out
+* ~~pounds roll-forward of inventory~~
+* ~~Investigate material changes in cost roll~~
+* ~~Add pricing goals to sales budget~~
 * Account Recs (including bank statements)
 * April 2017 Close
     * Federal Tax
     * Consolidating Entries
     * External Financials
+
+**Go-Get**
+* Complete MRP picture (hours, pounds, FPV, absorption)
+* Re-cast sales budget with current picture
 
 Projects
 ==========
