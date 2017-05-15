@@ -1,107 +1,64 @@
-WITH CUR AS (
+WITH 
+S AS (
 SELECT
-    MAST,
-    MPLT,
-	GLED,
+	CHAN,
+	GEO,
+	GLEC,
+	PLNT,
+	PART,
+	STATEMENT_LINE,
+	R_CURRENCY,
+	C_CURRENCY,
 	MAJG,
 	MING,
-	DEP,
-	------resin requirement qty--------------------------------------------
+	MAJS,
+	MINS,
+	SUM(VALUE_LOCAL*CASE R_CURRENCY WHEN 'CA' THEN .75 ELSE 1 END) REVENUE_USD,
+	SUM(QTY) QTY
+FROM
+	QGPL.FFBS0403
+WHERE
+	VERSION IN ('BASELINE','Color Point - 1006''s/trays, & 1-time injection prop strip and trays','Costa - Monrovia and Fern Baskets removed','Drop Monaghan','Garden State - remove all printing','INT1006 - assume we lose all 1006 and trays','INT1006 - assume we lose all 1006 and trays - Price Norm','Olsons - BHG Printing and 1006 removed','Oppas','TF3','VAN HOEKELEN') AND
+	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
+	B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01'
+GROUP BY
+	CHAN,
+	GEO,
+	GLEC,
+	PLNT,
+	PART,
+	STATEMENT_LINE,
+	R_CURRENCY,
+	C_CURRENCY,
+	MAJG,
+	MING,
+	MAJS,
+	MINS
+),
+
+SELECT
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	C.GLED,
+	C.MAJG,
+	C.MING,
+	C.DEP,
+	C.REPL,
+	SUM(ERQTYS) QTYS,
+	SUM(ERQTY) QTYG,
 	SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710R2' THEN 
-					ERQTY
-				ELSE 0
-			END
-	) RES_REQ_QTY,
-	------resin byproduct qty----------------------------------------------
-	SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710B2' THEN 
-					ERQTY
-				ELSE 0
-			END
-	) RES_BYP_QTY,
-	--------------------------------------------------
-		SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710R2' THEN 
-					BASEX
-				ELSE 0
-			END
-	) RES_REQ_VAL,
-	--------------------------------------------------
-	SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710B2' THEN 
-					BASEX
-				ELSE 0
-			END
-	) RES_BYP_VAL,
-	--------------------------------------------------
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D10 - CORRUGATE' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D10_CORRUGATE,
-	--------------------------------------------------
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D11 - PALLET' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D11_PALLET,
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D12 - LABEL' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D12_LABEL,
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D13 - WRAP' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D13_WRAP,
-	SUM(
-		CASE MAJG
-			WHEN '710' THEN
-				ERQTY-ERQTY*SCRP
-			ELSE
-				0
-		END
-	) SCRPQTY710,
-		SUM(
-		CASE MAJG
-			WHEN '710' THEN
-				(ERQTY-ERQTY*SCRP)*BASE
-			ELSE
-				0
-		END
-	) SCRPVAL710,
-	SUM(
-		CASE SUBSTR(DEP,4,2)
-			WHEN '01' THEN 0
-			WHEN '39' THEN 0 
-			ELSE (ERQTY+ERQTYS)*(1/RUNTIME)
-		END
+		(ERQTY+ERQTYS)*(1/RUNTIME)
 	) EH,
     SUM(COALESCE(BASEX,0)) BASE,
     SUM(COALESCE(FRTX,0)) FREIGHT,
@@ -176,16 +133,32 @@ SELECT
         )
     ,5) TOTAL_CALC
 FROM
-    QGPL.FFBSREQC
+	S
+    INNER JOIN QGPL.FFBSREQC C ON
+		S.PART = C.MAST AND
+		S.PLNT = C.MPLT
 GROUP BY
-    MAST,
-    MPLT,
-	GLED,
-	MAJG,
-	MING,
-	DEP
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	C.GLED,
+	C.MAJG,
+	C.MING,
+	C.DEP,
+	C.REPL
 
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------
 ),
 FUT AS (
 SELECT
@@ -195,96 +168,11 @@ SELECT
 	MAJG,
 	MING,
 	DEP,
+	REPL,
+	SUM(ERQTYS) QTYS,
+	SUM(ERQTY) QTYG,
 	SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710R2' THEN 
-					ERQTY
-				ELSE 0
-			END
-	) RES_REQ_QTY,
-	SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710B2' THEN 
-					ERQTY
-				ELSE 0
-			END
-	) RES_BYP_QTY,
-		SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710R2' THEN 
-					BASEX
-				ELSE 0
-			END
-	) RES_REQ_VAL,
-	SUM(
-			CASE MAJG||RQBY||REPL
-				WHEN '710B2' THEN 
-					BASEX
-				ELSE 0
-			END
-	) RES_BYP_VAL,
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D10 - CORRUGATE' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D10_CORRUGATE,
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D11 - PALLET' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D11_PALLET,
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D12 - LABEL' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D12_LABEL,
-	SUM(
-		CASE MAJG
-			WHEN '910' THEN
-				CASE MING
-					WHEN 'D13 - WRAP' THEN BASEX
-					ELSE 0
-				END
-			ELSE 0
-		END
-	) D13_WRAP,
-	SUM(
-		CASE MAJG
-			WHEN '710' THEN
-				ERQTY-ERQTY*SCRP
-			ELSE
-				0
-		END
-	) SCRPQTY710,
-		SUM(
-		CASE MAJG
-			WHEN '710' THEN
-				(ERQTY-ERQTY*SCRP)*BASE
-			ELSE
-				0
-		END
-	) SCRPVAL710,
-	SUM(
-		CASE SUBSTR(DEP,4,2)
-			WHEN '01' THEN 0
-			WHEN '39' THEN 0 
-			ELSE (ERQTY+ERQTYS)*(1/RUNTIME)
-		END
+		(ERQTY+ERQTYS)*(1/RUNTIME)
 	) EH,
     SUM(COALESCE(BASEX,0)) BASE,
     SUM(COALESCE(FRTX,0)) FREIGHT,
@@ -370,10 +258,8 @@ GROUP BY
 
 ), SALES AS (
 SELECT
-	VERSION,
 	CHAN,
 	GEO,
-	ACCOUNT,
 	GLEC,
 	PLNT,
 	PART,
@@ -384,18 +270,17 @@ SELECT
 	MING,
 	MAJS,
 	MINS,
-	SUBSTR(DIGITS(YEAR(B_SHIPDATE+ I_SHIPDATE DAYS)),9)||SUBSTR(DIGITS(MONTH(B_SHIPDATE + I_SHIPDATE DAYS)),9) SHIPDATE,
 	SUM(VALUE_LOCAL*CASE R_CURRENCY WHEN 'CA' THEN .75 ELSE 1 END) REVENUE_USD,
 	SUM(QTY) QTY
 FROM
 	QGPL.FFBS0403
 WHERE
-	COALESCE(B_SHIPDATE,CAST('2001-01-01' AS DATE)) >= CAST('2017-03-01' AS DATE) 
+	VERSION IN ('BASELINE','Color Point - 1006''s/trays, & 1-time injection prop strip and trays','Costa - Monrovia and Fern Baskets removed','Drop Monaghan','Garden State - remove all printing','INT1006 - assume we lose all 1006 and trays','INT1006 - assume we lose all 1006 and trays - Price Norm','Olsons - BHG Printing and 1006 removed','Oppas','TF3','VAN HOEKELEN') AND
+	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
+	B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01'
 GROUP BY
-	VERSION,
 	CHAN,
 	GEO,
-	ACCOUNT,
 	GLEC,
 	PLNT,
 	PART,
@@ -405,8 +290,7 @@ GROUP BY
 	MAJG,
 	MING,
 	MAJS,
-	MINS,
-	SUBSTR(DIGITS(YEAR(B_SHIPDATE+ I_SHIPDATE DAYS)),9)||SUBSTR(DIGITS(MONTH(B_SHIPDATE + I_SHIPDATE DAYS)),9)
+	MINS
 )
 
 SELECT
@@ -558,3 +442,4 @@ GROUP BY
 	C.MAJG,
 	C.MING,
 	C.DEP
+*/---------------------------------------------------------------------------------------------------------------------------------------------
