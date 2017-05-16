@@ -15,13 +15,13 @@ Start Adding revions
 	clear old if necessary
 --------------------------*/
 
-DROP TABLE QGPL.FFOTEST;
+DROP TABLE QGPL.FFBS0515;
 
 /*---------------------
 	create table
 ---------------------*/
 
-CREATE TABLE QGPL.FFOTEST
+CREATE TABLE QGPL.FFBS0515
 (
 	------order info--------------
 	PLNT VARCHAR(3),
@@ -97,7 +97,6 @@ CREATE TABLE QGPL.FFOTEST
 	I_ORDERDATE INT,
 	I_REQUESTDATE INT,
 	I_SHIPDATE INT,
-	FLAG VARCHAR(255),
 	VERSION VARCHAR(255)
 );
 
@@ -105,7 +104,7 @@ CREATE TABLE QGPL.FFOTEST
 	base data insert
 ---------------------*/
 INSERT INTO
-	QGPL.FFOTEST
+	QGPL.FFBS0515
 SELECT
 	--order data
 	PLNT,
@@ -515,7 +514,7 @@ WHERE
 ---------------------------------------------------------------------------*/
 
 INSERT INTO 
-	QGPL.FFOTEST
+	QGPL.FFBS0515
 SELECT
 	------order info--------------
 	PLNT,
@@ -593,7 +592,7 @@ SELECT
 	0,
 	'BASELINE_OPEN' VERSION
 FROM
-	QGPL.FFOTEST
+	QGPL.FFBS0515
 WHERE	
 	STATUS IN ('OPEN','BACKORDER');
 	
@@ -602,7 +601,7 @@ WHERE
 ---------------------------------------------------------------------------*/
 
 UPDATE
-	QGPL.FFOTEST
+	QGPL.FFBS0515
 SET
 	B_SHIPDATE = 
 		CASE VERSION 
@@ -622,7 +621,7 @@ WHERE
 	Add forecast for remainder of current year to get to budget year
 ---------------------------------------------------------------------------*/
 INSERT INTO	
-	QGPL.FFOTEST
+	QGPL.FFBS0515
 SELECT 
 ------order info--------------
 	PLNT,
@@ -700,7 +699,7 @@ SELECT
 	0,
 	'BASELINE' VERSION
 FROM 
-	QGPL.FFOTEST 
+	QGPL.FFBS0515
 WHERE 
 	VERSION = 'BASELINE' AND
 	ORDERDATE >= '2016-04-01' AND 
@@ -730,7 +729,7 @@ ORDER BY
 ---------------------------------------------------------------------------*/
 
 UPDATE	
-	QGPL.FFOTEST
+	QGPL.FFBS0515
 SET
 	/*
 	ORDERDATE = ORDERDATE + 1 YEAR,

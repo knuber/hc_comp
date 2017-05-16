@@ -293,25 +293,34 @@ SELECT
 	COALESCE(M.AQQPPC,1) QTY, 
 	COALESCE(M.AQQTYM,1) BQTY, 
 	COALESCE(
-			--qty required per 1 parent
-			FLOAT (M.AQQPPC / M.AQQTYM) / 
-			--scrap factor in BOM
-			FLOAT (1 - M.AQSCRP / 100) * 
-			--byproduct flag
-			CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
-		,1) RQTY, 
+		CASE M.AQQTYM
+			WHEN 0 
+				THEN 0
+			ELSE
+				--qty required per 1 parent
+				FLOAT (M.AQQPPC / M.AQQTYM) / 
+				--scrap factor in BOM
+				FLOAT (1 - M.AQSCRP / 100) * 
+				--byproduct flag
+				CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
+		END
+	,1) RQTY, 
 	COALESCE(
-			--qty required per 1 parent
-			FLOAT (M.AQQPPC / M.AQQTYM) * 
-			--parent extended required qty
-			FLOAT (PSE.ERQTY) / 
-			--scrap in BOM
-			FLOAT (1 - M.AQSCRP / 100) * 
-			--byproduct flag
-			CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
-		--parent extended req qty
-		,PSE.ERQTY
-	) ERQTY, 
+		CASE M.AQQTYM
+			WHEN 0 
+				THEN 0
+			ELSE
+				--qty required per 1 parent
+				FLOAT (M.AQQPPC / M.AQQTYM) * 
+				--parent extended required qty
+				FLOAT (PSE.ERQTY) / 
+				--scrap in BOM
+				FLOAT (1 - M.AQSCRP / 100) * 
+				--byproduct flag
+				CASE M.AQRQBY WHEN 'B' THEN - 1 ELSE 1 END
+			--parent extended req qty
+		END
+	,PSE.ERQTY) ERQTY, 
 	---build in transfer conversion here.
 	--A2 is going to be either the BOM uom in the source plant (or consumption plant if none) or the uom of the parent part in the transfer plant if pass-through
 	CASE PP.V6RPLN 

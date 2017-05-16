@@ -1,0 +1,817 @@
+
+-----------------------------PRICE NORMALIZATION--------------------------------
+/*
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL * 
+    CASE MAJG 
+        WHEN '110 - INJECTION' THEN .135 
+        WHEN '320 - COEX' THEN .135 
+        WHEN '310 - VACUUM FORM' THEN .095 
+        ELSE 0
+    END VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Greenhouse Pricelist Adj for Baseline'
+FROM 
+	QGPL.FFBS0516 
+    INNER JOIN QGPL.FFVERS ON
+        VERS = VERSION
+WHERE 
+    SEQ <= 4 AND
+    VERSION = 'BASELINE' AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    SHIPCUSTCLASS LIKE '%DIS%' AND
+    MAJG IN ('110 - INJECTION','320 - COEX','310 - VACUUM FORM') AND
+	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-06-01' AND 
+	(B_ORDERDATE + I_ORDERDATE DAYS) <= '2017-12-31'
+*/
+
+
+------------lobllaws price gain---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Loblaw''s Win';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.1875 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Loblaw''s Win'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+	PROMO LIKE 'LOBLAWS 2017%' AND 
+	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+
+------------Proven Winners Increase---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Proven Winners Increase';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.07 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Proven Winners Increase'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    MING = 'B52 - PROVEN WINNERS' AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+------------Printing Increase---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'General Printing Increase';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.05 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'General Printing Increase'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    MING = 'B11 - PRINTED' AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+------------Warehouse Shipment Increase---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Warehouse Shipment Increase';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.047 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Warehouse Shipment Increase'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    BILLCUSTCLASS IN ('GDIS','NDIS') AND
+    SHIPCUSTCLASS IN ('GDIS','NDIS') AND
+    GLEC = '1GR - GREENHOUSE PRODUCT' AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+
+
+---------ALL OTHER DIRECT INCREASE----------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'All Other Direct Increase';
+INSERT INTO 
+    QGPL.FFBS0516
+SELECT
+	PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.03 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'All Other Direct Increase'
+FROM
+	QGPL.FFBS0516
+WHERE 
+	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+	GLEC = '1GR - GREENHOUSE PRODUCT' AND
+	CHAN = 'DIRECT' AND
+	ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+---------ALL OTHER DROPSHIP INCREASE----------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'All Other Drop-Ship Increase';
+INSERT INTO 
+    QGPL.FFBS0516
+SELECT
+	PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.03 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'All Other Drop-Ship Increase'
+FROM
+	QGPL.FFBS0516
+WHERE 
+	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+	GLEC = '1GR - GREENHOUSE PRODUCT' AND
+	CHAN = 'DISTRIB DROP SHIP' AND
+	ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+------------Retail Distribution Adjustments---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Distribution Adjustments - Price';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.02 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Distribution Adjustments - Price'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    BILLCUSTCLASS IN ('GDIS','RDIS') AND
+    GLEC = '1RE - RETAIL PRODUCT' AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+
+
+------------Dan Pricing Adjustments Non-Black---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Dan Pricing Adjustments - Non-Black';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.03 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Dan Pricing Adjustments - Non-Black'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    GLEC = '1NU - NURSERY PRODUCT' AND
+    SUBSTR(PART,9,3) <> 'G18' AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
+

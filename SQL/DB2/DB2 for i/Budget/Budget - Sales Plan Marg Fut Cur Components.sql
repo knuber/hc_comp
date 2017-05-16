@@ -1,0 +1,445 @@
+WITH 
+S AS (
+SELECT
+	CHAN,
+	GEO,
+	GLEC,
+	PLNT,
+	PART,
+	STATEMENT_LINE,
+	R_CURRENCY,
+	C_CURRENCY,
+	MAJG,
+	MING,
+	MAJS,
+	MINS,
+	SUM(VALUE_LOCAL*CASE R_CURRENCY WHEN 'CA' THEN .75 ELSE 1 END) REVENUE_USD,
+	SUM(QTY) QTY
+FROM
+	QGPL.FFBS0403
+WHERE
+	VERSION IN ('BASELINE','Color Point - 1006''s/trays, & 1-time injection prop strip and trays','Costa - Monrovia and Fern Baskets removed','Drop Monaghan','Garden State - remove all printing','INT1006 - assume we lose all 1006 and trays','INT1006 - assume we lose all 1006 and trays - Price Norm','Olsons - BHG Printing and 1006 removed','Oppas','TF3','VAN HOEKELEN') AND
+	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
+	B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01'
+GROUP BY
+	CHAN,
+	GEO,
+	GLEC,
+	PLNT,
+	PART,
+	STATEMENT_LINE,
+	R_CURRENCY,
+	C_CURRENCY,
+	MAJG,
+	MING,
+	MAJS,
+	MINS
+),
+
+SELECT
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	C.GLED,
+	C.MAJG,
+	C.MING,
+	C.DEP,
+	C.REPL,
+	SUM(ERQTYS) QTYS,
+	SUM(ERQTY) QTYG,
+	SUM(
+		(ERQTY+ERQTYS)*(1/RUNTIME)
+	) EH,
+    SUM(COALESCE(BASEX,0)) BASE,
+    SUM(COALESCE(FRTX,0)) FREIGHT,
+    SUM(COALESCE(DUTYX,0)) DUTY,
+    SUM(COALESCE(MULT1X,0)) MULT1,
+    SUM(COALESCE(MULT2X,0)) MULT2,
+    SUM(COALESCE(SHIPHX,0)) SHIPH,
+    SUM(COALESCE(OSFTX,0)) SUBFRTOUT,
+    SUM(COALESCE(OSFFX,0)) SUBFRTIN,
+    SUM(COALESCE(CURRX,0)) CURRENCY,
+    SUM(COALESCE(SUBCX,0)) SUBCONTR,
+    SUM(LABRX) LABRUN,
+    SUM(VARRX) VARRUN,
+    SUM(FIXRX) FIXRUN,
+    SUM(LABSX) LABSET,
+    SUM(VARSX) VARSET,
+    SUM(FIXSX) FIXSET,
+    SUM(
+        COALESCE(BASEXS,0) +
+        COALESCE(FRTXS,0) +
+        COALESCE(DUTYXS,0) +
+        COALESCE(MULT1XS,0) +
+        COALESCE(MULT2XS,0) +
+        COALESCE(SHIPHXS,0) +
+        COALESCE(OSFTXS,0) +
+        COALESCE(OSFFXS,0) +
+        COALESCE(CURRXS,0) +
+        COALESCE(SUBCXS,0) +
+        COALESCE(LABRXS,0)+
+        COALESCE(VARRXS,0)+
+        COALESCE(FIXRXS,0)+
+        COALESCE(LABSXS,0)+
+        COALESCE(VARSXS,0)+
+        COALESCE(FIXSXS,0)
+    ) SCRAP,
+    ROUND(
+        SUM(
+                ---good----
+                COALESCE(BASEX,0) +
+                COALESCE(FRTX,0) +
+                COALESCE(DUTYX,0) +
+                COALESCE(MULT1X,0) +
+                COALESCE(MULT2X,0) +
+                COALESCE(SHIPHX,0) +
+                COALESCE(OSFTX,0) +
+                COALESCE(OSFFX,0) +
+                COALESCE(CURRX,0) +
+                COALESCE(SUBCX,0) +
+                COALESCE(LABRX,0)+
+                COALESCE(VARRX,0)+
+                COALESCE(FIXRX,0)+
+                COALESCE(LABSX,0)+
+                COALESCE(VARSX,0)+
+                COALESCE(FIXSX,0)+
+                ---scrap----
+                COALESCE(BASEXS,0) +
+                COALESCE(FRTXS,0) +
+                COALESCE(DUTYXS,0) +
+                COALESCE(MULT1XS,0) +
+                COALESCE(MULT2XS,0) +
+                COALESCE(SHIPHXS,0) +
+                COALESCE(OSFTXS,0) +
+                COALESCE(OSFFXS,0) +
+                COALESCE(CURRXS,0) +
+                COALESCE(SUBCXS,0) +
+                COALESCE(LABRXS,0)+
+                COALESCE(VARRXS,0)+
+                COALESCE(FIXRXS,0)+
+                COALESCE(LABSXS,0)+
+                COALESCE(VARSXS,0)+
+                COALESCE(FIXSXS,0)
+        )
+    ,5) TOTAL_CALC
+FROM
+	S
+    INNER JOIN QGPL.FFBSREQC C ON
+		S.PART = C.MAST AND
+		S.PLNT = C.MPLT
+GROUP BY
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	C.GLED,
+	C.MAJG,
+	C.MING,
+	C.DEP,
+	C.REPL
+
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------
+),
+FUT AS (
+SELECT
+    MAST,
+    MPLT,
+	GLED,
+	MAJG,
+	MING,
+	DEP,
+	REPL,
+	SUM(ERQTYS) QTYS,
+	SUM(ERQTY) QTYG,
+	SUM(
+		(ERQTY+ERQTYS)*(1/RUNTIME)
+	) EH,
+    SUM(COALESCE(BASEX,0)) BASE,
+    SUM(COALESCE(FRTX,0)) FREIGHT,
+    SUM(COALESCE(DUTYX,0)) DUTY,
+    SUM(COALESCE(MULT1X,0)) MULT1,
+    SUM(COALESCE(MULT2X,0)) MULT2,
+    SUM(COALESCE(SHIPHX,0)) SHIPH,
+    SUM(COALESCE(OSFTX,0)) SUBFRTOUT,
+    SUM(COALESCE(OSFFX,0)) SUBFRTIN,
+    SUM(COALESCE(CURRX,0)) CURRENCY,
+    SUM(COALESCE(SUBCX,0)) SUBCONTR,
+    SUM(LABRX) LABRUN,
+    SUM(VARRX) VARRUN,
+    SUM(FIXRX) FIXRUN,
+    SUM(LABSX) LABSET,
+    SUM(VARSX) VARSET,
+    SUM(FIXSX) FIXSET,
+    SUM(
+        COALESCE(BASEXS,0) +
+        COALESCE(FRTXS,0) +
+        COALESCE(DUTYXS,0) +
+        COALESCE(MULT1XS,0) +
+        COALESCE(MULT2XS,0) +
+        COALESCE(SHIPHXS,0) +
+        COALESCE(OSFTXS,0) +
+        COALESCE(OSFFXS,0) +
+        COALESCE(CURRXS,0) +
+        COALESCE(SUBCXS,0) +
+        COALESCE(LABRXS,0)+
+        COALESCE(VARRXS,0)+
+        COALESCE(FIXRXS,0)+
+        COALESCE(LABSXS,0)+
+        COALESCE(VARSXS,0)+
+        COALESCE(FIXSXS,0)
+    ) SCRAP,
+    ROUND(
+        SUM(
+                ---good----
+                COALESCE(BASEX,0) +
+                COALESCE(FRTX,0) +
+                COALESCE(DUTYX,0) +
+                COALESCE(MULT1X,0) +
+                COALESCE(MULT2X,0) +
+                COALESCE(SHIPHX,0) +
+                COALESCE(OSFTX,0) +
+                COALESCE(OSFFX,0) +
+                COALESCE(CURRX,0) +
+                COALESCE(SUBCX,0) +
+                COALESCE(LABRX,0)+
+                COALESCE(VARRX,0)+
+                COALESCE(FIXRX,0)+
+                COALESCE(LABSX,0)+
+                COALESCE(VARSX,0)+
+                COALESCE(FIXSX,0)+
+                ---scrap----
+                COALESCE(BASEXS,0) +
+                COALESCE(FRTXS,0) +
+                COALESCE(DUTYXS,0) +
+                COALESCE(MULT1XS,0) +
+                COALESCE(MULT2XS,0) +
+                COALESCE(SHIPHXS,0) +
+                COALESCE(OSFTXS,0) +
+                COALESCE(OSFFXS,0) +
+                COALESCE(CURRXS,0) +
+                COALESCE(SUBCXS,0) +
+                COALESCE(LABRXS,0)+
+                COALESCE(VARRXS,0)+
+                COALESCE(FIXRXS,0)+
+                COALESCE(LABSXS,0)+
+                COALESCE(VARSXS,0)+
+                COALESCE(FIXSXS,0)
+        )
+    ,5) TOTAL_CALC
+FROM
+    QGPL.FFBSREQF
+GROUP BY
+    MAST,
+    MPLT,
+	GLED,
+	MAJG,
+	MING,
+	DEP
+
+), SALES AS (
+SELECT
+	CHAN,
+	GEO,
+	GLEC,
+	PLNT,
+	PART,
+	STATEMENT_LINE,
+	R_CURRENCY,
+	C_CURRENCY,
+	MAJG,
+	MING,
+	MAJS,
+	MINS,
+	SUM(VALUE_LOCAL*CASE R_CURRENCY WHEN 'CA' THEN .75 ELSE 1 END) REVENUE_USD,
+	SUM(QTY) QTY
+FROM
+	QGPL.FFBS0403
+WHERE
+	VERSION IN ('BASELINE','Color Point - 1006''s/trays, & 1-time injection prop strip and trays','Costa - Monrovia and Fern Baskets removed','Drop Monaghan','Garden State - remove all printing','INT1006 - assume we lose all 1006 and trays','INT1006 - assume we lose all 1006 and trays - Price Norm','Olsons - BHG Printing and 1006 removed','Oppas','TF3','VAN HOEKELEN') AND
+	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
+	B_SHIPDATE + I_SHIPDATE DAYS < '2018-06-01'
+GROUP BY
+	CHAN,
+	GEO,
+	GLEC,
+	PLNT,
+	PART,
+	STATEMENT_LINE,
+	R_CURRENCY,
+	C_CURRENCY,
+	MAJG,
+	MING,
+	MAJS,
+	MINS
+)
+
+SELECT
+	'FUTURE' SRCE,
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	SUM(S.REVENUE_USD) REVENUE_USD,
+	SUM(S.QTY) QTY,
+	C.GLED GLED_C,
+	C.MAJG MAJG_C,
+	C.MING MING_C,
+	C.DEP DEP_C,
+	SUM(C.RES_REQ_QTY * S.QTY) CRES_REQ_QTY,
+	SUM(C.RES_BYP_QTY * S.QTY) CRES_BYP_QTY,
+	SUM(C.RES_REQ_VAL * S.QTY) CRES_REQ_VAL,
+	SUM(C.RES_BYP_VAL * S.QTY) CRES_BYP_VAL,
+	SUM(C.D10_CORRUGATE * S.QTY) CD10_CORRUGATE,
+	SUM(C.D11_PALLET * S.QTY) CD11_PALLET,
+	SUM(C.D12_LABEL * S.QTY) CD12_LABEL,
+	SUM(C.D13_WRAP * S.QTY) CD13_WRAP,
+	SUM(C.SCRPQTY710 * S.QTY) CSCRPQTY,
+	SUM(C.SCRPVAL710 * S.QTY) CSCRPVAL,
+	SUM(C.EH * S.QTY) CEH,
+	SUM(C.BASE * S.QTY) CBASE,
+	SUM(C.FREIGHT * S.QTY) CFREIGHT,
+	SUM(C.DUTY * S.QTY) CDUTY,
+	SUM(C.MULT1 * S.QTY) CMULT1,
+	SUM(C.MULT2 * S.QTY) CMULT2,
+	SUM(C.SHIPH * S.QTY) CSHIPH,
+	SUM(C.SUBFRTOUT * S.QTY) CSUBFRTOUT,
+	SUM(C.SUBFRTIN * S.QTY) CSUBFRTIN,
+	SUM(C.CURRENCY * S.QTY) CCURRENCY,
+	SUM(C.SUBCONTR * S.QTY) CSUBCONTR,
+	SUM(C.LABRUN * S.QTY) CLABRUN,
+	SUM(C.VARRUN * S.QTY) CVARRUN,
+	SUM(C.FIXRUN * S.QTY) CFIXRUN,
+	SUM(C.LABSET * S.QTY) CLABSET,
+	SUM(C.VARSET * S.QTY) CVARSET,
+	SUM(C.FIXSET * S.QTY) CFIXSET,
+	SUM(C.SCRAP * S.QTY) CSCRAP,
+	SUM(C.TOTAL_CALC * S.QTY) CTOTAL
+FROM
+	SALES S
+	LEFT OUTER JOIN CUR C ON
+		C.MAST = S.PART AND
+		C.MPLT = S.PLNT
+GROUP BY
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	C.GLED,
+	C.MAJG,
+	C.MING,
+	C.DEP
+
+UNION ALL
+
+SELECT
+	'CURRENT' SRCE,
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	SUM(S.REVENUE_USD) REVENUE_USD,
+	SUM(S.QTY) QTY,
+	C.GLED GLED_C,
+	C.MAJG MAJG_C,
+	C.MING MING_C,
+	C.DEP DEP_C,
+	SUM(C.RES_REQ_QTY * S.QTY) CRES_REQ_QTY,
+	SUM(C.RES_BYP_QTY * S.QTY) CRES_BYP_QTY,
+	SUM(C.RES_REQ_VAL * S.QTY) CRES_REQ_VAL,
+	SUM(C.RES_BYP_VAL * S.QTY) CRES_BYP_VAL,
+	SUM(C.D10_CORRUGATE * S.QTY) CD10_CORRUGATE,
+	SUM(C.D11_PALLET * S.QTY) CD11_PALLET,
+	SUM(C.D12_LABEL * S.QTY) CD12_LABEL,
+	SUM(C.D13_WRAP * S.QTY) CD13_WRAP,
+	SUM(C.SCRPQTY710 * S.QTY) CSCRPQTY,
+	SUM(C.SCRPVAL710 * S.QTY) CSCRPVAL,
+	SUM(C.EH * S.QTY) CEH,
+	SUM(C.BASE * S.QTY) CBASE,
+	SUM(C.FREIGHT * S.QTY) CFREIGHT,
+	SUM(C.DUTY * S.QTY) CDUTY,
+	SUM(C.MULT1 * S.QTY) CMULT1,
+	SUM(C.MULT2 * S.QTY) CMULT2,
+	SUM(C.SHIPH * S.QTY) CSHIPH,
+	SUM(C.SUBFRTOUT * S.QTY) CSUBFRTOUT,
+	SUM(C.SUBFRTIN * S.QTY) CSUBFRTIN,
+	SUM(C.CURRENCY * S.QTY) CCURRENCY,
+	SUM(C.SUBCONTR * S.QTY) CSUBCONTR,
+	SUM(C.LABRUN * S.QTY) CLABRUN,
+	SUM(C.VARRUN * S.QTY) CVARRUN,
+	SUM(C.FIXRUN * S.QTY) CFIXRUN,
+	SUM(C.LABSET * S.QTY) CLABSET,
+	SUM(C.VARSET * S.QTY) CVARSET,
+	SUM(C.FIXSET * S.QTY) CFIXSET,
+	SUM(C.SCRAP * S.QTY) CSCRAP,
+	SUM(C.TOTAL_CALC * S.QTY) CTOTAL
+FROM
+	SALES S
+	LEFT OUTER JOIN FUT C ON
+		C.MAST = S.PART AND
+		C.MPLT = S.PLNT
+GROUP BY
+	S.VERSION,
+	S.CHAN,
+	S.GEO,
+	S.ACCOUNT,
+	S.GLEC,
+	S.PLNT,
+	S.STATEMENT_LINE,
+	S.R_CURRENCY,
+	S.C_CURRENCY,
+	S.MAJG,
+	S.MING,
+	S.MAJS,
+	S.MINS,
+	C.GLED,
+	C.MAJG,
+	C.MING,
+	C.DEP
+*/---------------------------------------------------------------------------------------------------------------------------------------------
