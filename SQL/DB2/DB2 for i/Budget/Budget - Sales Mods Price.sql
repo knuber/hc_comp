@@ -1,6 +1,6 @@
 
 -----------------------------PRICE NORMALIZATION--------------------------------
-
+/*
 SELECT 
     PLNT,
     ORDER,
@@ -87,90 +87,8 @@ WHERE
     MAJG IN ('110 - INJECTION','320 - COEX','310 - VACUUM FORM') AND
 	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-06-01' AND 
 	(B_ORDERDATE + I_ORDERDATE DAYS) <= '2017-12-31'
+*/
 
-
-
--------------------Lowes & Wal-Mart Price-----------------------------------------------------
-DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Lowes & Wal-Mart Price';
-INSERT INTO 
-	QGPL.FFBS0516
-SELECT 
-    PLNT,
-    ORDER,
-    ORDERITEM,
-    BOL,
-    BOLITEM,
-    INVOICE,
-    INVOICEITEM,
-    PROMO,
-    RETURNREAS,
-    TERMS,
-    CUSTPO,
-    ORDERDATE,
-    REQUESTDATE,
-    PROMISEDATE,
-    SHIPDATE,
-    SALESMONTH,
-    BILLREMITO,
-    BILLCUSTCLASS,
-    BILLCUST,
-    BILLREP,
-    BILLDSM,
-    BILLDIRECTOR,
-    SHIPCUSTCLASS,
-    SHIPCUST,
-    SHIPDSM,
-    SHIPDIRECTOR,
-    SPECIAL_SAUCE_REP,
-    ACCOUNT,
-    GEO,
-    CHAN,
-    ORIG_CTRY,
-    ORIG_PROV,
-    ORIG_LANE,
-    ORIG_POST,
-    DEST_CTRY,
-    DEST_PROV,
-    DEST_LANE,
-    DEST_POST,
-    PART,
-    GL_CODE,
-    MAJG,
-    MING,
-    MAJS,
-    MINS,
-    GLDC,
-    GLEC,
-    HARM,
-    CLSS,
-    BRAND,
-    ASSC,
-    STATEMENT_LINE,
-    R_CURRENCY,
-    R_RATE,
-    C_CURRENCY,
-    C_RATE,
-    0 QTY,
-    VALUE_LOCAL*.04 VALUE_LOCAL,
-    0 PRICE,
-    STATUS,
-    FLAG,
-    B_ORDERDATE,
-    B_REQUESTDATE,
-    B_SHIPDATE,
-    I_ORDERDATE,
-    I_REQUESTDATE,
-    I_SHIPDATE,
-    'Lowes & Wal-Mart Price'
-FROM 
-	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
-WHERE 
-    SEQ <= 4 AND
-    GLEC = '1GR - GREENHOUSE PRODUCT' AND
-	SUBSTR(PART,1,7) IN ('PSC0800','PSH1000','PSP1000','HMH1000','HMP1000','QUH1000','FSH1000','QUP1000') AND
-	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 ------------lobllaws price gain---------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Loblaw''s Win';
@@ -246,13 +164,21 @@ SELECT
     'Loblaw''s Win'
 FROM 
 	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
 	PROMO LIKE 'LOBLAWS 2017%' AND 
-	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
+	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 
 
 ------------Proven Winners Increase---------------
@@ -329,13 +255,21 @@ SELECT
     'Proven Winners Increase'
 FROM 
 	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
     MING = 'B52 - PROVEN WINNERS' AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 
 ------------Printing Increase---------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'General Printing Increase';
@@ -411,14 +345,21 @@ SELECT
     'General Printing Increase'
 FROM 
 	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
     MING = 'B11 - PRINTED' AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
-    PROMO NOT LIKE 'LOBLAWS 2017%' AND 
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 
 ------------Warehouse Shipment Increase---------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Warehouse Shipment Increase';
@@ -494,97 +435,24 @@ SELECT
     'Warehouse Shipment Increase'
 FROM 
 	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
     BILLCUSTCLASS IN ('GDIS','NDIS') AND
     SHIPCUSTCLASS IN ('GDIS','NDIS') AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 
-------------Direct Price Increase---------------
-DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Warehouse Shipment Increase';
-INSERT INTO 
-	QGPL.FFBS0516
-SELECT 
-    PLNT,
-    ORDER,
-    ORDERITEM,
-    BOL,
-    BOLITEM,
-    INVOICE,
-    INVOICEITEM,
-    PROMO,
-    RETURNREAS,
-    TERMS,
-    CUSTPO,
-    ORDERDATE,
-    REQUESTDATE,
-    PROMISEDATE,
-    SHIPDATE,
-    SALESMONTH,
-    BILLREMITO,
-    BILLCUSTCLASS,
-    BILLCUST,
-    BILLREP,
-    BILLDSM,
-    BILLDIRECTOR,
-    SHIPCUSTCLASS,
-    SHIPCUST,
-    SHIPDSM,
-    SHIPDIRECTOR,
-    SPECIAL_SAUCE_REP,
-    ACCOUNT,
-    GEO,
-    CHAN,
-    ORIG_CTRY,
-    ORIG_PROV,
-    ORIG_LANE,
-    ORIG_POST,
-    DEST_CTRY,
-    DEST_PROV,
-    DEST_LANE,
-    DEST_POST,
-    PART,
-    GL_CODE,
-    MAJG,
-    MING,
-    MAJS,
-    MINS,
-    GLDC,
-    GLEC,
-    HARM,
-    CLSS,
-    BRAND,
-    ASSC,
-    STATEMENT_LINE,
-    R_CURRENCY,
-    R_RATE,
-    C_CURRENCY,
-    C_RATE,
-    0 QTY,
-    VALUE_LOCAL*.047 VALUE_LOCAL,
-    0 PRICE,
-    STATUS,
-    FLAG,
-    B_ORDERDATE,
-    B_REQUESTDATE,
-    B_SHIPDATE,
-    I_ORDERDATE,
-    I_REQUESTDATE,
-    I_SHIPDATE,
-    'Warehouse Shipment Increase'
-FROM 
-	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
-WHERE 
-    SEQ <= 4 AND
-    BILLCUSTCLASS IN ('GDIS','NDIS') AND
-    SHIPCUSTCLASS IN ('GDIS','NDIS') AND
-    GLEC = '1GR - GREENHOUSE PRODUCT' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+
 
 ---------ALL OTHER DIRECT INCREASE----------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'All Other Direct Increase';
@@ -660,23 +528,20 @@ SELECT
     'All Other Direct Increase'
 FROM
 	QGPL.FFBS0516
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
-	(B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
+	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
 	GLEC = '1GR - GREENHOUSE PRODUCT' AND
 	CHAN = 'DIRECT' AND
-    --need to address this situation from a sequence standpoint
 	ORDER NOT IN (
         SELECT DISTINCT
             ORDER
         FROM
             QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
         WHERE
-            (B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
-            VERSION IN ('Loblaw''s Risk','Lowes & Wal-Mart Price','Loblaw''s Win','X1000 Weathered Wood','6 ct Tray','Lowes & Wal-Mart Price','Proven Winners Increase','General Printing Increase','Warehouse Shipment Increase') AND
-            GLEC = '1GR - GREENHOUSE PRODUCT'
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
     );
 
 ---------ALL OTHER DROPSHIP INCREASE----------------
@@ -753,11 +618,8 @@ SELECT
     'All Other Drop-Ship Increase'
 FROM
 	QGPL.FFBS0516
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
-	(B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
+	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
 	GLEC = '1GR - GREENHOUSE PRODUCT' AND
 	CHAN = 'DISTRIB DROP SHIP' AND
 	ORDER NOT IN (
@@ -765,10 +627,11 @@ WHERE
             ORDER
         FROM
             QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
         WHERE
-            (B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
-            VERSION IN ('Loblaw''s Risk','Lowes & Wal-Mart Price','Loblaw''s Win','X1000 Weathered Wood','6 ct Tray','Lowes & Wal-Mart Price','Proven Winners Increase','General Printing Increase','Warehouse Shipment Increase') AND
-            GLEC = '1GR - GREENHOUSE PRODUCT'
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
     );
 
 ------------Retail Distribution Adjustments---------------
@@ -845,13 +708,21 @@ SELECT
     'Distribution Adjustments - Price'
 FROM 
 	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
     BILLCUSTCLASS IN ('GDIS','RDIS') AND
     GLEC = '1RE - RETAIL PRODUCT' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 
 
 ------------Dan Pricing Adjustments Non-Black---------------
@@ -928,11 +799,19 @@ SELECT
     'Dan Pricing Adjustments - Non-Black'
 FROM 
 	QGPL.FFBS0516 
-    INNER JOIN QGPL.FFVERS ON
-        VERS = VERSION
 WHERE 
-    SEQ <= 4 AND
     GLEC = '1NU - NURSERY PRODUCT' AND
     SUBSTR(PART,9,3) <> 'G18' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 
