@@ -1,8 +1,8 @@
 
 ------------17x17 Adjustment---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = '17x17 Adjustment';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = '17x17 Adjustment';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -72,7 +72,7 @@ SELECT
     I_SHIPDATE,
     '17x17 Adjustment'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -83,9 +83,9 @@ WHERE
 
 
 ------------INT1006---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'INT1006 - assume we lose all 1006 and trays';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'INT1006 - assume we lose all 1006 and trays';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -155,7 +155,7 @@ SELECT
     I_SHIPDATE,
     'INT1006 - assume we lose all 1006 and trays'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -164,9 +164,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 --------Lowe''s Round Quarts/Pints (70%)------------------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Lowe''s Round Quarts/Pints (70%)';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Lowe''s Round Quarts/Pints (70%)';
 INSERT INTO
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT
 	PLNT,
     ORDER,
@@ -236,7 +236,7 @@ SELECT
     I_SHIPDATE,
     'Lowe''s Round Quarts/Pints (70%)'
 FROM
-	QGPL.FFBS0403
+	QGPL.FFBS0516
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -245,9 +245,9 @@ WHERE
 	(B_ORDERDATE+ I_ORDERDATE DAYS) >= '2017-06-01';
 
 ------------Garden State Printing---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Garden State - remove all printing';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Garden State - remove all printing';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -317,7 +317,7 @@ SELECT
     I_SHIPDATE,
     'Garden State - remove all printing'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -331,10 +331,10 @@ WHERE
     ) AND
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
-------------Garden State Printing---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Color Point - 1-time injection prop strip and trays';
+------------Color Point propr strip & trays---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Color Point - 1-time injection prop strip and trays';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -404,7 +404,7 @@ SELECT
     I_SHIPDATE,
     'Color Point - 1-time injection prop strip and trays'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -414,10 +414,10 @@ WHERE
 	SUBSTR(PART,1,8) IN ('PIT00080','TPI00080') AND
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
-------------Garden State Printing---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Olsons - BHG Printing and 1006 removed';
+------------Olsons - BHG Printing and 1006 removed---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Olsons - BHG Printing and 1006 removed';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -487,7 +487,7 @@ SELECT
     I_SHIPDATE,
     'Olsons - BHG Printing and 1006 removed'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -498,9 +498,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Costa - Monrovia and Fern Baskets removed---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Costa - Monrovia and Fern Baskets removed';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Costa - Monrovia and Fern Baskets removed';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -570,7 +570,7 @@ SELECT
     I_SHIPDATE,
     'Costa - Monrovia and Fern Baskets removed'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -581,9 +581,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------VAN HOEKELEN---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'VAN HOEKELEN';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'VAN HOEKELEN';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -653,7 +653,7 @@ SELECT
     I_SHIPDATE,
     'VAN HOEKELEN'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -663,9 +663,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Drop Monoghans---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Drop Monaghan';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Drop Monaghan';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -735,7 +735,7 @@ SELECT
     I_SHIPDATE,
     'Drop Monaghan'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -744,9 +744,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Neptune II---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Neptune II';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Neptune II';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -816,7 +816,7 @@ SELECT
     I_SHIPDATE,
     'Neptune II'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 

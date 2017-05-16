@@ -76,7 +76,7 @@ SELECT
     I_SHIPDATE,
     'Greenhouse Pricelist Adj for Baseline'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -91,9 +91,9 @@ WHERE
 
 
 -------------------Lowes & Wal-Mart Price-----------------------------------------------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Lowes & Wal-Mart Price';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Lowes & Wal-Mart Price';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -163,7 +163,7 @@ SELECT
     I_SHIPDATE,
     'Lowes & Wal-Mart Price'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -173,9 +173,9 @@ WHERE
 	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 ------------lobllaws price gain---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Loblaw''s Win';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Loblaw''s Win';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -245,7 +245,7 @@ SELECT
     I_SHIPDATE,
     'Loblaw''s Win'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -256,9 +256,9 @@ WHERE
 
 
 ------------Proven Winners Increase---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Proven Winners Increase';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Proven Winners Increase';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -328,7 +328,7 @@ SELECT
     I_SHIPDATE,
     'Proven Winners Increase'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -338,9 +338,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Printing Increase---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'General Printing Increase';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'General Printing Increase';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -410,7 +410,7 @@ SELECT
     I_SHIPDATE,
     'General Printing Increase'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -421,9 +421,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Warehouse Shipment Increase---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Warehouse Shipment Increase';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Warehouse Shipment Increase';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -493,7 +493,7 @@ SELECT
     I_SHIPDATE,
     'Warehouse Shipment Increase'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -504,9 +504,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Direct Price Increase---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Warehouse Shipment Increase';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Warehouse Shipment Increase';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -576,7 +576,7 @@ SELECT
     I_SHIPDATE,
     'Warehouse Shipment Increase'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -587,9 +587,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ---------ALL OTHER DIRECT INCREASE----------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'All Other Direct Increase';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'All Other Direct Increase';
 INSERT INTO 
-    QGPL.FFBS0403
+    QGPL.FFBS0516
 SELECT
 	PLNT,
     ORDER,
@@ -659,7 +659,7 @@ SELECT
     I_SHIPDATE,
     'All Other Direct Increase'
 FROM
-	QGPL.FFBS0403
+	QGPL.FFBS0516
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -672,7 +672,7 @@ WHERE
         SELECT DISTINCT
             ORDER
         FROM
-            QGPL.FFBS0403
+            QGPL.FFBS0516
         WHERE
             (B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
             VERSION IN ('Loblaw''s Risk','Lowes & Wal-Mart Price','Loblaw''s Win','X1000 Weathered Wood','6 ct Tray','Lowes & Wal-Mart Price','Proven Winners Increase','General Printing Increase','Warehouse Shipment Increase') AND
@@ -680,9 +680,9 @@ WHERE
     );
 
 ---------ALL OTHER DROPSHIP INCREASE----------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'All Other Drop-Ship Increase';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'All Other Drop-Ship Increase';
 INSERT INTO 
-    QGPL.FFBS0403
+    QGPL.FFBS0516
 SELECT
 	PLNT,
     ORDER,
@@ -752,7 +752,7 @@ SELECT
     I_SHIPDATE,
     'All Other Drop-Ship Increase'
 FROM
-	QGPL.FFBS0403
+	QGPL.FFBS0516
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -764,7 +764,7 @@ WHERE
         SELECT DISTINCT
             ORDER
         FROM
-            QGPL.FFBS0403
+            QGPL.FFBS0516
         WHERE
             (B_SHIPDATE + I_SHIPDATE DAYS) >= '2017-06-01' AND
             VERSION IN ('Loblaw''s Risk','Lowes & Wal-Mart Price','Loblaw''s Win','X1000 Weathered Wood','6 ct Tray','Lowes & Wal-Mart Price','Proven Winners Increase','General Printing Increase','Warehouse Shipment Increase') AND
@@ -772,9 +772,9 @@ WHERE
     );
 
 ------------Retail Distribution Adjustments---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Adjustments - Price';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Distribution Adjustments - Price';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -844,7 +844,7 @@ SELECT
     I_SHIPDATE,
     'Distribution Adjustments - Price'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 
@@ -855,9 +855,9 @@ WHERE
 
 
 ------------Dan Pricing Adjustments Non-Black---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Dan Pricing Adjustments - Non-Black';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Dan Pricing Adjustments - Non-Black';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -927,7 +927,7 @@ SELECT
     I_SHIPDATE,
     'Dan Pricing Adjustments - Non-Black'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
     INNER JOIN QGPL.FFVERS ON
         VERS = VERSION
 WHERE 

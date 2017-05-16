@@ -1,8 +1,8 @@
 
 ------------Weathered Wood---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'X1000 Weathered Wood';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'X1000 Weathered Wood';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -72,8 +72,11 @@ SELECT
     I_SHIPDATE,
     'X1000 Weathered Wood'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
+    INNER JOIN QGPL.FFVERS ON
+        VERS = VERSION
 WHERE 
+    SEQ <= 3 AND
     PART LIKE 'PBH1200%' AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
@@ -82,9 +85,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------6 ct Tray---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = '6 ct Tray';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = '6 ct Tray';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -154,8 +157,11 @@ SELECT
     I_SHIPDATE,
     '6 ct Tray'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
+    INNER JOIN QGPL.FFVERS ON
+        VERS = VERSION
 WHERE 
+    SEQ <= 3 AND
     PART LIKE 'TIS6665%' AND
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE') AND
@@ -164,9 +170,9 @@ WHERE
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
 
 ------------Retail Distribution Adjustments---------------
-DELETE FROM QGPL.FFBS0403 WHERE VERSION = 'Distribution Adjustments - Vol';
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Distribution Adjustments - Vol';
 INSERT INTO 
-	QGPL.FFBS0403
+	QGPL.FFBS0516
 SELECT 
     PLNT,
     ORDER,
@@ -236,8 +242,11 @@ SELECT
     I_SHIPDATE,
     'Distribution Adjustments - Vol'
 FROM 
-	QGPL.FFBS0403 
+	QGPL.FFBS0516 
+    INNER JOIN QGPL.FFVERS ON
+        VERS = VERSION
 WHERE 
+    SEQ <= 3 AND
     BILLCUSTCLASS IN ('GDIS','RDIS') AND
     GLEC = '1RE - RETAIL PRODUCT' AND
     VERSION IN ('Greenhouse Pricelist Adj for Baseline','BASELINE','Distribution Adjustments - Price') AND
