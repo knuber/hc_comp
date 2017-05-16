@@ -81,8 +81,7 @@ WHERE
     SEQ <= 4 AND
 	PROMO LIKE 'LOBLAWS 2017%' AND 
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
-	B_SHIPDATE + I_SHIPDATE DAYS >= '2017-06-01' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-06-01';
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
 -------------------DISTRIBUTION VOLUME-----------------------------------------------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Distribution Volume Risk';
