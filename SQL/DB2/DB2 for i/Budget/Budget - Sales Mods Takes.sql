@@ -164,6 +164,7 @@ WHERE
     SUBSTR(PART,1,7) IN ('INT1006','TWT.R10','TVT1006') AND
     B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
 
+/*
 --------Lowe''s Round Quarts/Pints (70%)------------------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Lowe''s Round Quarts/Pints (70%)';
 INSERT INTO
@@ -244,6 +245,7 @@ WHERE
     SEQ <= 2 AND
 	SUBSTR(PART,1,7) IN ('TCR081Q','TIS1Q08','TRS10QD','XNT0TQT','XRT0330','XST0400','TCA1333','XAZ0550','TIS5506','TCA0855') AND
 	(B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01';
+*/    
 
 ------------Garden State Printing---------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Garden State - remove all printing';
