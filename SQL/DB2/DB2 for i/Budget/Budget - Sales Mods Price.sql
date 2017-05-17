@@ -164,21 +164,13 @@ SELECT
     'Loblaw''s Win'
 FROM 
 	QGPL.FFBS0516 
+    INNER JOIN QGPL.FFVERS ON
+        VERS = VERSION
 WHERE 
     GLEC = '1GR - GREENHOUSE PRODUCT' AND
 	PROMO LIKE 'LOBLAWS 2017%' AND 
 	B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
-    ORDER NOT IN (
-        SELECT DISTINCT
-            ORDER
-        FROM
-            QGPL.FFBS0516
-            INNER JOIN QGPL.FFVERS ON
-                VERS = VERSION
-        WHERE
-            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
-            SEQ = 5
-    );
+    SEQ <= 1;
 
 
 ------------Proven Winners Increase---------------
@@ -724,7 +716,95 @@ WHERE
             SEQ = 5
     );
 
-
+------------Dan Pricing Adjustments 110, 210---------------
+DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Dan Pricing Adjustments - 110, 210';
+INSERT INTO 
+	QGPL.FFBS0516
+SELECT 
+    PLNT,
+    ORDER,
+    ORDERITEM,
+    BOL,
+    BOLITEM,
+    INVOICE,
+    INVOICEITEM,
+    PROMO,
+    RETURNREAS,
+    TERMS,
+    CUSTPO,
+    ORDERDATE,
+    REQUESTDATE,
+    PROMISEDATE,
+    SHIPDATE,
+    SALESMONTH,
+    BILLREMITO,
+    BILLCUSTCLASS,
+    BILLCUST,
+    BILLREP,
+    BILLDSM,
+    BILLDIRECTOR,
+    SHIPCUSTCLASS,
+    SHIPCUST,
+    SHIPDSM,
+    SHIPDIRECTOR,
+    SPECIAL_SAUCE_REP,
+    ACCOUNT,
+    GEO,
+    CHAN,
+    ORIG_CTRY,
+    ORIG_PROV,
+    ORIG_LANE,
+    ORIG_POST,
+    DEST_CTRY,
+    DEST_PROV,
+    DEST_LANE,
+    DEST_POST,
+    PART,
+    GL_CODE,
+    MAJG,
+    MING,
+    MAJS,
+    MINS,
+    GLDC,
+    GLEC,
+    HARM,
+    CLSS,
+    BRAND,
+    ASSC,
+    STATEMENT_LINE,
+    R_CURRENCY,
+    R_RATE,
+    C_CURRENCY,
+    C_RATE,
+    0 QTY,
+    VALUE_LOCAL*.02 VALUE_LOCAL,
+    0 PRICE,
+    STATUS,
+    FLAG,
+    B_ORDERDATE,
+    B_REQUESTDATE,
+    B_SHIPDATE,
+    I_ORDERDATE,
+    I_REQUESTDATE,
+    I_SHIPDATE,
+    'Dan Pricing Adjustments - 110, 210'
+FROM 
+	QGPL.FFBS0516 
+WHERE 
+    GLEC = '1NU - NURSERY PRODUCT' AND
+    MAJG IN ('110 - INJECTION','210 - BLOW MOLD') AND
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
+    ORDER NOT IN (
+        SELECT DISTINCT
+            ORDER
+        FROM
+            QGPL.FFBS0516
+            INNER JOIN QGPL.FFVERS ON
+                VERS = VERSION
+        WHERE
+            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
+            SEQ = 5
+    );
 ------------Dan Pricing Adjustments Non-Black---------------
 DELETE FROM QGPL.FFBS0516 WHERE VERSION = 'Dan Pricing Adjustments - Non-Black';
 INSERT INTO 
@@ -802,16 +882,4 @@ FROM
 WHERE 
     GLEC = '1NU - NURSERY PRODUCT' AND
     SUBSTR(PART,9,3) <> 'G18' AND
-    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01' AND
-    ORDER NOT IN (
-        SELECT DISTINCT
-            ORDER
-        FROM
-            QGPL.FFBS0516
-            INNER JOIN QGPL.FFVERS ON
-                VERS = VERSION
-        WHERE
-            (B_ORDERDATE + I_ORDERDATE DAYS) >= '2017-05-01' AND
-            SEQ = 5
-    );
-
+    B_ORDERDATE + I_ORDERDATE DAYS >= '2017-05-01';
