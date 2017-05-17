@@ -2,18 +2,12 @@ Tasks
 ==============
 
 **High Priority**
-* Resequence sales revisions
-    1	Baseline	(exclude 3M normalization)
-    2	Takes	    (on baseline)
-    3	Risk	    (on baseline)
-    4	Price	    (on 1-3)
-    5	Puts	    (on baseline)
-
+* ~~Resequence sales revisions~~
 * Add more verbose descriptions
-* drop 310 volume by 66% in June
-* Leave Lowe's pricing out
+* ~~drop 310 volume by 66% in June~~
+* ~~Leave Lowe's pricing out~~
 * Add fiber volumes
-* add in PPV coordinated through Bennet
+* add in PPV coordinated through Geisler/Nauert & pricing
 * ~~pounds roll-forward of inventory~~
 * ~~Investigate material changes in cost roll~~
 * ~~Add pricing goals to sales budget~~
@@ -40,7 +34,7 @@ Projects
 
 * RSM Audit List
     * 6/19  Copies of bank statements for all accounts for 5/31/17, 6/30/17, and 7/31/17
-    * 6/25  Copies of bank reconciliations for all accounts for 5/31/17
+    * 6/25  ~~Copies of bank reconciliations for all accounts for 5/31/17~~
     * 6/25  E&O reserve analysis as of 5/31/17 in excel format.  Please include inventory create date as a field on the STOCK LOC E&O tab.
     * 6/25  Inventory rollforward (RSM to provide count dates to roll forward from)
     * 6/25  Debt rollforward for 1/1/16 - 5/31/17
