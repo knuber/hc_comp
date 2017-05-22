@@ -203,7 +203,7 @@ another new idea
         the starting point will be the regular layou
 
 **event master**
-`fc.claim`
+`fc.evnt`
 
 | flow          |  element      |  claim        |location       |verions        |
 |---------------|---------------|---------------|---------------|---------------|
