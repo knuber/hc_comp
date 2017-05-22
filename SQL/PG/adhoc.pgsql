@@ -1,29 +1,88 @@
-SELECT 
-        m.srce,
-        m.target,
-        t.unq,
-        jsonb_pretty(
-                jsonb_build_object(
-                        e.v ->> 'key'::text,
-                        (t.rec -> (e.v ->> 'key'::text))
-                )
-         ) AS rkey,
-        jsonb_pretty(
-                jsonb_build_object(e.v->>'field',CASE WHEN array_upper(mt.mt,1)=1 THEN to_json(mt.mt[1]) ELSE array_to_json(mt.mt) END)
-         ) retval,
-        m.seq
+
+WITH 
+--primes in batches
+PG AS (
+SELECT
+	BATCH,
+	REC->>'CUSCUST' PARTY,
+	SUBSTR(ACCT,7,4) PRIME,
+	SUM(AMT) AMT,
+	ROUND(SUM(AMT) FILTER (WHERE AMT > 0),2) AMTD
+FROM
+	r.ffsbglr1
+WHERE
+	PERD >= '1701' AND
+	MODULE IN ('OEIN','ICIN')
+GROUP BY
+	BATCH,
+	REC->>'CUSCUST',
+	SUBSTR(ACCT,7,4)
+),
+--batch primes aggregated
+BP AS (
+	SELECT
+		BATCH,
+		PARTY,
+		ARRAY_AGG(PRIME ORDER BY PRIME ASC) PRIME_A,
+		SUM(AMTD) AMTD
+	FROM
+		PG
+	GROUP BY 
+		BATCH,
+		PARTY
+),
+--prime aggregate values
+PA1 AS (
+SELECT
+	PRIME_A,
+	PRIME,
+	SUM(AMT),
+	JSONB_BUILD_OBJECT(PRIME,to_char(ROUND(SUM(AMT),2),'999,999,999')) JD
+FROM	
+	BP
+	INNER JOIN PG ON
+		PG.BATCH = BP.BATCH AND
+		PG.PARTY = BP.PARTY
+GROUP BY
+	PRIME_A,
+	PRIME
+ORDER BY PRIME_A ASC
+),
+--build prime aggregates into a json
+PA2 AS (
+SELECT
+	PRIME_A,
+	tps.jsonb_concat_obj(JD) JD
+FROM
+	PA1
+GROUP BY
+	PRIME_A
+
+),
+--aggregate vendor values per prime group
+PAP AS (
+SELECT
+	bp.prime_a,
+	jd,
+	JSONB_BUILD_OBJECT(party,TO_CHAR(SUM(amtd),'999,999,999')) pjd
 FROM 
-        tps.map_rm m
-        LEFT JOIN LATERAL jsonb_array_elements(m.regex->'where') w(v) ON TRUE
-        JOIN tps.trans t ON 
-                t.srce = m.srce AND
-                t.rec @> w.v
-        LEFT JOIN LATERAL jsonb_array_elements(m.regex->'defn') WITH ORDINALITY e(v, rn) ON true
-        LEFT JOIN LATERAL regexp_matches(t.rec ->> (e.v ->> 'key'::text), e.v ->> 'regex'::text) WITH ORDINALITY mt(mt, rn) ON true
-ORDER BY
-        m.srce,
-        m.seq,
-        m.target,
-        t.unq, 
-        e.rn
-LIMIT 100;
+	PA2
+	INNER JOIN BP ON
+		BP.PRIME_A = PA2.PRIME_A
+GROUP BY
+	bp.prime_a,
+	jd,
+	party
+)
+--turn vendor totals into json per the prime_a
+SELECT
+	prime_a,
+	jsonb_pretty(jd) jd,
+	jsonb_pretty(tps.jsonb_concat_obj(pjd)) pjd
+FROM
+	PAP
+GROUP BY
+	prime_a,
+	jd
+ORDER BY 
+	prime_a ASC
