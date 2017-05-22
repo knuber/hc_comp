@@ -1,0 +1,69 @@
+
+WITH 
+--primes in batches
+PG AS (
+SELECT
+	SUBSTRING(ACCT,1,2) COMP,
+	BATCH,
+    PDATE::DATE PDATE,
+	(REC->>'CUSVEND')||' - '||btname PARTY,
+	SUBSTRING(ACCT,7,4)||' - '||AZGROP PRIME,
+	SUM(AMT) AMT,
+	ROUND(SUM(AMT) FILTER (WHERE AMT > 0),2) AMTD
+FROM
+	r.ffsbglr1
+	LEFT OUTER JOIN lgdat.mast ON
+		azcomp||azcode = acct
+	LEFT OUTER JOIN lgdat.fgrp ON
+		bq1grp = azgrop
+	LEFT OUTER JOIN lgdat.vend ON
+		btvend = REC->>'CUSVEND'
+WHERE
+	PERD >= '1701' AND
+	MODULE = 'APVN'
+GROUP BY
+	SUBSTRING(ACCT,1,2),
+	BATCH,
+    PDATE::DATE,
+	(REC->>'CUSVEND')||' - '||btname,
+	SUBSTRING(ACCT,7,4)||' - '||AZGROP
+),
+--batch primes aggregated
+BP AS (
+	SELECT
+		COMP,
+		BATCH,
+		PARTY,
+		JSONB_AGG(PRIME ORDER BY PRIME ASC) PRIME_A,
+		SUM(AMTD) AMTD
+	FROM
+		PG
+	GROUP BY 
+		COMP,
+		BATCH,
+		PARTY
+)
+--prime aggregate values
+
+SELECT
+    PG.BATCH,
+    PG.PDATE,
+    PG.PARTY,
+	BP.COMP,
+	BP.PRIME_A,
+	PG.PRIME,
+	SUM(PG.AMT) AMT,
+	SUM(PG.AMTD) AMTD
+FROM	
+	BP
+	INNER JOIN PG ON
+		PG.BATCH = BP.BATCH AND
+		PG.PARTY = BP.PARTY
+GROUP BY
+	PG.BATCH,
+    PG.PDATE,
+    PG.PARTY,
+	BP.COMP,
+	BP.PRIME_A,
+	PG.PRIME
+LIMIT 100
