@@ -1,91 +1,88 @@
-\timing
---DELETE FROM r.ffsbglr1;
---COPY r.ffsbglr1 FROM 'C:\users\ptrowbridge\downloads\ffsbglr1.csv' WITH (FORMAT CSV, HEADER TRUE, QUOTE '"');
 
 WITH 
-------GROUP BY ACCOUNT NUMBER-----------
-AL AS (
+--primes in batches
+PG AS (
 SELECT
 	BATCH,
-	MODULE,
+	REC->>'CUSVEND' PARTY,
 	SUBSTR(ACCT,7,4) PRIME,
-	ACCT,
-	REC->>'CUSVEND' party,
-    ROUND(SUM(AMT),2) AMTA,
-	ROUND(SUM(AMT) FILTER (WHERE AMT > 0),2) AMT
+	SUM(AMT) AMT,
+	ROUND(SUM(AMT) FILTER (WHERE AMT > 0),2) AMTD
 FROM
 	r.ffsbglr1
 WHERE
+	PERD >= '1701' AND
 	MODULE = 'APVN'
 GROUP BY
 	BATCH,
-	MODULE,
-	SUBSTR(ACCT,7,4),
-	ACCT,
-	REC->>'CUSVEND'
+	REC->>'CUSVEND',
+	SUBSTR(ACCT,7,4)
 ),
---AGGREGATE ACCOUNTS INSIDE PRIMES--
-AA AS (
-SELECT
-	BATCH,
-	MODULE,
-	tps.jsonb_concat_obj(JSONB_BUILD_OBJECT(ACCT,AMTA)) JDEF,
-	PRIME,
-	PARTY,
-    ROUND(SUM(AMTA),2) AMTA,
-	ROUND(SUM(AMT),2) AMT
-FROM
-	AL
-GROUP BY
-	BATCH,
-	MODULE,
-	PRIME,
-	PARTY
-)
---SELECT * FROM AA where batch =  '000430731' LIMIT 100
-,
---create the prime group by batch, party, module--
-PA AS (
-SELECT
-	BATCH,
-	MODULE,
-    ARRAY_AGG(PRIME ORDER BY PRIME ASC) PRIME_A
-FROM
-	AL
-GROUP BY
-	BATCH,
-	MODULE,
-	PARTY
-)
-,
---AGGREGATE TO PARTIES IN BATCHES--
-AP AS (
-SELECT
-	BATCH,
-	MODULE,
-	tps.jsonb_concat_obj(JDEF) JDEF,
-	PARTY,
-	SUM(AMT) AMT
-FROM
-	AA
-GROUP BY
-	BATCH,
-	MODULE,
-	PARTY,
-    PRIME_A
-)
---SELECT * FROM AP WHERE BATCH = '000430731' LIMIT 100
-,
---AGGREGATE TO PRIME GROUPS
-PG AS (
+--batch primes aggregated
+BP AS (
+	SELECT
+		BATCH,
+		PARTY,
+		ARRAY_AGG(PRIME ORDER BY PRIME ASC) PRIME_A,
+		SUM(AMTD) AMTD
+	FROM
+		PG
+	GROUP BY 
+		BATCH,
+		PARTY
+),
+--prime aggregate values
+PA1 AS (
 SELECT
 	PRIME_A,
-    tps.jsonb_concat_obj(JSONB_BUILD_OBJECT(PARTY,AMT)) PARTIES,
-	JSONB_AGG(JSONB_BUILD_OBJECT(PARTY,JDEF)) JDEF,
-	SUM(AMT) AMT
-FROM
-	AP
+	PRIME,
+	SUM(AMT),
+	JSONB_BUILD_OBJECT(PRIME,to_char(ROUND(SUM(AMT),2),'999,999,999')) JD
+FROM	
+	BP
+	INNER JOIN PG ON
+		PG.BATCH = BP.BATCH AND
+		PG.PARTY = BP.PARTY
 GROUP BY
+	PRIME_A,
 	PRIME
+ORDER BY PRIME_A ASC
+),
+--build prime aggregates into a json
+PA2 AS (
+SELECT
+	PRIME_A,
+	tps.jsonb_concat_obj(JD) JD
+FROM
+	PA1
+GROUP BY
+	PRIME_A
+
+),
+--aggregate vendor values per prime group
+PAP AS (
+SELECT
+	bp.prime_a,
+	jd,
+	JSONB_BUILD_OBJECT(party,TO_CHAR(SUM(amtd),'999,999,999')) pjd
+FROM 
+	PA2
+	INNER JOIN BP ON
+		BP.PRIME_A = PA2.PRIME_A
+GROUP BY
+	bp.prime_a,
+	jd,
+	party
 )
-SELECT PRIME_A, JSONB_PRETTY(PARTIES) PARTIES, JSONB_PRETTY(JDEF) JSONB_DEF, AMT FROM PG ORDER BY PRIME ASC LIMIT 100
+--turn vendor totals into json per the prime_a
+SELECT
+	prime_a,
+	jsonb_pretty(jd) jd,
+	jsonb_pretty(tps.jsonb_concat_obj(pjd)) pjd
+FROM
+	PAP
+GROUP BY
+	prime_a,
+	jd
+ORDER BY 
+	prime_a ASC
